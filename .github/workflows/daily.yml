@@ -5,6 +5,11 @@ on:
   schedule:
     - cron: "17 20 * * *"   # 20:17 UTC = about 7:17am in Sydney/Melbourne
   workflow_dispatch:         # adds a "Run workflow" button so you can run it any time
+    inputs:
+      collect:
+        description: "Collect from Instagram? Untick to publish a preview with sample numbers only."
+        type: boolean
+        default: true
 
 permissions:
   contents: write   # to save the new numbers back into the repository
@@ -33,6 +38,7 @@ jobs:
 
       - name: Collect today's numbers
         id: collect
+        if: github.event_name == 'schedule' || inputs.collect
         continue-on-error: true   # still publish the site even if Instagram blocks us today
         env:
           APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
@@ -46,9 +52,16 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/history.csv data/last_run.json 2>/dev/null || true
+          git add data/ 2>/dev/null || true
+          git add site/img/ 2>/dev/null || true   # profile photos
           git diff --cached --quiet || git commit -m "Daily numbers for $(date -u +%F)"
-          git push
+          # If files were uploaded while this was running, merge them in first, then save.
+          for attempt in 1 2 3; do
+            git pull --rebase --autostash -X theirs && git push && exit 0
+            echo "Save attempt $attempt didn't go through, trying again shortly..."
+            sleep 10
+          done
+          echo "::warning::Couldn't save today's numbers. The site will still be published."
 
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
