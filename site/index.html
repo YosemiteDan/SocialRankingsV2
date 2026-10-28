@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aussie Hoops Social</title>
+<meta name="description" content="Instagram rankings for every Australian playing in the NBA, updated daily.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F4F6F3;
+    --surface: #FFFFFF;
+    --ink: #13221C;
+    --muted: #5F6E66;
+    --line: #DCE3DD;
+    --green: #00843D;
+    --gold: #FFCD00;
+    --gold-soft: #FFE58A;
+    --down: #C8102E;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.5 "Barlow", system-ui, sans-serif;
+  }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 0 16px; }
+
+  header { background: var(--green); color: #fff; padding: 40px 0 72px; }
+  .brand { font: 700 18px/1 "Barlow Condensed", sans-serif; letter-spacing: .02em; color: var(--gold); margin: 0 0 28px; }
+  h1 {
+    font: 800 clamp(40px, 7vw, 76px)/.92 "Barlow Condensed", sans-serif;
+    margin: 0; max-width: 13ch; letter-spacing: -.01em;
+  }
+  .lede { margin: 18px 0 0; max-width: 52ch; color: #DDEFE3; font-size: 17px; }
+
+  main { margin-top: -44px; padding-bottom: 64px; }
+  .notice {
+    background: var(--gold); color: var(--ink); border-radius: 10px;
+    padding: 12px 16px; margin-bottom: 14px; font-weight: 500;
+  }
+  .board { background: var(--surface); border-radius: 14px; box-shadow: 0 1px 0 var(--line), 0 12px 32px -18px rgba(19,34,28,.35); overflow: hidden; }
+
+  .tabs { display: flex; gap: 4px; padding: 10px; border-bottom: 1px solid var(--line); overflow-x: auto; }
+  .tabs button {
+    font: 600 17px/1 "Barlow Condensed", sans-serif; letter-spacing: .01em;
+    border: 0; background: transparent; color: var(--muted);
+    padding: 10px 14px; border-radius: 8px; cursor: pointer; white-space: nowrap;
+  }
+  .tabs button[aria-selected="true"] { background: var(--ink); color: #fff; }
+  .tabs button:focus-visible, .row:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+
+  .row {
+    display: grid; grid-template-columns: 44px minmax(0, 1fr) 96px 110px;
+    align-items: center; gap: 14px; padding: 14px 18px;
+    border-bottom: 1px solid var(--line); cursor: pointer; background: none;
+    width: 100%; text-align: left; color: inherit; font: inherit; border-left: 0; border-right: 0; border-top: 0;
+  }
+  .row:hover { background: #F8FAF8; }
+  .rank { font: 800 30px/1 "Barlow Condensed", sans-serif; color: var(--green); text-align: center; }
+  .who { min-width: 0; display: block; }
+  .who > span { display: block; }
+  .name { font: 700 21px/1.1 "Barlow Condensed", sans-serif; }
+  .team { color: var(--muted); font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .bar { height: 10px; background: var(--line); border-radius: 5px; margin-top: 8px; overflow: hidden; }
+  .bar span { display: block; height: 100%; background: var(--gold); border-radius: 5px; transform-origin: left; animation: grow .9s cubic-bezier(.2,.7,.2,1) both; }
+  @keyframes grow { from { transform: scaleX(0); } }
+  .metric { text-align: right; }
+  .metric b { display: block; font: 700 24px/1 "Barlow Condensed", sans-serif; }
+  .metric small { color: var(--muted); font-size: 13px; }
+  .up { color: var(--green); } .down { color: var(--down); }
+  .spark { width: 110px; height: 36px; }
+
+  .detail { display: none; padding: 4px 18px 22px 76px; border-bottom: 1px solid var(--line); background: #FBFCFB; }
+  .detail.open { display: block; }
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px 20px; margin: 10px 0 16px; }
+  .stats div { font-size: 14px; color: var(--muted); }
+  .stats strong { display: block; font: 700 22px/1.1 "Barlow Condensed", sans-serif; color: var(--ink); }
+  .chart { width: 100%; height: 160px; display: block; }
+  .detail a { color: var(--green); font-weight: 600; }
+
+  .empty { padding: 32px 18px; color: var(--muted); }
+  footer { color: var(--muted); font-size: 14px; padding: 8px 0 40px; }
+  footer p { margin: 4px 0; max-width: 70ch; }
+
+  @media (max-width: 640px) {
+    .row { grid-template-columns: 34px minmax(0, 1fr) 84px; gap: 10px; padding: 12px; }
+    .spark { display: none; }
+    .rank { font-size: 24px; }
+    .detail { padding: 4px 12px 18px; }
+  }
+  @media (prefers-reduced-motion: reduce) { .bar span { animation: none; } }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <p class="brand">Aussie Hoops Social</p>
+    <h1>Every Aussie in the NBA, ranked by Instagram</h1>
+    <p class="lede" id="lede">Followers, growth and engagement for Australian players in the league, refreshed every morning from public profiles.</p>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="notice" id="notice" hidden></div>
+  <section class="board" aria-label="Player rankings">
+    <div class="tabs" role="tablist" id="tabs">
+      <button role="tab" data-view="followers" aria-selected="true">Most followed</button>
+      <button role="tab" data-view="growth7">Growing fastest this week</button>
+      <button role="tab" data-view="growth30">This month</button>
+      <button role="tab" data-view="engagement">Best engagement</button>
+    </div>
+    <div id="list"><p class="empty">Loading rankings…</p></div>
+  </section>
+</main>
+
+<footer class="wrap">
+  <p id="updated"></p>
+  <p>Numbers come from public Instagram profiles. Engagement is average likes and comments on recent posts, as a share of followers. Not affiliated with the NBA, its teams or Basketball Australia.</p>
+</footer>
+
+<script>
+const VIEWS = {
+  followers:  { key: "followers",          label: "followers", fmt: v => compact(v) },
+  growth7:    { key: "change_7d_pct",      label: "in 7 days", fmt: v => signed(v) + "%", change: true },
+  growth30:   { key: "change_30d_pct",     label: "in 30 days", fmt: v => signed(v) + "%", change: true },
+  engagement: { key: "engagement_rate",    label: "engagement", fmt: v => v.toFixed(2) + "%" },
+};
+let DATA = null, view = "followers";
+
+function compact(n) {
+  if (n == null) return "–";
+  if (n >= 1e6) return (n / 1e6).toFixed(n >= 1e7 ? 1 : 2).replace(/\.?0+$/, "") + "M";
+  if (n >= 1e3) return (n / 1e3).toFixed(n >= 1e5 ? 0 : 1).replace(/\.0$/, "") + "K";
+  return String(n);
+}
+function signed(n) { return (n > 0 ? "+" : "") + (Math.abs(n) < 10 ? n.toFixed(2) : n.toFixed(1)); }
+function esc(s) { return String(s).replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c])); }
+
+function line(points, w, h, pad, stroke, fill) {
+  const vals = points.map(p => p[1]).filter(v => v != null);
+  if (vals.length < 2) return "";
+  const min = Math.min(...vals), max = Math.max(...vals), span = (max - min) || 1;
+  const xy = vals.map((v, i) => [pad + i * (w - 2 * pad) / (vals.length - 1), h - pad - (v - min) / span * (h - 2 * pad)]);
+  const d = xy.map((p, i) => (i ? "L" : "M") + p[0].toFixed(1) + " " + p[1].toFixed(1)).join(" ");
+  const area = fill ? `<path d="${d} L${xy.at(-1)[0]} ${h - pad} L${pad} ${h - pad} Z" fill="${fill}"/>` : "";
+  return area + `<path d="${d}" fill="none" stroke="${stroke}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>`;
+}
+
+function render() {
+  const v = VIEWS[view];
+  const rows = DATA.players.filter(p => p[v.key] != null).sort((a, b) => b[v.key] - a[v.key]);
+  const missing = DATA.players.filter(p => p[v.key] == null);
+  const top = Math.max(...rows.map(p => Math.abs(p[v.key])), 1);
+  const list = document.getElementById("list");
+  if (!rows.length) {
+    list.innerHTML = `<p class="empty">${v.change ? "Growth appears once there are enough days of history to compare. Check back after the first week of collection." : "No numbers yet. They appear after the first daily collection run."}</p>`;
+    return;
+  }
+  list.innerHTML = rows.map((p, i) => {
+    const val = p[v.key];
+    const cls = v.change ? (val >= 0 ? "up" : "down") : "";
+    const trendUp = p.history.length > 1 && p.history.at(-1)[1] >= p.history[0][1];
+    return `
+    <button class="row" aria-expanded="false" aria-controls="d${i}">
+      <span class="rank">${i + 1}</span>
+      <span class="who">
+        <span class="name">${esc(p.name)}</span>
+        <span class="team">${esc(p.team)} · @${esc(p.instagram)}</span>
+        <span class="bar"><span style="width:${(Math.abs(val) / top * 100).toFixed(1)}%;animation-delay:${i * 40}ms"></span></span>
+      </span>
+      <span class="metric"><b class="${cls}">${v.fmt(val)}</b><small>${v.label}</small></span>
+      <svg class="spark" viewBox="0 0 110 36" aria-hidden="true">${line(p.history, 110, 36, 3, trendUp ? "var(--green)" : "var(--down)")}</svg>
+    </button>
+    <div class="detail" id="d${i}">${detail(p)}</div>`;
+  }).join("") + (missing.length ? `<p class="empty">No data yet for ${missing.map(p => esc(p.name)).join(", ")}.</p>` : "");
+
+  list.querySelectorAll(".row").forEach(btn => btn.addEventListener("click", () => {
+    const open = btn.getAttribute("aria-expanded") === "true";
+    btn.setAttribute("aria-expanded", String(!open));
+    document.getElementById(btn.getAttribute("aria-controls")).classList.toggle("open", !open);
+  }));
+}
+
+function detail(p) {
+  const chg = (n, pct) => n == null ? "–" : `<span class="${n >= 0 ? "up" : "down"}">${n >= 0 ? "+" : "−"}${compact(Math.abs(n))} (${signed(pct)}%)</span>`;
+  return `
+    <div class="stats">
+      <div><strong>${compact(p.followers)}</strong>followers</div>
+      <div><strong>${chg(p.change_7d, p.change_7d_pct)}</strong>last 7 days</div>
+      <div><strong>${chg(p.change_30d, p.change_30d_pct)}</strong>last 30 days</div>
+      <div><strong>${chg(p.change_365d, p.change_365d_pct)}</strong>last year</div>
+      <div><strong>${p.posts ?? "–"}</strong>posts in total</div>
+      <div><strong>${p.posts_last_30d ?? "–"}</strong>posts in 30 days</div>
+      <div><strong>${compact(p.avg_likes)}</strong>avg likes per post</div>
+      <div><strong>${p.engagement_rate != null ? p.engagement_rate.toFixed(2) + "%" : "–"}</strong>engagement</div>
+    </div>
+    <svg class="chart" viewBox="0 0 600 160" preserveAspectRatio="none" role="img" aria-label="Followers over the last 90 days">
+      ${line(p.history, 600, 160, 6, "var(--green)", "rgba(0,132,61,.08)")}
+    </svg>
+    <p><a href="https://www.instagram.com/${encodeURIComponent(p.instagram)}/" rel="noopener">View @${esc(p.instagram)} on Instagram</a></p>`;
+}
+
+document.getElementById("tabs").addEventListener("click", e => {
+  const b = e.target.closest("button"); if (!b) return;
+  view = b.dataset.view;
+  document.querySelectorAll("#tabs button").forEach(x => x.setAttribute("aria-selected", String(x === b)));
+  render();
+});
+
+fetch("data.json", { cache: "no-store" }).then(r => r.json()).then(d => {
+  DATA = d;
+  const n = d.players.length;
+  const total = d.players.reduce((s, p) => s + (p.followers || 0), 0);
+  document.getElementById("lede").textContent =
+    `${n} Australians in the league with ${compact(total)} Instagram followers between them. Followers, growth and engagement, refreshed every morning from public profiles.`;
+  if (d.sample_data) {
+    const el = document.getElementById("notice");
+    el.textContent = "These are made-up sample numbers for previewing the design. Real numbers replace them after the first daily collection.";
+    el.hidden = false;
+  }
+  const asOf = d.players.map(p => p.as_of).filter(Boolean).sort().at(-1);
+  document.getElementById("updated").textContent = asOf
+    ? `Last updated ${new Date(asOf + "T12:00:00").toLocaleDateString("en-AU", { day: "numeric", month: "long", year: "numeric" })}.`
+    : "";
+  render();
+}).catch(() => {
+  document.getElementById("list").innerHTML = '<p class="empty">The rankings file couldn\'t be loaded. If you opened this page straight from your computer, preview it through GitHub Pages or a local server instead.</p>';
+});
+</script>
+</body>
+</html>
