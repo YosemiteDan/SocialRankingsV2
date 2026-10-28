@@ -7,10 +7,10 @@ A website that ranks every Australian in the NBA by Instagram: followers, growth
 | File | What it does |
 |---|---|
 | `data/athletes.csv` | The list of players and their Instagram handles. Edit this to add or remove players. |
-| `scripts/collect.py` | Visits each profile and saves today's numbers to `data/history.csv`. |
-| `scripts/build_site_data.py` | Works out rankings and growth, and writes `site/data.json` for the website. |
+| `scripts/collect.py` | Visits each profile and saves today's numbers to `data/history.csv`, plus each player's name, bio and profile photo (`data/profiles.json` and `site/img/`). |
+| `scripts/build_site_data.py` | Works out rankings and growth, and writes `site/data.json` for the rankings plus one file per player in `site/players/` for their profile page. |
 | `scripts/make_sample_data.py` | Makes fake numbers so you can preview the design. Not used once real data exists. |
-| `site/index.html` | The website itself. |
+| `site/index.html` | The website itself: player cards, and a profile page for each player when you click their card. |
 | `.github/workflows/daily.yml` | Tells GitHub to run everything every morning at about 7:17am. |
 
 You don't need to install anything on your computer. Everything below happens on the GitHub website.
@@ -50,6 +50,8 @@ Open `data/last_run.json` in your repository after each run. It lists which play
 - **"profile not found"** means the Instagram handle is wrong. Most handles in `athletes.csv` are best guesses (see the `handle_checked` column), so check each player's real handle on Instagram, then edit the file on GitHub (click the file → pencil icon → fix → **Commit changes**).
 - **"blocked"** means Instagram refused the requests. See below.
 
+Profile photos appear after the first successful run, and are refreshed weekly. Until then each player shows their initials. Photos are saved to your own site because Instagram's photo links expire and won't display on other websites.
+
 Growth figures appear once there's enough history: the 7-day numbers after a week, 30-day after a month, and 1-year after a year.
 
 ## If Instagram blocks it
@@ -62,4 +64,8 @@ This is likely at some point, because Instagram is wary of requests from cloud s
 
 ## Adding players or sports
 
-Add a row to `data/athletes.csv` with the name, team, position and Instagram handle. To track a different sport, start a new copy of this repository with a different list.
+Add a row to `data/athletes.csv` with the name, sport, league, team, position and Instagram handle. Athletes from other sports go in the same list: as soon as there's more than one league, the site shows league filters (All sports, AFL, NBA and so on) above the rankings, the headline changes to cover all sports, and each profile shows the athlete's rank within their own league.
+
+## Changing the site's name
+
+The name appears in three places in `site/index.html`: the line `const SITE_NAME = "..."` near the top of the script, the `<title>` tag, and the `og:title` tag. The link-preview image shown when the site is shared on social media is `site/og.png`; replace it with your own 1200 × 630 image whenever you like. Some sites (Facebook, LinkedIn) need the full address of that image, so once your site is live, change `content="og.png"` in the `og:image` tag to `content="https://YOUR-USERNAME.github.io/aussie-hoops-social/og.png"`.
