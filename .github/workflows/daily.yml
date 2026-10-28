@@ -1,0 +1,58 @@
+# Runs every morning: collects the numbers, saves them, and republishes the site.
+name: Daily update
+
+on:
+  schedule:
+    - cron: "17 20 * * *"   # 20:17 UTC = about 7:17am in Sydney/Melbourne
+  workflow_dispatch:         # adds a "Run workflow" button so you can run it any time
+
+permissions:
+  contents: write   # to save the new numbers back into the repository
+  pages: write      # to publish the website
+  id-token: write
+
+concurrency:
+  group: daily-update
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install requirements
+        run: pip install -r requirements.txt
+
+      - name: Collect today's numbers
+        id: collect
+        continue-on-error: true   # still publish the site even if Instagram blocks us today
+        env:
+          APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
+          IG_SESSIONID: ${{ secrets.IG_SESSIONID }}
+        run: python scripts/collect.py
+
+      - name: Build the website data
+        run: python scripts/build_site_data.py
+
+      - name: Save the numbers
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/history.csv data/last_run.json 2>/dev/null || true
+          git diff --cached --quiet || git commit -m "Daily numbers for $(date -u +%F)"
+          git push
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+      - id: deploy
+        uses: actions/deploy-pages@v4
