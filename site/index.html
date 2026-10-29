@@ -54,6 +54,69 @@
   .bar .updated { color: var(--muted); font-size: 14px; }
   .live { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--up); margin-right: 7px; box-shadow: 0 0 0 4px rgba(60,224,160,.18); }
 
+  /* ---------- menu ---------- */
+  .bar .wrap { gap: 16px; }
+  .nav { display: flex; gap: 4px; margin-left: auto; }
+  .nav > a, .nav summary {
+    list-style: none; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
+    font: 600 15px/1 "Barlow", sans-serif; color: var(--muted); text-decoration: none;
+    padding: 10px 12px; border-radius: 10px;
+  }
+  .nav summary::-webkit-details-marker { display: none; }
+  .nav summary::after { content: ""; width: 7px; height: 7px; border: solid currentColor; border-width: 0 2px 2px 0; transform: rotate(45deg) translateY(-2px); }
+  .nav > a:hover, .nav summary:hover, .nav details[open] summary { color: var(--text); background: var(--bg-2); }
+  .nav details { position: relative; }
+  .menu {
+    position: absolute; right: 0; top: calc(100% + 8px); min-width: 290px; z-index: 30;
+    background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 8px;
+    box-shadow: 0 18px 40px -12px rgba(0,0,0,.55);
+  }
+  .menu a { display: flex; justify-content: space-between; gap: 12px; padding: 10px 12px; border-radius: 9px; text-decoration: none; color: var(--text); font-weight: 600; }
+  .menu a small { color: var(--muted); font-weight: 500; white-space: nowrap; }
+  .menu a:hover { background: var(--card-2); }
+  .menu h4 { margin: 10px 12px 4px; font: italic 800 17px/1 var(--display); color: var(--accent); }
+  .menu .sub { margin-left: 12px; border-left: 1px solid var(--line); padding-left: 4px; }
+  .menu hr { border: 0; border-top: 1px solid var(--line); margin: 6px 4px; }
+
+  /* ---------- home ---------- */
+  .home-hero { padding: 36px 0 26px; }
+  .home-hero h1 { font: italic 900 clamp(40px, 6vw, 72px)/.9 var(--display); margin: 0; letter-spacing: -.01em; max-width: 16ch; }
+  .home-hero h1 em { font-style: inherit; color: var(--accent); }
+  .home-hero .lede { color: var(--muted); max-width: 56ch; margin: 14px 0 0; font-size: 17px; }
+  .lists { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+  .list { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 18px 16px 10px; display: flex; flex-direction: column; }
+  .list h2 { font: italic 800 28px/1 var(--display); margin: 0 4px 4px; }
+  .list .hint { color: var(--muted); font-size: 14px; margin: 0 4px 10px; }
+  .list.rising { background: linear-gradient(160deg, rgba(255,122,26,.14), rgba(176,124,255,.12)), var(--card); }
+  .row { display: grid; grid-template-columns: 26px 40px minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 8px 6px; border-radius: 12px; text-decoration: none; }
+  .row:hover { background: var(--card-2); }
+  .row .n { font: italic 800 22px/1 var(--display); color: var(--muted); text-align: center; }
+  .row:nth-child(-n+3) .n { color: var(--accent); }
+  .row .av { width: 40px; height: 40px; border-radius: 11px; overflow: hidden; position: relative; background: var(--card-2); }
+  .row .av img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .row .av .ph { font-size: 17px; padding: 0; }
+  .row .who { min-width: 0; }
+  .row .who b { display: block; font: italic 700 19px/1.1 var(--display); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .row .who span { display: block; color: var(--muted); font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .row .val { text-align: right; }
+  .row .val b { display: block; font: italic 800 20px/1 var(--display); }
+  .row .val small { color: var(--muted); font-size: 12px; }
+  .list .all { margin: auto 4px 6px; padding-top: 10px; color: var(--accent); font-weight: 700; text-decoration: none; }
+  .list .empty { color: var(--muted); margin: 8px 4px 16px; }
+  .widget { margin-top: 16px; background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 18px; }
+  .widget-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
+  .widget h2 { font: italic 800 28px/1 var(--display); margin: 0 0 4px; }
+  .widget .hint { color: var(--muted); font-size: 14px; margin: 0; }
+  .wrows { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; }
+  .wrow { background: var(--bg-2); border-radius: 14px; padding: 14px; border: 1px solid var(--line); text-decoration: none; }
+  .wrow .n { font: italic 900 30px/1 var(--display); color: var(--accent); }
+  .wrow b { display: block; font: italic 800 20px/1.1 var(--display); margin: 8px 0 2px; }
+  .wrow span { color: var(--muted); font-size: 13px; }
+  .wrow .pct { display: block; font: italic 800 26px/1 var(--display); margin-top: 10px; }
+  .seg { display: flex; gap: 4px; background: var(--bg); padding: 4px; border-radius: 99px; }
+  .seg button { font: 700 14px/1 "Barlow", sans-serif; border: 0; background: none; color: var(--muted); padding: 9px 13px; border-radius: 99px; cursor: pointer; }
+  .seg button[aria-pressed="true"] { background: var(--card-2); color: var(--text); }
+
   /* ---------- hero ---------- */
   .hero { padding: 44px 0 28px; position: relative; }
   .hero h1 {
@@ -229,11 +292,24 @@
 
   /* ---------- responsive ---------- */
   @media (max-width: 960px) {
+    .lists { grid-template-columns: 1fr 1fr; }
+    .lists .rising { grid-column: span 2; }
+    .wrows { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .eng { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   }
   @media (max-width: 720px) {
+    .lists { grid-template-columns: 1fr; }
+    .lists .rising { grid-column: auto; }
+    .wrows { grid-template-columns: 1fr; }
+    .wrow { display: grid; grid-template-columns: 36px 1fr auto; align-items: center; gap: 10px; padding: 10px 14px; }
+    .wrow b { margin: 0; } .wrow .pct { margin: 0; font-size: 22px; }
+    .logo { font-size: 18px; }
+    .nav > a, .nav summary { padding: 9px 9px; font-size: 14px; }
+    .nav > a[href="#/"] { display: none; }   /* the logo goes home on phones */
+    .bar .wrap { gap: 8px; }
+    .menu { position: fixed; left: 12px; right: 12px; top: 60px; min-width: 0; max-height: calc(100vh - 80px); overflow: auto; }
     .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
     .card.feature { grid-column: span 2; flex-direction: column; }
     .card.feature .shot { aspect-ratio: 1 / .85; min-height: 0; flex: none; }
@@ -266,6 +342,7 @@
 <div class="bar">
   <div class="wrap">
     <a class="logo" href="#/"><i aria-hidden="true"></i><span id="siteName">Social Scoreboard</span></a>
+    <nav class="nav" id="nav" aria-label="Main"></nav>
     <span class="updated" id="updated"></span>
   </div>
 </div>
@@ -297,13 +374,15 @@ const PAGE_SIZE = 24;
 const SPORT_ORDER = ["Basketball", "Soccer", "American football"];
 const SPORT_LABEL = { "American football": "NFL" };
 const LEAGUE_ORDER = ["NBA", "WNBA", "NBL", "WNBL", "Matildas", "Socceroos", "NFL"];
+const GENDER_LABEL = { men: "Men", women: "Women" };
+const UP_AND_COMING_CAP = 100000;   // "Up & coming" only includes accounts below this many followers
 const SPORT_COPY = {
   All: { headline: "Australia’s athletes", lede: "Followers and growth for Australian athletes and the players in our leagues, across basketball, soccer and the NFL", count: "athletes tracked" },
   Basketball: { headline: "Australian basketball", lede: "Followers and growth for every Aussie in the NBA and WNBA, and every player in the NBL and WNBL", count: "players tracked" },
   Soccer: { headline: "The Matildas & Socceroos", lede: "Followers and growth for every player in the latest Matildas and Socceroos squads", count: "national team players" },
   "American football": { headline: "Every Aussie in the NFL", lede: "Followers and growth for the Australians on NFL rosters", count: "Aussies in the NFL" },
 };
-let DATA = null, sport = "All", league = "All", aussiesOnly = false, query = "", shown = PAGE_SIZE, view = "followers", range = "90D", current = null;
+let DATA = null, sport = "All", league = "All", gender = "All", aussiesOnly = false, query = "", shown = PAGE_SIZE, view = "followers", range = "90D", current = null;
 const $ = id => document.getElementById(id);
 
 function compact(n) {
@@ -376,11 +455,11 @@ async function share(title, text) {
 /* ---------------------------------------------------------------- rankings */
 function showRankings() {
   current = null;
-  document.title = SITE_NAME;
-  const sports = [...new Set(DATA.players.map(p => p.sport).filter(Boolean))]
+  document.title = `Rankings – ${SITE_NAME}`;
+  const sports = [...new Set(DATA.players.filter(p => gender === "All" || p.gender === gender).map(p => p.sport).filter(Boolean))]
     .sort((a, b) => ((SPORT_ORDER.indexOf(a) + 1) || 99) - ((SPORT_ORDER.indexOf(b) + 1) || 99));
   if (!sports.includes(sport)) sport = "All";
-  const inSport = DATA.players.filter(p => sport === "All" || p.sport === sport);
+  const inSport = DATA.players.filter(p => (sport === "All" || p.sport === sport) && (gender === "All" || p.gender === gender));
   const leagues = [...new Set(inSport.flatMap(p => p.leagues || [p.league]).filter(Boolean))]
     .sort((a, b) => ((LEAGUE_ORDER.indexOf(a) + 1) || 99) - ((LEAGUE_ORDER.indexOf(b) + 1) || 99) || a.localeCompare(b));
   if (!leagues.includes(league)) league = "All";
@@ -416,6 +495,9 @@ function showRankings() {
     </div>
     <div class="finder">
       <input id="search" type="search" placeholder="Search players or teams" value="${esc(query)}" aria-label="Search players or teams">
+      <div class="seg" role="group" aria-label="Men or women">
+        ${["All", "men", "women"].map(g => `<button data-gender="${g}" aria-pressed="${g === gender}">${g === "All" ? "Everyone" : GENDER_LABEL[g]}</button>`).join("")}
+      </div>
       ${hasImports ? `<label class="toggle"><input type="checkbox" id="aussies" ${aussiesOnly ? "checked" : ""}> Aussies only</label>` : ""}
     </div>
     <div id="grid"></div>`;
@@ -432,6 +514,11 @@ function showRankings() {
     renderGrid();
   }));
   $("search").addEventListener("input", e => { query = e.target.value; shown = PAGE_SIZE; renderGrid(); });
+  $("main").querySelector(".finder .seg").addEventListener("click", e => {
+    const b = e.target.closest("button"); if (!b) return;
+    gender = b.dataset.gender; shown = PAGE_SIZE;
+    showRankings();          // leagues and headline depend on it
+  });
   $("aussies")?.addEventListener("change", e => { aussiesOnly = e.target.checked; shown = PAGE_SIZE; renderGrid(); });
   renderGrid();
 }
@@ -439,7 +526,7 @@ function showRankings() {
 function renderGrid() {
   const v = VIEWS[view];
   const q = query.trim().toLowerCase();
-  const pool = DATA.players.filter(p => (sport === "All" || p.sport === sport) &&
+  const pool = DATA.players.filter(p => (sport === "All" || p.sport === sport) && (gender === "All" || p.gender === gender) &&
     (league === "All" || inLeague(p, league)) && !(aussiesOnly && p.import));
   // Rank first, then search, so a search shows each player's real rank.
   const ranked = pool.filter(p => p[v.key] != null).sort((a, b) => b[v.key] - a[v.key]);
@@ -538,7 +625,7 @@ async function showProfile(id) {
   const mini = q => `<span class="mini">${photo(q)}</span>`;
 
   $("main").innerHTML = `
-    <a class="back" href="#/">← All players</a>
+    <a class="back" href="#/rankings">← All players</a>
     ${DATA.sample_data ? `<div class="notice">Preview mode: sample numbers.</div>` : ""}
     <section class="pro">
       <div class="shot">${photo(p)}${lgRank ? `<span class="rank">${lgRank}</span>` : ""}</div>
@@ -759,8 +846,164 @@ function drawChart() {
 
 /* ---------------------------------------------------------------- routing */
 function route() {
-  const m = location.hash.match(/^#\/p\/(.+)$/);
-  if (m) showProfile(decodeURIComponent(m[1])); else showRankings();
+  document.querySelectorAll(".nav details[open]").forEach(d => d.removeAttribute("open"));
+  const h = location.hash;
+  const m = h.match(/^#\/p\/(.+)$/);
+  if (m) return showProfile(decodeURIComponent(m[1]));
+  if (h.startsWith("#/rankings")) {
+    const q = new URLSearchParams(h.split("?")[1] || "");
+    if (q.toString()) {            // a menu link: start from its filters
+      sport = q.get("sport") || "All"; league = q.get("league") || "All";
+      gender = q.get("gender") || "All"; query = ""; shown = PAGE_SIZE;
+      if (q.get("view") && VIEWS[q.get("view")]) view = q.get("view");
+    }
+    showRankings();
+    window.scrollTo(0, 0);
+    return;
+  }
+  showHome();
+}
+
+/* ---------------------------------------------------------------- menu */
+function link(params) {
+  const q = new URLSearchParams(Object.entries(params).filter(([, v]) => v && v !== "All"));
+  return "#/rankings" + (q.toString() ? "?" + q : "");
+}
+function buildNav() {
+  const sports = [...new Set(DATA.players.map(p => p.sport).filter(Boolean))]
+    .sort((a, b) => ((SPORT_ORDER.indexOf(a) + 1) || 99) - ((SPORT_ORDER.indexOf(b) + 1) || 99));
+  const count = f => DATA.players.filter(f).length;
+  const sportMenu = sports.map(sp => {
+    const label = SPORT_LABEL[sp] || sp;
+    const leagues = [...new Set(DATA.players.filter(p => p.sport === sp).flatMap(p => p.leagues || [p.league]))]
+      .sort((a, b) => ((LEAGUE_ORDER.indexOf(a) + 1) || 99) - ((LEAGUE_ORDER.indexOf(b) + 1) || 99));
+    const genderOf = lg => (DATA.players.find(p => inLeague(p, lg)) || {}).gender;
+    if (leagues.length <= 1) return `<a href="${link({ sport: sp })}">${esc(label)} <small>${count(p => p.sport === sp)}</small></a>`;
+    const group = g => {
+      const ls = leagues.filter(l => genderOf(l) === g);
+      return ls.length ? `<a href="${link({ sport: sp, gender: g })}">${GENDER_LABEL[g]}'s ${esc(label.toLowerCase())} <small>${ls.join(", ")}</small></a>
+        <div class="sub">${ls.map(l => `<a href="${link({ sport: sp, league: l })}">${esc(l)} <small>${count(p => inLeague(p, l))}</small></a>`).join("")}</div>` : "";
+    };
+    return `<h4>${esc(label)}</h4><a href="${link({ sport: sp })}">All ${esc(label.toLowerCase())} <small>${count(p => p.sport === sp)}</small></a>${group("men")}${group("women")}`;
+  }).join(sports.length > 1 ? "<hr>" : "");
+  $("nav").innerHTML = `
+    <a href="#/">Home</a>
+    <details><summary>Athletes</summary><div class="menu">
+      <a href="${link({ gender: "men" })}">Men <small>${count(p => p.gender === "men")}</small></a>
+      <a href="${link({ gender: "women" })}">Women <small>${count(p => p.gender === "women")}</small></a>
+      <hr><a href="#/rankings?all=1">All athletes <small>${DATA.players.length}</small></a>
+    </div></details>
+    <details><summary>Sports</summary><div class="menu">${sportMenu}</div></details>`;
+  // Only one menu open at a time; clicking elsewhere closes them.
+  $("nav").querySelectorAll("details").forEach(d => d.addEventListener("toggle", () => {
+    if (d.open) $("nav").querySelectorAll("details").forEach(o => o !== d && o.removeAttribute("open"));
+  }));
+  document.addEventListener("click", e => {
+    if (!e.target.closest(".nav")) $("nav").querySelectorAll("details[open]").forEach(d => d.removeAttribute("open"));
+  });
+}
+
+/* ---------------------------------------------------------------- home */
+// Growth "this week": the real 7-day figure once there is a week of history,
+// otherwise growth since tracking began (growth_days says how long).
+function weekGrowth(p) {
+  if (p.change_7d_pct != null) return { pct: p.change_7d_pct, n: p.change_7d, days: 7 };
+  if (p.growth_pct != null) return { pct: p.growth_pct, n: p.growth, days: p.growth_days };
+  return null;
+}
+
+function rowHtml(p, i, value, sub) {
+  const t = teamIn(p, "All");
+  return `<a class="row" href="#/p/${encodeURIComponent(p.id)}">
+      <span class="n">${i + 1}</span>
+      <span class="av">${photo(p)}</span>
+      <span class="who"><b>${esc(p.name)}</b><span>${esc(shortTeam(t.team, p.sport))} · ${esc(t.league)}</span></span>
+      <span class="val">${value}${sub ? `<small>${sub}</small>` : ""}</span>
+    </a>`;
+}
+
+function showHome() {
+  current = null;
+  document.title = `${SITE_NAME} – Australia's athletes, ranked by Instagram`;
+  const withFollowers = DATA.players.filter(p => p.followers != null);
+  const top = g => withFollowers.filter(p => p.gender === g).sort((a, b) => b.followers - a.followers).slice(0, 10);
+  const rising = withFollowers
+    .map(p => ({ p, g: weekGrowth(p) }))
+    .filter(x => x.g && x.g.pct > 0 && x.p.followers < UP_AND_COMING_CAP)
+    .sort((a, b) => b.g.pct - a.g.pct).slice(0, 10);
+  const days = Math.max(0, ...rising.map(x => x.g.days));
+  const total = withFollowers.reduce((s, p) => s + p.followers, 0);
+
+  const topList = g => {
+    const list = top(g);
+    return `<section class="list">
+      <h2>Top 10 ${GENDER_LABEL[g].toLowerCase()}</h2>
+      <p class="hint">Most followed on Instagram${DATA.players.some(p => p.change_7d != null) ? " · change this week" : ""}</p>
+      ${list.length ? list.map((p, i) => rowHtml(p, i, `<b>${compact(p.followers)}</b>`,
+        p.change_7d != null ? `<span class="${p.change_7d >= 0 ? "up" : "down"}">${exactSigned(p.change_7d)}</span>` : "followers")).join("")
+        : `<p class="empty">No numbers yet.</p>`}
+      <a class="all" href="${link({ gender: g })}">See all ${GENDER_LABEL[g].toLowerCase()} →</a>
+    </section>`;
+  };
+
+  $("main").innerHTML = `
+    <section class="home-hero">
+      <h1>Australia's athletes, ranked by <em>Instagram</em></h1>
+      <p class="lede">Who's winning the feed. ${compact(total)} followers across ${DATA.players.length} athletes in basketball, soccer and the NFL, refreshed every morning.</p>
+    </section>
+    ${DATA.sample_data ? `<div class="notice">Preview mode: these are made-up sample numbers.</div>` : ""}
+    <div class="lists">
+      ${topList("men")}
+      ${topList("women")}
+      <section class="list rising">
+        <h2>Up &amp; coming</h2>
+        <p class="hint">Fastest growing ${days && days < 7 ? `over the last ${days} day${days > 1 ? "s" : ""}` : "this week"}, under ${compact(UP_AND_COMING_CAP)} followers</p>
+        ${rising.length ? rising.map((x, i) => rowHtml(x.p, i, `<b class="up">${signed(x.g.pct)}%</b>`,
+          `${exactSigned(x.g.n)} · ${compact(x.p.followers)}`)).join("")
+          : `<p class="empty">Growth rankings start once there are two days of numbers. Check back tomorrow.</p>`}
+        <a class="all" href="#/rankings?view=growth7">See who's hot →</a>
+      </section>
+    </div>
+    <section class="widget" id="widget"></section>`;
+  renderWidget("team");
+  window.scrollTo(0, 0);
+}
+
+// "Fastest growing this week": top 5 teams, leagues or sports by follower growth.
+function renderWidget(by) {
+  const groups = {};
+  for (const p of DATA.players) {
+    const g = weekGrowth(p);
+    if (!g || p.followers == null) continue;
+    const keys = by === "sport" ? [[p.sport, SPORT_LABEL[p.sport] || p.sport, ""]]
+      : by === "league" ? (p.leagues || [p.league]).map(l => [l, l, SPORT_LABEL[p.sport] || p.sport])
+      : (p.teams || []).map(t => [t[0] + "|" + t[1], t[1], t[0]]);
+    for (const [k, name, sub] of keys) {
+      const x = groups[k] ||= { name, sub, now: 0, before: 0, n: 0, days: 0 };
+      x.now += p.followers; x.before += p.followers - g.n; x.n += 1; x.days = Math.max(x.days, g.days);
+    }
+  }
+  const minAthletes = by === "team" ? 3 : 1;
+  const ranked = Object.values(groups).filter(x => x.n >= minAthletes && x.before > 0)
+    .map(x => ({ ...x, pct: 100 * (x.now - x.before) / x.before, gain: x.now - x.before }))
+    .sort((a, b) => b.pct - a.pct).slice(0, 5);
+  const days = Math.max(0, ...ranked.map(x => x.days));
+  const tabs = [["team", "Teams"], ["league", "Leagues"], ["sport", "Sports"]];
+  $("widget").innerHTML = `
+    <div class="widget-head">
+      <div><h2>Fastest growing ${days && days < 7 ? `(last ${days} day${days > 1 ? "s" : ""})` : "this week"}</h2>
+      <p class="hint">Combined Instagram growth of their athletes${by === "team" ? " (teams with 3+ athletes tracked)" : ""}</p></div>
+      <div class="seg" role="group" aria-label="Group by">${tabs.map(([k, l]) => `<button data-by="${k}" aria-pressed="${k === by}">${l}</button>`).join("")}</div>
+    </div>
+    ${ranked.length ? `<div class="wrows">${ranked.map((x, i) => `
+      <div class="wrow"><span class="n">${i + 1}</span>
+        <div><b>${esc(x.name)}</b><span>${x.sub ? esc(x.sub) + " · " : ""}${x.n} athlete${x.n > 1 ? "s" : ""}</span></div>
+        <span class="pct ${x.pct >= 0 ? "up" : "down"}">${signed(x.pct)}%<br><span>${exactSigned(x.gain)}</span></span>
+      </div>`).join("")}</div>`
+      : `<p class="hint">This fills in once there are two days of numbers.</p>`}`;
+  $("widget").querySelector(".seg").addEventListener("click", e => {
+    const b = e.target.closest("button"); if (b) renderWidget(b.dataset.by);
+  });
 }
 let resizeTimer;
 window.addEventListener("resize", () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(drawChart, 150); });
@@ -770,6 +1013,7 @@ fetch("data.json", { cache: "no-store" }).then(r => r.json()).then(d => {
   DATA = d;
   const asOf = d.players.map(p => p.as_of).filter(Boolean).sort().at(-1);
   $("siteName").textContent = SITE_NAME;
+  buildNav();
   if (asOf) $("updated").innerHTML = `<span class="live"></span>Updated ${niceDate(asOf, { day: "numeric", month: "short" })}`;
   route();
 }).catch(() => {

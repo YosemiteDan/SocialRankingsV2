@@ -100,6 +100,12 @@ Profile photos appear after the first successful run and are refreshed weekly. U
 
 Growth figures fill in over time: weekly after 7 days, monthly after 30, yearly after a year.
 
+## Home page and menu
+
+The home page shows the **Top 10 men**, **Top 10 women** and **Up & coming** (biggest growth this week among accounts under 100K followers; change `UP_AND_COMING_CAP` near the top of the script in `site/index.html`), plus **Fastest growing this week**, the top 5 teams, leagues or sports by their athletes' combined growth. Until there's a week of history, growth is measured since tracking began, and the page says how many days that covers.
+
+The top menu has **Athletes** (men / women) and **Sports** (each sport, then its men's and women's leagues), which open the full rankings with that filter applied. Each league is counted as men's or women's automatically (see `LEAGUE_GENDER` in `scripts/build_site_data.py`); add a `gender` column to `athletes.csv` (men / women) to override it for anyone.
+
 ## Videos on profiles
 
 Each profile features the athlete's latest reel as a large thumbnail that plays on the page when clicked (a small copy of the preview image is saved in `site/img/hl/`, refreshed only when they post a new one). Below that are their other recent reels and posts, fetched in the same daily lookup as their follower count, so it costs nothing extra. The posts are shown with Instagram's own embed and only load when a visitor scrolls to them. Athletes on personal accounts don't get this strip unless Apify is set up.

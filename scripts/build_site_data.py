@@ -22,6 +22,11 @@ DATA = ROOT / "data"
 SITE = ROOT / "site"
 
 PERIODS = {"7d": 7, "30d": 30, "365d": 365}
+
+# Men's or women's competition. An optional "gender" column in athletes.csv
+# (men / women) overrides this for any athlete.
+LEAGUE_GENDER = {"NBA": "men", "NBL": "men", "Socceroos": "men", "NFL": "men",
+                 "WNBA": "women", "WNBL": "women", "Matildas": "women"}
 SPARK_DAYS = 30
 
 
@@ -92,6 +97,7 @@ def main():
             "teams": [[m.get("league", ""), m["team"], m["position"]] for m in memberships],
             "leagues": [m.get("league", "") for m in memberships],
             "import": any(m.get("import") == "yes" for m in memberships),
+            "gender": (a.get("gender") or "").strip().lower() or LEAGUE_GENDER.get(a.get("league", "")),
             "id": slug(a["name"]),
             "instagram": handle or None,
             "verified": prof.get("is_verified"),
@@ -119,6 +125,20 @@ def main():
                     p[f"change_{key}_pct"] = round(100 * (followers - then) / then, 2)
                 else:
                     p[f"change_{key}"] = p[f"change_{key}_pct"] = None
+            # "This week" growth for the home page. Until there's a week of history,
+            # use growth since tracking began, and say how many days that covers.
+            week_ago = (last_day - timedelta(days=7)).isoformat()
+            base = None
+            for r in rows:
+                if r["date"] <= week_ago:
+                    base = r
+            base = base or rows[0]
+            base_followers = num(base["followers"])
+            win_days = (last_day - date.fromisoformat(base["date"])).days
+            if win_days > 0 and base_followers and followers is not None:
+                p["growth"] = followers - base_followers
+                p["growth_pct"] = round(100 * (followers - base_followers) / base_followers, 2)
+                p["growth_days"] = win_days
             cutoff = (last_day - timedelta(days=SPARK_DAYS)).isoformat()
             p["spark"] = [num(r["followers"]) for r in rows if r["date"] >= cutoff]
         summaries.append(p)
