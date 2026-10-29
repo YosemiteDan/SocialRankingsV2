@@ -127,6 +127,9 @@ def main():
             "full_name": prof.get("full_name"),
             "bio": prof.get("biography"),
             "recent": prof.get("recent") or [],     # latest Instagram posts (links only)
+            # Their latest reel, with a preview image saved on the site
+            "featured": prof.get("featured") if prof.get("featured") and
+                        (SITE / prof["featured"].get("thumb", "-")).exists() else None,
             "details": details.get(a["name"]),
             # [date, followers, posts, engagement rate]
             "history": [[r["date"], num(r["followers"]), num(r["posts"]),

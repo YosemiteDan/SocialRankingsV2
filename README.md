@@ -102,7 +102,7 @@ Growth figures fill in over time: weekly after 7 days, monthly after 30, yearly 
 
 ## Videos on profiles
 
-Each profile shows the athlete's latest Instagram reels and posts (reels first), fetched in the same daily lookup as their follower count, so it costs nothing extra. The posts are shown with Instagram's own embed and only load when a visitor scrolls to them. Athletes on personal accounts don't get this strip unless Apify is set up.
+Each profile features the athlete's latest reel as a large thumbnail that plays on the page when clicked (a small copy of the preview image is saved in `site/img/hl/`, refreshed only when they post a new one). Below that are their other recent reels and posts, fetched in the same daily lookup as their follower count, so it costs nothing extra. The posts are shown with Instagram's own embed and only load when a visitor scrolls to them. Athletes on personal accounts don't get this strip unless Apify is set up.
 
 Every profile also has a **Watch highlights** button, which opens a YouTube search for that player's highlights in their league.
 

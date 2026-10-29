@@ -200,20 +200,32 @@ RECENT_POSTS = 9   # latest posts fetched per athlete, for the video strip on th
 
 # Whether Meta lets us fetch recent posts in the same lookup. None = not known yet.
 # If asking for posts ever causes errors, the run carries on without them.
-MEDIA_STATE = {"ok": None}
+MEDIA_STATE = {"ok": None, "images": False}
+POST_FIELDS = "permalink,media_type,media_product_type,timestamp,caption"
+IMAGE_FIELDS = ",media_url,thumbnail_url"
+HL_DIR = IMG_DIR / "hl"           # featured highlight thumbnails
+HL_WIDTH = 540                    # small enough to keep the site (and repository) light
 
 
 def check_media_allowed(token, ig_id):
     """One test lookup on your own Instagram account: can we fetch recent posts?
     If not, the run still collects follower numbers, just without posts."""
     try:
-        me = graph_get(ig_id, token, fields="username")
-        graph_get(ig_id, token, fields=f"business_discovery.username({me['username']})"
-                                       "{media.limit(1){permalink}}")
-        MEDIA_STATE["ok"] = True
+        me = graph_get(ig_id, token, fields="username")["username"]
     except (NotVisible, RuntimeError, KeyError) as e:
         MEDIA_STATE["ok"] = False
         print(f"  Recent posts not available this run ({e}); collecting follower numbers only.")
+        return
+    for images in (True, False):
+        fields = POST_FIELDS + (IMAGE_FIELDS if images else "")
+        try:
+            graph_get(ig_id, token, fields=f"business_discovery.username({me}){{media.limit(1){{{fields}}}}}")
+            MEDIA_STATE.update(ok=True, images=images)
+            return
+        except (NotVisible, RuntimeError) as e:
+            last = e
+    MEDIA_STATE["ok"] = False
+    print(f"  Recent posts not available this run ({last}); collecting follower numbers only.")
 
 
 def recent_media(items):
@@ -224,14 +236,16 @@ def recent_media(items):
             continue
         kind = "reel" if (m.get("media_product_type") == "REELS" or m.get("media_type") == "VIDEO") \
             else "carousel" if m.get("media_type") == "CAROUSEL_ALBUM" else "photo"
-        out.append({"url": m["permalink"], "type": kind, "date": (m.get("timestamp") or "")[:10]})
+        out.append({"url": m["permalink"], "type": kind, "date": (m.get("timestamp") or "")[:10],
+                    "caption": (m.get("caption") or "").strip()[:160],
+                    "_img": m.get("thumbnail_url") or (m.get("media_url") if kind != "reel" else None)})
     return out
 
 
 def lookup_meta(handle, token, ig_id):
     fields = ("username,name,biography,followers_count,follows_count,"
               "media_count,profile_picture_url")
-    media = f",media.limit({RECENT_POSTS}){{permalink,media_type,media_product_type,timestamp}}"
+    media = f",media.limit({RECENT_POSTS}){{{POST_FIELDS}{IMAGE_FIELDS if MEDIA_STATE['images'] else ''}}}"
     body = graph_get(ig_id, token,
                      fields=f"business_discovery.username({handle}){{{fields}{media if MEDIA_STATE['ok'] else ''}}}")
     d = body["business_discovery"]
@@ -266,7 +280,9 @@ def lookup_apify(handles, token):
                              "recent": [{"url": p["url"],
                                          "type": "reel" if p.get("type") == "Video" else
                                                  "carousel" if p.get("type") == "Sidecar" else "photo",
-                                         "date": (p.get("timestamp") or "")[:10]}
+                                         "date": (p.get("timestamp") or "")[:10],
+                                         "caption": (p.get("caption") or "").strip()[:160],
+                                         "_img": p.get("displayUrl")}
                                         for p in (item.get("latestPosts") or [])[:RECENT_POSTS] if p.get("url")]},
             }
     return out
@@ -339,9 +355,23 @@ def save_profiles(results, today):
     for handle, r in results.items():
         info = r.get("_profile") or {}
         p = profiles.setdefault(handle, {})
-        for key in ("full_name", "biography", "is_verified", "recent"):
+        for key in ("full_name", "biography", "is_verified"):
             if info.get(key) is not None:
                 p[key] = info[key]
+        if info.get("recent") is not None:
+            recent = info["recent"]
+            p["recent"] = [{k: v for k, v in m.items() if not k.startswith("_")} for m in recent]
+            # Featured highlight: keep a small copy of its preview image on your site
+            # (Instagram's image links expire). Only re-downloaded when it changes.
+            feat = pick_featured(recent)
+            old = p.get("featured") or {}
+            if feat and feat.get("_img") and feat["url"] != old.get("url"):
+                thumb = HL_DIR / f"{handle}.jpg"
+                if save_thumbnail(feat["_img"], thumb):
+                    p["featured"] = {k: v for k, v in feat.items() if not k.startswith("_")}
+                    p["featured"]["thumb"] = f"img/hl/{handle}.jpg"
+            elif not feat:
+                p.pop("featured", None)
         img = IMG_DIR / f"{handle}.jpg"
         last = p.get("photo_updated", "")
         stale = not img.exists() or not last or \
@@ -355,6 +385,34 @@ def save_profiles(results, today):
             except requests.RequestException as e:
                 print(f"  photo for @{handle} not saved: {e}")
     PROFILES_FILE.write_text(json.dumps(profiles, indent=2, ensure_ascii=False))
+
+
+def save_thumbnail(url, path):
+    """Download a post's preview image and shrink it. Returns True if saved."""
+    try:
+        resp = requests.get(url, timeout=30, headers={"User-Agent": USER_AGENT})
+        if not (resp.ok and resp.headers.get("Content-Type", "").startswith("image/")):
+            return False
+        path.parent.mkdir(parents=True, exist_ok=True)
+        try:
+            from io import BytesIO
+            from PIL import Image
+            im = Image.open(BytesIO(resp.content)).convert("RGB")
+            if im.width > HL_WIDTH:
+                im = im.resize((HL_WIDTH, round(im.height * HL_WIDTH / im.width)))
+            im.save(path, "JPEG", quality=78, optimize=True, progressive=True)
+        except ImportError:
+            path.write_bytes(resp.content)
+        return True
+    except Exception as e:  # noqa: BLE001 - a missing thumbnail never stops the run
+        print(f"  thumbnail not saved: {e}")
+        return False
+
+
+def pick_featured(recent):
+    """Their latest reel, or their latest post if they have no reels."""
+    reels = [m for m in recent if m["type"] == "reel"]
+    return (reels or recent or [None])[0]
 
 
 def write_report(report):

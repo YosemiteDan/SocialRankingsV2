@@ -175,6 +175,22 @@
   .chart .lbl { font: 12px "Barlow", sans-serif; fill: var(--muted); }
   .tip { position: absolute; top: 0; pointer-events: none; background: var(--accent); color: #1A0B00; border-radius: 8px; padding: 6px 10px; font-size: 13px; white-space: nowrap; transform: translateX(-50%); display: none; font-weight: 600; }
   .tip b { font: italic 800 19px/1 var(--display); display: block; }
+  .feature-hl {
+    display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 24px; align-items: center;
+    background: linear-gradient(120deg, rgba(255,122,26,.16), rgba(176,124,255,.14)), var(--card);
+    border: 1px solid var(--line); border-radius: 18px; padding: 18px; margin-bottom: 16px;
+  }
+  .hl-thumb { position: relative; display: block; padding: 0; border: 0; cursor: pointer; border-radius: 14px; overflow: hidden; aspect-ratio: 4 / 5; background: var(--card-2); }
+  .hl-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .3s ease; }
+  .hl-thumb:hover img { transform: scale(1.03); }
+  .hl-thumb::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 55%, rgba(10,14,36,.55)); }
+  .hl-play { position: absolute; inset: 0; display: grid; place-items: center; z-index: 1; }
+  .hl-play svg { width: 72px; height: 72px; filter: drop-shadow(0 6px 18px rgba(0,0,0,.4)); color: #fff; }
+  .hl-embed .instagram-media { margin: 0 !important; min-width: 0 !important; width: 100% !important; border-radius: 14px !important; }
+  .hl-kicker { color: var(--accent); font-weight: 700; font-size: 14px; }
+  .hl-cap { font: italic 700 clamp(22px, 2.6vw, 30px)/1.15 var(--display); margin: 8px 0 0; max-width: 40ch; }
+  @media (max-width: 720px) { .feature-hl { grid-template-columns: 1fr; } .hl-thumb { max-height: 70vh; } }
+  @media (prefers-reduced-motion: reduce) { .hl-thumb img { transition: none; } }
   .strip { display: flex; gap: 14px; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 8px; margin: 0 -4px; }
   .strip::-webkit-scrollbar { height: 8px; } .strip::-webkit-scrollbar-thumb { background: var(--card-2); border-radius: 8px; }
   .post { flex: 0 0 328px; max-width: 86vw; scroll-snap-align: start; }
@@ -316,6 +332,7 @@ function imgFail(img) {
 }
 const TICK = `<svg class="tick" viewBox="0 0 24 24" aria-label="Verified"><circle cx="12" cy="12" r="11" fill="#3897F0"/><path d="M7 12.5l3.2 3L17 9" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 const SHARE = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V3M7 8l5-5 5 5M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"/></svg>`;
+const PLAY_ROUND = `<svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="31" fill="rgba(14,20,48,.55)" stroke="#fff" stroke-width="2.5"/><path d="M26 20v24l19-12z" fill="#fff"/></svg>`;
 const PLAY = `<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="4" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M10 9.2v5.6l4.8-2.8z" fill="currentColor"/></svg>`;
 const IG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>`;
 
@@ -507,6 +524,8 @@ async function showProfile(id) {
       </div>
     </section>
 
+    ${featuredCard(p)}
+
     <div class="tiles">
       <div class="tile hot"><b>${compact(p.followers)}</b><span>followers${rankText ? ` · ${rankText}` : " · unranked"}</span></div>
       ${delta(p.change_7d, p.change_7d_pct, "this week")}
@@ -555,19 +574,64 @@ async function showProfile(id) {
   });
   drawChart();
   loadVideosWhenVisible();
+  $("hlPlay")?.addEventListener("click", playFeatured);
+  $("hlPlay2")?.addEventListener("click", playFeatured);
   window.scrollTo(0, 0);
 }
 
 /* Latest Instagram posts, reels first. The embeds only load when the section
    scrolls into view, so profiles stay fast on phones. */
+function featuredCard(p) {
+  const f = p.featured;
+  if (!f || !f.thumb) return "";
+  return `<section class="feature-hl" id="featured" data-url="${esc(f.url)}">
+      <button class="hl-thumb" id="hlPlay" aria-label="Play ${esc(p.name)}'s latest ${f.type === "reel" ? "reel" : "post"}">
+        <img src="${esc(f.thumb)}" alt="" loading="lazy">
+        <span class="hl-play">${f.type === "reel" ? PLAY_ROUND : IG}</span>
+      </button>
+      <div class="hl-text">
+        <span class="hl-kicker">${f.type === "reel" ? "Latest highlight" : "Latest post"}${f.date ? " · " + niceDate(f.date) : ""}</span>
+        ${f.caption ? `<p class="hl-cap">${esc(f.caption)}${f.caption.length >= 160 ? "…" : ""}</p>` : ""}
+        <div class="actions">
+          <button class="btn primary" id="hlPlay2">${PLAY}${f.type === "reel" ? "Play here" : "View here"}</button>
+          <a class="btn" href="${esc(f.url)}" rel="noopener" target="_blank">${IG}Open in Instagram</a>
+        </div>
+      </div>
+    </section>`;
+}
+
+function playFeatured() {
+  const sec = $("featured");
+  if (!sec) return;
+  const thumb = sec.querySelector(".hl-thumb");
+  const holder = document.createElement("div");
+  holder.className = "hl-embed";
+  holder.innerHTML = `<blockquote class="instagram-media" data-instgrm-permalink="${esc(sec.dataset.url)}?utm_source=ig_embed" data-instgrm-version="14"><a class="post-ph" href="${esc(sec.dataset.url)}" rel="noopener" target="_blank">${IG}<span>View on Instagram</span></a></blockquote>`;
+  thumb.replaceWith(holder);
+  $("hlPlay2")?.remove();
+  loadInstagram();
+}
+
+function loadInstagram() {
+  if (window.instgrm) { window.instgrm.Embeds.process(); return; }
+  if (!igScript) {
+    igScript = document.createElement("script");
+    igScript.async = true;
+    igScript.src = "https://www.instagram.com/embed.js";
+    igScript.onload = () => window.instgrm && window.instgrm.Embeds.process();
+    document.body.appendChild(igScript);
+  }
+}
+
 function videoPanel(p) {
-  const recent = p.recent || [];
+  // The featured post is shown separately, so leave it out of the strip.
+  const recent = (p.recent || []).filter(m => !p.featured || m.url !== p.featured.url);
   if (!recent.length) return "";
   const reels = recent.filter(m => m.type === "reel");
   const picks = [...reels, ...recent.filter(m => m.type !== "reel")].slice(0, 6);
   return `<section class="panel" id="videos">
       <div class="chart-head">
-        <div><h2>${reels.length ? "Latest reels and posts" : "Latest posts"}</h2>
+        <div><h2>${reels.length ? "More reels and posts" : "More posts"}</h2>
         <p class="hint">From @${esc(p.instagram)} on Instagram.</p></div>
       </div>
       <div class="strip">${picks.map(m => `
@@ -588,13 +652,7 @@ function loadVideosWhenVisible() {
     sec.querySelectorAll(".post").forEach(el => {
       el.innerHTML = `<blockquote class="instagram-media" data-instgrm-permalink="${esc(el.dataset.url)}?utm_source=ig_embed" data-instgrm-version="14"><a class="post-ph" href="${esc(el.dataset.url)}" rel="noopener" target="_blank">${IG}<span>View on Instagram</span></a></blockquote>`;
     });
-    if (window.instgrm) { window.instgrm.Embeds.process(); return; }
-    if (!igScript) {
-      igScript = document.createElement("script");
-      igScript.async = true;
-      igScript.src = "https://www.instagram.com/embed.js";
-      document.body.appendChild(igScript);
-    }
+    loadInstagram();
   };
   if (!("IntersectionObserver" in window)) return go();
   const io = new IntersectionObserver(es => { if (es.some(e => e.isIntersecting)) { io.disconnect(); go(); } }, { rootMargin: "200px" });
