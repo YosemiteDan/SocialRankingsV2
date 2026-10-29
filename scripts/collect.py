@@ -291,14 +291,16 @@ def lookup_apify(handles, token):
 # ---------------------------------------------------------------- Wikidata
 
 def wikidata_handles(names):
-    """{athlete name: instagram handle} for basketball players found on Wikidata."""
+    """{athlete name: instagram handle} for athletes found on Wikidata.
+    To cover another sport, add its occupation (e.g. wd:Q12299841 for cricketers) to the list below."""
     if not names:
         return {}
     values = " ".join('"%s"@en' % n.replace('"', "") for n in names)
     query = f"""
       SELECT ?name ?ig WHERE {{
         VALUES ?name {{ {values} }}
-        ?p rdfs:label ?name ; wdt:P106 wd:Q3665646 ; wdt:P2003 ?ig .
+        VALUES ?job { wd:Q3665646 wd:Q937857 wd:Q19204627 }   # basketball, soccer, American football players
+        ?p rdfs:label ?name ; wdt:P106 ?job ; wdt:P2003 ?ig .
       }}"""
     try:
         r = requests.post("https://query.wikidata.org/sparql", data={"query": query},

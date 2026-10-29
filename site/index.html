@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Aussie Hoops Social</title>
+<title>Social Scoreboard</title>
 <meta name="description" content="Australian athletes ranked by Instagram followers, updated daily.">
 <meta name="theme-color" content="#0E1430">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Aussie Hoops Social">
+<meta property="og:title" content="Social Scoreboard">
 <meta property="og:description" content="Australian athletes ranked by Instagram. Updated daily.">
 <meta property="og:image" content="og.png">
 <meta name="twitter:card" content="summary_large_image">
@@ -78,6 +78,9 @@
   .tabs button:hover { color: var(--text); }
   .tabs button[aria-selected="true"] { background: var(--accent); border-color: var(--accent); color: #1A0B00; }
   .tabs.leagues { margin-bottom: 0; }
+  .tabs.sports { margin-bottom: 0; }
+  .tabs.sports button { font: italic 800 19px/1 var(--display); letter-spacing: .01em; border-radius: 10px; padding: 12px 16px; }
+  .tabs.sports button[aria-selected="true"] { background: linear-gradient(120deg, var(--accent), var(--accent-2)); border-color: transparent; color: #fff; }
   .tabs.leagues button[aria-selected="true"] { background: var(--text); border-color: var(--text); color: var(--bg); }
 
   /* ---------- player cards ---------- */
@@ -262,7 +265,7 @@
 <body>
 <div class="bar">
   <div class="wrap">
-    <a class="logo" href="#/"><i aria-hidden="true"></i><span id="siteName">Aussie Hoops Social</span></a>
+    <a class="logo" href="#/"><i aria-hidden="true"></i><span id="siteName">Social Scoreboard</span></a>
     <span class="updated" id="updated"></span>
   </div>
 </div>
@@ -276,7 +279,7 @@
 <script>
 /* ---------------------------------------------------------------- setup */
 // Change the site's name here (also update the <title> and og:title tags at the top).
-const SITE_NAME = "Aussie Hoops Social";
+const SITE_NAME = "Social Scoreboard";
 // Phase 1 tracks followers only. Switch this to true when engagement
 // (likes, comments, posts) is being collected, to show those features.
 const SHOW_ENGAGEMENT = false;
@@ -290,7 +293,17 @@ const VIEWS = {
 if (!SHOW_ENGAGEMENT) delete VIEWS.engagement;
 const RANGES = { "30D": 30, "90D": 90, "1Y": 365, "All": Infinity };
 const PAGE_SIZE = 24;
-let DATA = null, league = "All", aussiesOnly = false, query = "", shown = PAGE_SIZE, view = "followers", range = "90D", current = null;
+// Order and wording for each sport. Add an entry here when adding a new sport.
+const SPORT_ORDER = ["Basketball", "Soccer", "American football"];
+const SPORT_LABEL = { "American football": "NFL" };
+const LEAGUE_ORDER = ["NBA", "WNBA", "NBL", "WNBL", "Matildas", "Socceroos", "NFL"];
+const SPORT_COPY = {
+  All: { headline: "Australia’s athletes", lede: "Followers and growth for Australian athletes and the players in our leagues, across basketball, soccer and the NFL", count: "athletes tracked" },
+  Basketball: { headline: "Australian basketball", lede: "Followers and growth for every Aussie in the NBA and WNBA, and every player in the NBL and WNBL", count: "players tracked" },
+  Soccer: { headline: "The Matildas & Socceroos", lede: "Followers and growth for every player in the latest Matildas and Socceroos squads", count: "national team players" },
+  "American football": { headline: "Every Aussie in the NFL", lede: "Followers and growth for the Australians on NFL rosters", count: "Aussies in the NFL" },
+};
+let DATA = null, sport = "All", league = "All", aussiesOnly = false, query = "", shown = PAGE_SIZE, view = "followers", range = "90D", current = null;
 const $ = id => document.getElementById(id);
 
 function compact(n) {
@@ -316,7 +329,11 @@ function leagueRank(p, lg) {
   const i = r.findIndex(x => x.id === p.id);
   return { rank: i >= 0 ? i + 1 : null, of: r.length, list: r };
 }
-function shortTeam(t) { const w = t.split(" "); return w.at(-2) === "Trail" ? "Trail Blazers" : w.at(-1); }
+function shortTeam(t, sport) {
+  // "Chicago Bulls" -> "Bulls" for US-style team names; club names (soccer) stay whole.
+  if (sport === "Soccer") return t;
+  const w = t.split(" "); return w.at(-2) === "Trail" ? "Trail Blazers" : w.at(-1);
+}
 function nameLines(n) { const i = n.indexOf(" "); return i < 0 ? esc(n) : esc(n.slice(0, i)) + "<br>" + esc(n.slice(i + 1)); }
 
 function photo(p) {
@@ -358,34 +375,39 @@ async function share(title, text) {
 function showRankings() {
   current = null;
   document.title = SITE_NAME;
-  const order = ["NBA", "WNBA", "NBL", "WNBL"];
-  const leagues = [...new Set(DATA.players.flatMap(p => p.leagues || [p.league]).filter(Boolean))]
-    .sort((a, b) => ((order.indexOf(a) + 1) || 99) - ((order.indexOf(b) + 1) || 99) || a.localeCompare(b));
+  const sports = [...new Set(DATA.players.map(p => p.sport).filter(Boolean))]
+    .sort((a, b) => ((SPORT_ORDER.indexOf(a) + 1) || 99) - ((SPORT_ORDER.indexOf(b) + 1) || 99));
+  if (!sports.includes(sport)) sport = "All";
+  const inSport = DATA.players.filter(p => sport === "All" || p.sport === sport);
+  const leagues = [...new Set(inSport.flatMap(p => p.leagues || [p.league]).filter(Boolean))]
+    .sort((a, b) => ((LEAGUE_ORDER.indexOf(a) + 1) || 99) - ((LEAGUE_ORDER.indexOf(b) + 1) || 99) || a.localeCompare(b));
   if (!leagues.includes(league)) league = "All";
-  const sports = [...new Set(DATA.players.map(p => p.sport).filter(Boolean))];
-  const hasImports = DATA.players.some(p => p.import);
-  // Headline: "Every Aussie in the NBA & WNBA" for a couple of leagues,
-  // "Australian basketball" for one sport, "Australia's athletes" for several.
-  const scope = sports.length === 1 && leagues.length <= 2 && !hasImports ? leagues.join(" & ") : null;
-  const sportName = sports.length === 1 ? sports[0].toLowerCase() : null;
-  const headline = scope ? `Every Aussie in the ${esc(scope)}` : sportName ? `Australian ${esc(sportName)}` : "Australia's athletes";
+  const hasImports = inSport.some(p => p.import);
   const leagueList = leagues.length > 1 ? leagues.slice(0, -1).join(", ") + " & " + leagues.at(-1) : leagues[0] || "";
-  const ranked = DATA.players.filter(p => p.followers != null);
+  const copy = SPORT_COPY[sport] || {
+    headline: `Australian ${esc(sport.toLowerCase())}`,
+    lede: `Followers and growth for every player in the ${esc(leagueList)}`,
+    count: "players tracked",
+  };
+  const ranked = inSport.filter(p => p.followers != null);
   const total = ranked.reduce((s, p) => s + p.followers, 0);
   const weekGain = ranked.reduce((s, p) => s + (p.change_7d || 0), 0);
   $("main").innerHTML = `
     <section class="hero">
-      <h1>${headline}, ranked by <em>Instagram</em></h1>
-      <p class="lede">Who's winning the feed. Followers and growth for ${scope ? `Australia's ${esc(scope)} players` : `every player in the ${esc(leagueList)}`}${SHOW_ENGAGEMENT ? ", plus engagement" : ""}, refreshed each morning.</p>
+      <h1>${copy.headline}, ranked by <em>Instagram</em></h1>
+      <p class="lede">Who's winning the feed. ${copy.lede}${SHOW_ENGAGEMENT ? ", plus engagement" : ""}, refreshed each morning.</p>
       <div class="totals">
-        <div><b>${DATA.players.length}</b><span>${scope ? `Aussies in the ${esc(scope)}` : "players tracked"}</span></div>
+        <div><b>${inSport.length}</b><span>${copy.count}</span></div>
         <div><b>${compact(total)}</b><span>combined followers</span></div>
         ${weekGain ? `<div><b class="${weekGain >= 0 ? "up" : "down"}">${weekGain >= 0 ? "+" : "−"}${compact(Math.abs(weekGain))}</b><span>followers this week</span></div>` : ""}
       </div>
     </section>
     ${DATA.sample_data ? `<div class="notice">Preview mode: these are made-up sample numbers. Real numbers and photos replace them after the first daily collection.</div>` : ""}
-    ${leagues.length > 1 ? `<div class="tabs leagues" role="tablist" aria-label="League">
-      ${["All", ...leagues].map(l => `<button role="tab" data-league="${esc(l)}" aria-selected="${l === league}">${l === "All" ? (sports.length > 1 ? "All sports" : "All leagues") : esc(l)}</button>`).join("")}
+    ${sports.length > 1 ? `<div class="tabs sports" role="tablist" aria-label="Sport">
+      ${["All", ...sports].map(x => `<button role="tab" data-sport="${esc(x)}" aria-selected="${x === sport}">${x === "All" ? "All sports" : esc(SPORT_LABEL[x] || x)}</button>`).join("")}
+    </div>` : ""}
+    ${leagues.length > 1 && (sport !== "All" || sports.length === 1) ? `<div class="tabs leagues" role="tablist" aria-label="League">
+      ${["All", ...leagues].map(l => `<button role="tab" data-league="${esc(l)}" aria-selected="${l === league}">${l === "All" ? (sport === "All" ? "All leagues" : `All ${esc((SPORT_LABEL[sport] || sport).toLowerCase())}`) : esc(l)}</button>`).join("")}
     </div>` : ""}
     <div class="tabs views" role="tablist" aria-label="Ranking">
       ${Object.entries(VIEWS).map(([k, v]) => `<button role="tab" data-view="${k}" aria-selected="${k === view}">${v.tab}</button>`).join("")}
@@ -397,6 +419,11 @@ function showRankings() {
     <div id="grid"></div>`;
   $("main").querySelectorAll(".tabs").forEach(bar => bar.addEventListener("click", e => {
     const b = e.target.closest("button"); if (!b) return;
+    if (b.dataset.sport) {            // a new sport changes the headline and leagues too
+      sport = b.dataset.sport; league = "All"; shown = PAGE_SIZE;
+      showRankings();
+      return;
+    }
     if (b.dataset.view) view = b.dataset.view; else league = b.dataset.league;
     bar.querySelectorAll("button").forEach(x => x.setAttribute("aria-selected", String(x === b)));
     shown = PAGE_SIZE;
@@ -410,7 +437,8 @@ function showRankings() {
 function renderGrid() {
   const v = VIEWS[view];
   const q = query.trim().toLowerCase();
-  const pool = DATA.players.filter(p => (league === "All" || inLeague(p, league)) && !(aussiesOnly && p.import));
+  const pool = DATA.players.filter(p => (sport === "All" || p.sport === sport) &&
+    (league === "All" || inLeague(p, league)) && !(aussiesOnly && p.import));
   // Rank first, then search, so a search shows each player's real rank.
   const ranked = pool.filter(p => p[v.key] != null).sort((a, b) => b[v.key] - a[v.key]);
   ranked.forEach((p, i) => p._rank = i + 1);
@@ -442,7 +470,7 @@ function renderGrid() {
         <span class="rank" aria-label="Rank ${rank}">${rank}</span>
         <div class="shot-foot">
           <span class="name">${nameLines(p.name)}${p.verified ? TICK : ""}</span>
-          <span class="team">${esc(shortTeam(t.team))} · ${esc(t.league)}</span>
+          <span class="team">${esc(shortTeam(t.team, p.sport))} · ${esc(t.league)}</span>
         </div>
       </div>`;
     if (i === 0 && rank === 1) {

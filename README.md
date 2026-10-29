@@ -1,8 +1,8 @@
-# Aussie Hoops Social
+# Social Scoreboard
 
-A website that ranks Australian athletes by Instagram followers, with growth over 7 days, 30 days and a year, and a profile page for each athlete. GitHub collects the numbers every morning and republishes the site for free.
+A website (working title: Social Scoreboard) that ranks Australian athletes by Instagram followers, with growth over 7 days, 30 days and a year, and a profile page for each athlete. GitHub collects the numbers every morning and republishes the site for free.
 
-**Phase 1:** basketball, followers only. Every Australian in the NBA and WNBA, plus every player in the NBL and WNBL (imports included and labelled). Engagement (likes, comments, posts) comes in a later phase.
+**Phase 1:** followers only, across three sports. Basketball: every Australian in the NBA and WNBA, plus every player in the NBL and WNBL (imports included and labelled). Soccer: the latest Matildas and Socceroos squads. NFL: the Australians on NFL rosters. Engagement (likes, comments, posts) comes in a later phase.
 
 ## What's in this folder
 
@@ -115,6 +115,14 @@ Meta's API only sees Creator and Business accounts. For athletes on personal acc
 When you're ready to show likes, comments and posts, change `const SHOW_ENGAGEMENT = false;` to `true` near the top of the script in `site/index.html`. The collector will also need updating to fetch recent posts, which Meta's API supports.
 
 ## Adding athletes, leagues or sports
+
+The site has a sport switch (All sports / Basketball / Soccer / NFL), with league buttons under each sport. To add a new sport:
+1. Add its athletes to `data/athletes.csv` (the `sport` column decides which switch they appear under).
+2. In `site/index.html`, add the sport to `SPORT_ORDER` and give it a headline in `SPORT_COPY` (both near the top of the script).
+3. So Wikidata can find handles, add the sport's occupation to the list in `wikidata_handles` in `scripts/collect.py` (e.g. `wd:Q12299841` for cricketers).
+
+The Matildas and Socceroos lists are the October 2026 squads; update them as new squads are announced.
+
 
 Each row in `data/athletes.csv` is one athlete in one league:
 
