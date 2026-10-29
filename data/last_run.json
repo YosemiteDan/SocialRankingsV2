@@ -1,10 +1,34 @@
 {
-  "ran_at": "2026-10-29T05:53:22+00:00",
+  "ran_at": "2026-10-29T06:20:13+00:00",
   "method": "meta",
   "succeeded": [],
-  "failed": {},
+  "failed": {
+    "Josh Giddey": "Meta error 10: (#10) Application does not have permission for this action",
+    "Dyson Daniels": "Meta error 10: (#10) Application does not have permission for this action",
+    "Jock Landale": "Meta error 10: (#10) Application does not have permission for this action",
+    "Tyrese Proctor": "Meta error 10: (#10) Application does not have permission for this action",
+    "Kyrie Irving": "Meta error 10: (#10) Application does not have permission for this action",
+    "Alex Toohey": "Meta error 10: (#10) Application does not have permission for this action",
+    "Johnny Furphy": "Meta error 10: (#10) Application does not have permission for this action",
+    "Matisse Thybulle": "Meta error 10: (#10) Application does not have permission for this action",
+    "Rocco Zikarsky": "Meta error 10: (#10) Application does not have permission for this action",
+    "Duop Reath": "Meta error 10: (#10) Application does not have permission for this action",
+    "Ben Simmons": "Meta error 10: (#10) Application does not have permission for this action",
+    "Josh Green": "Meta error 10: (#10) Application does not have permission for this action",
+    "Alanna Smith": "Meta error 10: (#10) Application does not have permission for this action",
+    "Ezi Magbegor": "Meta error 10: (#10) Application does not have permission for this action",
+    "Jade Melbourne": "Meta error 10: (#10) Application does not have permission for this action",
+    "Georgia Amoore": "Meta error 10: (#10) Application does not have permission for this action",
+    "Isobel Borlase": "Meta error 10: (#10) Application does not have permission for this action",
+    "Nyadiew Puoch": "Meta error 10: (#10) Application does not have permission for this action",
+    "Rebecca Allen": "Meta error 10: (#10) Application does not have permission for this action",
+    "Sami Whitcomb": "Meta error 10: (#10) Application does not have permission for this action",
+    "Stephanie Talbot": "Meta error 10: (#10) Application does not have permission for this action",
+    "Chloe Bibby": "Meta error 10: (#10) Application does not have permission for this action",
+    "Anneli Maley": "Meta error 10: (#10) Application does not have permission for this action",
+    "Miela Sowah": "Meta error 10: (#10) Application does not have permission for this action"
+  },
   "handle_changes": {},
-  "warnings": [
-    "Couldn't find your Facebook Page with this token ((#100) Tried accessing nonexisting field (accounts)). Make sure the token is the Page's access_token from README step 5, or that it has the pages_show_list permission."
-  ]
+  "warnings": [],
+  "token_expires": "never"
 }
