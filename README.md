@@ -100,6 +100,12 @@ Profile photos appear after the first successful run and are refreshed weekly. U
 
 Growth figures fill in over time: weekly after 7 days, monthly after 30, yearly after a year.
 
+## Videos on profiles
+
+Each profile shows the athlete's latest Instagram reels and posts (reels first), fetched in the same daily lookup as their follower count, so it costs nothing extra. The posts are shown with Instagram's own embed and only load when a visitor scrolls to them. Athletes on personal accounts don't get this strip unless Apify is set up.
+
+Every profile also has a **Watch highlights** button, which opens a YouTube search for that player's highlights in their league.
+
 ## Optional: Apify for personal accounts
 
 Meta's API only sees Creator and Business accounts. For athletes on personal accounts, sign up at apify.com, copy your API token, and add it as a repository secret named `APIFY_TOKEN`. The script then uses Apify for just those athletes. Check Apify's pricing first; a handful of profiles a day costs very little.

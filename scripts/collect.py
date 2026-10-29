@@ -196,16 +196,52 @@ def token_expiry(token):
         return None
 
 
+RECENT_POSTS = 9   # latest posts fetched per athlete, for the video strip on their profile
+
+# Whether Meta lets us fetch recent posts in the same lookup. None = not known yet.
+# If asking for posts ever causes errors, the run carries on without them.
+MEDIA_STATE = {"ok": None}
+
+
+def check_media_allowed(token, ig_id):
+    """One test lookup on your own Instagram account: can we fetch recent posts?
+    If not, the run still collects follower numbers, just without posts."""
+    try:
+        me = graph_get(ig_id, token, fields="username")
+        graph_get(ig_id, token, fields=f"business_discovery.username({me['username']})"
+                                       "{media.limit(1){permalink}}")
+        MEDIA_STATE["ok"] = True
+    except (NotVisible, RuntimeError, KeyError) as e:
+        MEDIA_STATE["ok"] = False
+        print(f"  Recent posts not available this run ({e}); collecting follower numbers only.")
+
+
+def recent_media(items):
+    """Keep only what the site needs: link, type and date of each recent post."""
+    out = []
+    for m in items or []:
+        if not m.get("permalink"):
+            continue
+        kind = "reel" if (m.get("media_product_type") == "REELS" or m.get("media_type") == "VIDEO") \
+            else "carousel" if m.get("media_type") == "CAROUSEL_ALBUM" else "photo"
+        out.append({"url": m["permalink"], "type": kind, "date": (m.get("timestamp") or "")[:10]})
+    return out
+
+
 def lookup_meta(handle, token, ig_id):
     fields = ("username,name,biography,followers_count,follows_count,"
               "media_count,profile_picture_url")
-    body = graph_get(ig_id, token, fields=f"business_discovery.username({handle}){{{fields}}}")
+    media = f",media.limit({RECENT_POSTS}){{permalink,media_type,media_product_type,timestamp}}"
+    body = graph_get(ig_id, token,
+                     fields=f"business_discovery.username({handle}){{{fields}{media if MEDIA_STATE['ok'] else ''}}}")
     d = body["business_discovery"]
     return {
         "followers": d.get("followers_count"), "following": d.get("follows_count"),
         "posts": d.get("media_count"), "source": "meta",
         "_profile": {"username": d.get("username"), "full_name": d.get("name"),
-                     "biography": d.get("biography"), "pic_url": d.get("profile_picture_url")},
+                     "biography": d.get("biography"), "pic_url": d.get("profile_picture_url"),
+                     "recent": recent_media((d.get("media") or {}).get("data"))
+                               if MEDIA_STATE["ok"] else None},
     }
 
 
@@ -226,7 +262,12 @@ def lookup_apify(handles, token):
                 "posts": item.get("postsCount"), "source": "apify",
                 "_profile": {"username": h, "full_name": item.get("fullName"),
                              "biography": item.get("biography"), "is_verified": item.get("verified"),
-                             "pic_url": item.get("profilePicUrlHD") or item.get("profilePicUrl")},
+                             "pic_url": item.get("profilePicUrlHD") or item.get("profilePicUrl"),
+                             "recent": [{"url": p["url"],
+                                         "type": "reel" if p.get("type") == "Video" else
+                                                 "carousel" if p.get("type") == "Sidecar" else "photo",
+                                         "date": (p.get("timestamp") or "")[:10]}
+                                        for p in (item.get("latestPosts") or [])[:RECENT_POSTS] if p.get("url")]},
             }
     return out
 
@@ -298,7 +339,7 @@ def save_profiles(results, today):
     for handle, r in results.items():
         info = r.get("_profile") or {}
         p = profiles.setdefault(handle, {})
-        for key in ("full_name", "biography", "is_verified"):
+        for key in ("full_name", "biography", "is_verified", "recent"):
             if info.get(key) is not None:
                 p[key] = info[key]
         img = IMG_DIR / f"{handle}.jpg"
@@ -361,6 +402,7 @@ def run(now, report):
 
     try:
         ig_id = find_ig_account(token)
+        check_media_allowed(token, ig_id)
         expires = token_expiry(token)
         if expires:
             days = (expires - now).days

@@ -126,6 +126,7 @@ def main():
             **{k: v for k, v in p.items() if k != "spark"},
             "full_name": prof.get("full_name"),
             "bio": prof.get("biography"),
+            "recent": prof.get("recent") or [],     # latest Instagram posts (links only)
             "details": details.get(a["name"]),
             # [date, followers, posts, engagement rate]
             "history": [[r["date"], num(r["followers"]), num(r["posts"]),
