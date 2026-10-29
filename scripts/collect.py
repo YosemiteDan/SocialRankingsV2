@@ -290,16 +290,20 @@ def lookup_apify(handles, token):
 
 # ---------------------------------------------------------------- Wikidata
 
+# Wikidata occupations searched for handles: basketball, soccer and American football players.
+# To cover another sport, add its occupation here (e.g. "wd:Q12299841" for cricketers).
+WIKIDATA_JOBS = ["wd:Q3665646", "wd:Q937857", "wd:Q19204627"]
+
+
 def wikidata_handles(names):
-    """{athlete name: instagram handle} for athletes found on Wikidata.
-    To cover another sport, add its occupation (e.g. wd:Q12299841 for cricketers) to the list below."""
+    """{athlete name: instagram handle} for athletes found on Wikidata."""
     if not names:
         return {}
     values = " ".join('"%s"@en' % n.replace('"', "") for n in names)
     query = f"""
       SELECT ?name ?ig WHERE {{
         VALUES ?name {{ {values} }}
-        VALUES ?job { wd:Q3665646 wd:Q937857 wd:Q19204627 }   # basketball, soccer, American football players
+        VALUES ?job {{ {" ".join(WIKIDATA_JOBS)} }}
         ?p rdfs:label ?name ; wdt:P106 ?job ; wdt:P2003 ?ig .
       }}"""
     try:
