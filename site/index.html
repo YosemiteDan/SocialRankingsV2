@@ -161,7 +161,7 @@
 
   .tiles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-bottom: 16px; }
   .tile { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 18px; }
-  .tile b { display: block; font: italic 800 40px/1 var(--display); }
+  .tile b { display: block; font: italic 800 clamp(26px, 3.4vw, 40px)/1 var(--display); white-space: nowrap; }
   .tile span { color: var(--muted); font-size: 14px; }
   .tile.hot { background: var(--accent); color: #1A0B00; border-color: var(--accent); }
   .tile.hot span { color: #5C2A00; }
@@ -256,7 +256,7 @@
     .totals b { font-size: 36px; }
     .eng, .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .facts b { font-size: 24px; }
-    .tile b { font-size: 34px; }
+    .tile b { font-size: clamp(22px, 7vw, 30px); }
     .pager span b { font-size: 18px; }
   }
   @media (prefers-reduced-motion: reduce) { .card, .toast { transition: none; } .card:hover { transform: none; } }
@@ -286,8 +286,8 @@ const SHOW_ENGAGEMENT = false;
 
 const VIEWS = {
   followers:  { key: "followers",       tab: "Most followed",       label: "followers",  fmt: v => compact(v) },
-  growth7:    { key: "change_7d_pct",   tab: "Hot this week",       label: "this week",  fmt: v => signed(v) + "%", change: true },
-  growth30:   { key: "change_30d_pct",  tab: "Hot this month",      label: "this month", fmt: v => signed(v) + "%", change: true },
+  growth7:    { abs: "change_7d", key: "change_7d_pct",   tab: "Hot this week",       label: "this week",  fmt: v => signed(v) + "%", change: true },
+  growth30:   { abs: "change_30d", key: "change_30d_pct",  tab: "Hot this month",      label: "this month", fmt: v => signed(v) + "%", change: true },
   engagement: { key: "engagement_rate", tab: "Best engagement",     label: "engagement", fmt: v => v.toFixed(2) + "%" },
 };
 if (!SHOW_ENGAGEMENT) delete VIEWS.engagement;
@@ -312,6 +312,8 @@ function compact(n) {
   if (n >= 1e3) return (n / 1e3).toFixed(n >= 1e5 ? 0 : 1).replace(/\.0$/, "") + "K";
   return String(n);
 }
+function exact(n) { return Number(n).toLocaleString("en-AU"); }
+function exactSigned(n) { return (n >= 0 ? "+" : "−") + exact(Math.abs(n)); }
 function signed(n) { return (n > 0 ? "+" : "") + (Math.abs(n) < 10 ? n.toFixed(2) : n.toFixed(1)); }
 function esc(s) { return String(s ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c])); }
 function ordinal(n) { const s = ["th","st","nd","rd"], v = n % 100; return n + (s[(v - 20) % 10] || s[v] || s[0]); }
@@ -474,14 +476,14 @@ function renderGrid() {
         </div>
       </div>`;
     if (i === 0 && rank === 1) {
-      const ch = (n, pct) => n == null ? "–" : `<span class="${n >= 0 ? "up" : "down"}">${n >= 0 ? "+" : "−"}${compact(Math.abs(n))}</span>`;
+      const ch = (n, pct) => n == null ? "–" : `<span class="${n >= 0 ? "up" : "down"}">${exactSigned(n)}</span>`;
       return `
         <a class="card feature podium" href="${href}">
           ${shot}
           <div class="side">
             <span class="lead">No. 1 · ${esc(v.tab)}</span>
             <span class="big ${v.change ? (p[v.key] >= 0 ? "up" : "down") : ""}">${v.fmt(p[v.key])}</span>
-            <span style="color:var(--muted)">${v.label}</span>
+            <span style="color:var(--muted)">${v.change && p[v.abs] != null ? `${exactSigned(p[v.abs])} followers ${v.label}` : v.label}</span>
             <div class="rows">
               <div>Followers <b>${compact(p.followers)}</b></div>
               <div>This week <b>${ch(p.change_7d)}</b></div>
@@ -496,7 +498,7 @@ function renderGrid() {
     return `
       <a class="card${rank <= 3 ? " podium" : ""}" href="${href}">
         ${shot}
-        <div class="meta"><div>${val(p)}<small>${v.label}</small></div>${chip(p)}</div>
+        <div class="meta"><div>${val(p)}<small>${v.change && p[v.abs] != null ? `${exactSigned(p[v.abs])} followers ${v.label}` : v.label}</small></div>${chip(p)}</div>
         <svg class="spark" viewBox="0 0 200 40" preserveAspectRatio="none" aria-hidden="true">${sparkline(p.spark || [], 200, 40)}</svg>
       </a>`;
   }).join("")}</div>
@@ -531,7 +533,8 @@ async function showProfile(id) {
     return r.rank ? `${ordinal(r.rank)} of ${r.of} in the ${esc(l)}` : null;
   }).filter(Boolean).join(" · ");
   const prev = idx > 0 ? ranked[idx - 1] : null, next = idx >= 0 ? ranked[idx + 1] : null;
-  const delta = (n, pct, label) => `<div class="tile"><b class="${n == null ? "" : n >= 0 ? "up" : "down"}">${n == null ? "–" : (n >= 0 ? "+" : "−") + compact(Math.abs(n))}</b><span>${label}${pct != null ? ` · ${signed(pct)}%` : ""}</span></div>`;
+  // Exact numbers on profiles: "+3,912", not "+3.9K".
+  const delta = (n, pct, label) => `<div class="tile"><b class="${n == null ? "" : n >= 0 ? "up" : "down"}">${n == null ? "–" : exactSigned(n)}</b><span>${label}${pct != null ? ` · ${signed(pct)}%` : ""}</span></div>`;
   const mini = q => `<span class="mini">${photo(q)}</span>`;
 
   $("main").innerHTML = `
@@ -555,7 +558,7 @@ async function showProfile(id) {
     ${featuredCard(p)}
 
     <div class="tiles">
-      <div class="tile hot"><b>${compact(p.followers)}</b><span>followers${rankText ? ` · ${rankText}` : " · unranked"}</span></div>
+      <div class="tile hot"><b>${p.followers != null ? exact(p.followers) : "–"}</b><span>followers${rankText ? ` · ${rankText}` : " · unranked"}</span></div>
       ${delta(p.change_7d, p.change_7d_pct, "this week")}
       ${delta(p.change_30d, p.change_30d_pct, "this month")}
       ${delta(p.change_365d, p.change_365d_pct, "this year")}
@@ -716,7 +719,7 @@ function drawChart() {
   box.querySelector("svg")?.remove();
   if (pts.length < 2) { $("chartHint").textContent = "The chart fills in as daily numbers are collected."; return; }
   const change = pts.at(-1)[1] - pts[0][1];
-  $("chartHint").innerHTML = `<span class="${change >= 0 ? "up" : "down"}">${change >= 0 ? "+" : "−"}${compact(Math.abs(change))}</span> since ${niceDate(pts[0][0], { day: "numeric", month: "short", year: "numeric" })}`;
+  $("chartHint").innerHTML = `<span class="${change >= 0 ? "up" : "down"}">${exactSigned(change)}</span> since ${niceDate(pts[0][0], { day: "numeric", month: "short", year: "numeric" })}`;
 
   const W = box.clientWidth, H = box.clientHeight, L = 50, R = 6, T = 12, B = 26;
   const vals = pts.map(p => p[1]);
