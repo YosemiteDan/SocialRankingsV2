@@ -1,24 +1,32 @@
 """
-Daily collector: looks up each athlete's public Instagram profile and saves
-today's numbers to data/history.csv.
+Daily collector: looks up each athlete's Instagram account and saves today's
+numbers to data/history.csv, plus their name, bio and photo.
 
 You normally don't run this yourself - GitHub runs it every morning.
 
-Where the numbers come from (picked automatically):
-  1. Apify  - used if an APIFY_TOKEN secret is set. Paid, but reliable.
-  2. Instagram directly - the default. Free, but Instagram may block it.
+Where the numbers come from:
+  1. Meta's official Business Discovery API - the main source. Free and
+     permitted. Needs the META_ACCESS_TOKEN secret (see README). Works for
+     Creator and Business accounts, which most pro athletes use.
+  2. Apify - optional backup for athletes on personal accounts, which Meta's
+     API can't see. Used only if an APIFY_TOKEN secret is set.
 
-Optional: an IG_SESSIONID secret makes the direct method look like a
-logged-in visitor, which gets blocked less often (see README for the risks).
+Safety checks:
+  - The name on the Instagram account must match the athlete, so a wrong
+    handle can't put someone else's numbers on the site. If you've checked
+    a handle yourself, set handle_checked to "yes" in data/athletes.csv to
+    skip this check.
+  - Blank or failing handles are looked up on Wikidata (the free database
+    behind Wikipedia) and filled in automatically for the next run.
 """
 
 import csv
 import json
 import os
-import random
 import re
 import sys
 import time
+import unicodedata
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -28,222 +36,357 @@ ROOT = Path(__file__).resolve().parent.parent
 ATHLETES_FILE = ROOT / "data" / "athletes.csv"
 HISTORY_FILE = ROOT / "data" / "history.csv"
 LAST_RUN_FILE = ROOT / "data" / "last_run.json"
+PROFILES_FILE = ROOT / "data" / "profiles.json"
+IMG_DIR = ROOT / "site" / "img"
+PHOTO_REFRESH_DAYS = 7
+
+GRAPH = "https://graph.facebook.com/v25.0"
+SECONDS_BETWEEN_LOOKUPS = 2   # stays well inside Meta's hourly limits
 
 HISTORY_COLUMNS = [
     "date", "instagram", "followers", "following", "posts",
     "avg_likes", "avg_comments", "engagement_rate", "posts_last_30d", "source",
 ]
-
-# Pause between profiles, in seconds. Slow on purpose: fast = blocked.
-MIN_WAIT, MAX_WAIT = 8, 20
-
-BROWSER_HEADERS = {
-    "User-Agent": (
-        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
-        "(KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36"
-    ),
-    "Accept-Language": "en-AU,en;q=0.9",
-    # The ID Instagram's own website sends with this request.
-    "X-IG-App-ID": "936619743392459",
-}
+USER_AGENT = "AussieHoopsSocial/1.0 (github.com; daily follower rankings)"
 
 
-class Blocked(Exception):
-    """Instagram has started refusing requests - stop for today."""
+class TokenProblem(Exception):
+    """The Meta access token is missing, wrong or expired - nothing will work."""
+
+
+class RateLimited(Exception):
+    """Meta says we've made too many requests - stop for today."""
+
+
+class NotVisible(Exception):
+    """Meta can't see this account: wrong handle, or a personal account."""
 
 
 # ---------------------------------------------------------------- helpers
 
-def parse_count(text):
-    """Turn '1.2M', '15,300' or '987K' into a whole number."""
-    text = text.strip().replace(",", "")
-    mult = 1
-    if text[-1:].upper() in ("K", "M", "B"):
-        mult = {"K": 1_000, "M": 1_000_000, "B": 1_000_000_000}[text[-1].upper()]
-        text = text[:-1]
-    return int(round(float(text) * mult))
+def plain(text):
+    """Lower-case, accents removed, letters only - for comparing names."""
+    text = unicodedata.normalize("NFKD", text or "").encode("ascii", "ignore").decode()
+    return re.sub(r"[^a-z]", "", text.lower())
 
 
-def engagement_from_posts(posts, followers, now_ts):
-    """posts: list of dicts with likes, comments, timestamp (unix seconds)."""
-    if not posts:
-        return None, None, None, None
-    likes = [p["likes"] for p in posts if p.get("likes") is not None and p["likes"] >= 0]
-    comments = [p["comments"] for p in posts if p.get("comments") is not None]
-    avg_likes = round(sum(likes) / len(likes)) if likes else None
-    avg_comments = round(sum(comments) / len(comments)) if comments else None
-    rate = None
-    if followers and avg_likes is not None:
-        rate = round(100 * (avg_likes + (avg_comments or 0)) / followers, 3)
-    recent = sum(1 for p in posts if p.get("timestamp") and now_ts - p["timestamp"] <= 30 * 86400)
-    return avg_likes, avg_comments, rate, recent
+def name_matches(athlete_name, ig_name, ig_username):
+    """True if the athlete's surname appears in the name shown on the Instagram
+    account. (The username alone isn't trusted: we often guessed it from the
+    athlete's name, so it would always 'match'.) Only if the account shows no
+    name at all do we fall back to the username."""
+    surname = plain(athlete_name.split()[-1])
+    shown = plain(ig_name) or plain(ig_username)
+    return bool(surname) and surname in shown
 
 
-def row(handle, followers, following, posts, eng, source):
-    avg_likes, avg_comments, rate, recent = eng
+def load_athletes():
+    with ATHLETES_FILE.open(newline="") as f:
+        reader = csv.DictReader(f)
+        return reader.fieldnames, list(reader)
+
+
+def save_athletes(fields, rows):
+    with ATHLETES_FILE.open("w", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=fields)
+        w.writeheader()
+        w.writerows(rows)
+
+
+def clean_handle(h):
+    return (h or "").strip().lstrip("@").lower()
+
+
+# ---------------------------------------------------------------- Meta API
+
+def graph_get(path, token, **params):
+    r = requests.get(f"{GRAPH}/{path}", params={**params, "access_token": token}, timeout=30)
+    try:
+        body = r.json()
+    except ValueError:
+        r.raise_for_status()
+        raise
+    err = body.get("error")
+    if err:
+        code, sub, msg = err.get("code"), err.get("error_subcode"), err.get("message", "")
+        if code == 190 or code == 102:
+            raise TokenProblem(f"Meta rejected the access token: {msg}")
+        if code in (4, 17, 32, 613) or "limit" in msg.lower():
+            raise RateLimited(msg)
+        if code in (100, 110) or sub == 2207013:
+            raise NotVisible(msg)
+        raise RuntimeError(f"Meta error {code}: {msg}")
+    return body
+
+
+def find_ig_account(token):
+    """Work out which Instagram account to make lookups from."""
+    fixed = os.environ.get("META_IG_USER_ID", "").strip()
+    if fixed:
+        return fixed
+    # A Page token: the page itself is "me".
+    try:
+        me = graph_get("me", token, fields="instagram_business_account")
+        if me.get("instagram_business_account"):
+            return me["instagram_business_account"]["id"]
+    except NotVisible:
+        pass
+    # A user token: look through the pages this person manages.
+    pages = graph_get("me/accounts", token, fields="name,instagram_business_account")
+    for page in pages.get("data", []):
+        if page.get("instagram_business_account"):
+            return page["instagram_business_account"]["id"]
+    raise TokenProblem(
+        "No Instagram professional account is linked to a Facebook Page this token can see. "
+        "Check README step 'Link Instagram to a Facebook Page'.")
+
+
+def token_expiry(token):
+    """When the token stops working, or None if it never expires / can't tell."""
+    try:
+        data = graph_get("debug_token", token, input_token=token).get("data", {})
+        exp = data.get("expires_at") or 0
+        return datetime.fromtimestamp(exp, timezone.utc) if exp else None
+    except Exception:  # noqa: BLE001 - this check is only a courtesy
+        return None
+
+
+def lookup_meta(handle, token, ig_id):
+    fields = ("username,name,biography,followers_count,follows_count,"
+              "media_count,profile_picture_url")
+    body = graph_get(ig_id, token, fields=f"business_discovery.username({handle}){{{fields}}}")
+    d = body["business_discovery"]
     return {
-        "instagram": handle, "followers": followers, "following": following,
-        "posts": posts, "avg_likes": avg_likes, "avg_comments": avg_comments,
-        "engagement_rate": rate, "posts_last_30d": recent, "source": source,
+        "followers": d.get("followers_count"), "following": d.get("follows_count"),
+        "posts": d.get("media_count"), "source": "meta",
+        "_profile": {"username": d.get("username"), "full_name": d.get("name"),
+                     "biography": d.get("biography"), "pic_url": d.get("profile_picture_url")},
     }
 
 
-# ------------------------------------------------ method 1: Instagram itself
+# ---------------------------------------------------------------- Apify backup
 
-def make_session():
-    s = requests.Session()
-    s.headers.update(BROWSER_HEADERS)
-    sessionid = os.environ.get("IG_SESSIONID", "").strip()
-    if sessionid:
-        s.cookies.set("sessionid", sessionid, domain=".instagram.com")
-    return s
-
-
-def parse_profile_json(handle, payload, now_ts):
-    user = (payload.get("data") or {}).get("user")
-    if not user:
-        return None
-    followers = user["edge_followed_by"]["count"]
-    timeline = user.get("edge_owner_to_timeline_media") or {}
-    posts = []
-    for edge in timeline.get("edges", []):
-        n = edge.get("node", {})
-        likes = (n.get("edge_liked_by") or n.get("edge_media_preview_like") or {}).get("count")
-        posts.append({
-            "likes": likes,
-            "comments": (n.get("edge_media_to_comment") or {}).get("count"),
-            "timestamp": n.get("taken_at_timestamp"),
-        })
-    return row(handle, followers, user["edge_follow"]["count"], timeline.get("count"),
-               engagement_from_posts(posts, followers, now_ts), "instagram-json")
-
-
-def parse_profile_html(handle, html):
-    """Backup: the page's preview text reads '1.2M Followers, 500 Following, 300 Posts'."""
-    m = re.search(
-        r'content="([\d.,]+[KMB]?) Followers, ([\d.,]+[KMB]?) Following, ([\d.,]+[KMB]?) Posts',
-        html, re.IGNORECASE)
-    if not m:
-        return None
-    f, g, p = (parse_count(x) for x in m.groups())
-    return row(handle, f, g, p, (None, None, None, None), "instagram-html")
-
-
-def fetch_direct(session, handle, now_ts):
-    url = f"https://www.instagram.com/api/v1/users/web_profile_info/?username={handle}"
-    r = session.get(url, timeout=30)
-    if r.status_code == 404:
-        raise LookupError("profile not found - check the handle")
-    if r.status_code in (401, 403, 429):
-        # Try the plain profile page once before giving up.
-        page = session.get(f"https://www.instagram.com/{handle}/", timeout=30)
-        result = parse_profile_html(handle, page.text) if page.ok else None
-        if result:
-            return result
-        raise Blocked(f"Instagram answered {r.status_code}")
+def lookup_apify(handles, token):
+    r = requests.post(
+        "https://api.apify.com/v2/acts/apify~instagram-profile-scraper/run-sync-get-dataset-items",
+        json={"usernames": handles}, timeout=600,
+        headers={"Authorization": f"Bearer {token}"})
     r.raise_for_status()
-    try:
-        result = parse_profile_json(handle, r.json(), now_ts)
-    except ValueError:
-        result = None
-    if result is None:
-        raise LookupError("unexpected response - Instagram may have changed its page")
-    return result
-
-
-def collect_direct(handles, now_ts):
-    session = make_session()
-    results, failures = {}, {}
-    for i, handle in enumerate(handles):
-        if i:
-            time.sleep(random.uniform(MIN_WAIT, MAX_WAIT))
-        try:
-            results[handle] = fetch_direct(session, handle, now_ts)
-            print(f"  ok   @{handle}: {results[handle]['followers']:,} followers")
-        except Blocked as e:
-            print(f"  STOP @{handle}: {e}. Skipping the rest until tomorrow.")
-            for h in handles[i:]:
-                failures[h] = f"blocked ({e})"
-            break
-        except Exception as e:  # noqa: BLE001 - keep going for other players
-            print(f"  fail @{handle}: {e}")
-            failures[handle] = str(e)
-    return results, failures
-
-
-# ------------------------------------------------------ method 2: Apify
-
-def collect_apify(handles, now_ts, token):
-    url = ("https://api.apify.com/v2/acts/apify~instagram-profile-scraper/"
-           "run-sync-get-dataset-items")
-    r = requests.post(url, json={"usernames": handles}, timeout=600,
-                      headers={"Authorization": f"Bearer {token}"})
-    r.raise_for_status()
-    results = {}
+    out = {}
     for item in r.json():
-        handle = (item.get("username") or "").lower()
-        if not handle or item.get("followersCount") is None:
-            continue
-        posts = []
-        for p in item.get("latestPosts") or []:
-            ts = p.get("timestamp")
-            if isinstance(ts, str):
-                ts = datetime.fromisoformat(ts.replace("Z", "+00:00")).timestamp()
-            posts.append({"likes": p.get("likesCount"), "comments": p.get("commentsCount"),
-                          "timestamp": ts})
-        followers = item["followersCount"]
-        results[handle] = row(handle, followers, item.get("followsCount"), item.get("postsCount"),
-                              engagement_from_posts(posts, followers, now_ts), "apify")
-        print(f"  ok   @{handle}: {followers:,} followers")
-    failures = {h: "not returned by Apify" for h in handles if h not in results}
-    return results, failures
+        h = clean_handle(item.get("username"))
+        if h and item.get("followersCount") is not None:
+            out[h] = {
+                "followers": item["followersCount"], "following": item.get("followsCount"),
+                "posts": item.get("postsCount"), "source": "apify",
+                "_profile": {"username": h, "full_name": item.get("fullName"),
+                             "biography": item.get("biography"), "is_verified": item.get("verified"),
+                             "pic_url": item.get("profilePicUrlHD") or item.get("profilePicUrl")},
+            }
+    return out
 
 
-# ------------------------------------------------------------- saving
+# ---------------------------------------------------------------- Wikidata
 
-def save(results, today):
-    existing = []
+def wikidata_handles(names):
+    """{athlete name: instagram handle} for basketball players found on Wikidata."""
+    if not names:
+        return {}
+    values = " ".join('"%s"@en' % n.replace('"', "") for n in names)
+    query = f"""
+      SELECT ?name ?ig WHERE {{
+        VALUES ?name {{ {values} }}
+        ?p rdfs:label ?name ; wdt:P106 wd:Q3665646 ; wdt:P2003 ?ig .
+      }}"""
+    try:
+        r = requests.post("https://query.wikidata.org/sparql", data={"query": query},
+                          headers={"Accept": "application/sparql-results+json",
+                                   "User-Agent": USER_AGENT}, timeout=60)
+        r.raise_for_status()
+    except requests.RequestException as e:
+        print(f"  Wikidata lookup skipped: {e}")
+        return {}
+    found = {}
+    for b in r.json()["results"]["bindings"]:
+        found.setdefault(b["name"]["value"], set()).add(clean_handle(b["ig"]["value"]))
+    # Only use a name if Wikidata gives exactly one handle for it.
+    return {n: hs.pop() for n, hs in found.items() if len(hs) == 1}
+
+
+def fill_handles_from_wikidata(fields, athletes, names, changes):
+    suggestions = wikidata_handles(names)
+    for a in athletes:
+        new = suggestions.get(a["name"]) if a["name"] in names else None
+        if new and new != clean_handle(a["instagram"]) and a.get("handle_checked") != "yes":
+            changes[a["name"]] = {"from": a["instagram"] or None, "to": new}
+            a["instagram"] = new
+            a["handle_checked"] = "wikidata"
+    if changes:
+        save_athletes(fields, athletes)
+    return suggestions
+
+
+# ---------------------------------------------------------------- saving
+
+def save_history(results, today):
+    rows = []
     if HISTORY_FILE.exists():
         with HISTORY_FILE.open(newline="") as f:
-            existing = [r for r in csv.DictReader(f)
-                        if not (r["date"] == today and r["instagram"] in results)]
+            rows = [r for r in csv.DictReader(f)
+                    if not (r["date"] == today and r["instagram"] in results)]
     for handle, r in results.items():
-        existing.append({"date": today, **r})
-    existing.sort(key=lambda r: (r["date"], r["instagram"]))
+        rows.append({"date": today, "instagram": handle, **r})
+    rows.sort(key=lambda r: (r["date"], r["instagram"]))
     with HISTORY_FILE.open("w", newline="") as f:
         w = csv.DictWriter(f, fieldnames=HISTORY_COLUMNS)
         w.writeheader()
-        for r in existing:
+        for r in rows:
             w.writerow({k: ("" if r.get(k) is None else r.get(k)) for k in HISTORY_COLUMNS})
 
 
-def main():
-    with ATHLETES_FILE.open(newline="") as f:
-        handles = [r["instagram"].strip().lstrip("@").lower()
-                   for r in csv.DictReader(f) if r["instagram"].strip()]
+def save_profiles(results, today):
+    """Keep each player's name, bio and photo up to date.
 
+    Instagram photo links expire and won't load on other websites, so photos
+    are downloaded into site/img/ and served from your own site, refreshed weekly.
+    """
+    profiles = json.loads(PROFILES_FILE.read_text()) if PROFILES_FILE.exists() else {}
+    IMG_DIR.mkdir(parents=True, exist_ok=True)
+    for handle, r in results.items():
+        info = r.get("_profile") or {}
+        p = profiles.setdefault(handle, {})
+        for key in ("full_name", "biography", "is_verified"):
+            if info.get(key) is not None:
+                p[key] = info[key]
+        img = IMG_DIR / f"{handle}.jpg"
+        last = p.get("photo_updated", "")
+        stale = not img.exists() or not last or \
+            (datetime.fromisoformat(today) - datetime.fromisoformat(last)).days >= PHOTO_REFRESH_DAYS
+        if info.get("pic_url") and stale:
+            try:
+                resp = requests.get(info["pic_url"], timeout=30, headers={"User-Agent": USER_AGENT})
+                if resp.ok and resp.headers.get("Content-Type", "").startswith("image/"):
+                    img.write_bytes(resp.content)
+                    p["photo_updated"] = today
+            except requests.RequestException as e:
+                print(f"  photo for @{handle} not saved: {e}")
+    PROFILES_FILE.write_text(json.dumps(profiles, indent=2, ensure_ascii=False))
+
+
+def write_report(report):
+    LAST_RUN_FILE.write_text(json.dumps(report, indent=2, ensure_ascii=False))
+
+
+# ---------------------------------------------------------------- main
+
+def main():
     now = datetime.now(timezone.utc)
     today = now.date().isoformat()
-    token = os.environ.get("APIFY_TOKEN", "").strip()
-    method = "apify" if token else "instagram"
-    print(f"Collecting {len(handles)} profiles via {method} for {today}")
+    fields, athletes = load_athletes()
+    report = {"ran_at": now.isoformat(timespec="seconds"), "method": "meta",
+              "succeeded": [], "failed": {}, "handle_changes": {}, "warnings": []}
 
-    if token:
-        results, failures = collect_apify(handles, now.timestamp(), token)
-    else:
-        results, failures = collect_direct(handles, now.timestamp())
+    # 1. Fill blank handles from Wikidata before looking anyone up.
+    blanks = [a["name"] for a in athletes if not clean_handle(a["instagram"])]
+    if blanks:
+        print(f"Looking up {len(blanks)} missing handles on Wikidata")
+        fill_handles_from_wikidata(fields, athletes, blanks, report["handle_changes"])
+
+    token = os.environ.get("META_ACCESS_TOKEN", "").strip()
+    apify = os.environ.get("APIFY_TOKEN", "").strip()
+    if not token:
+        msg = "META_ACCESS_TOKEN secret isn't set yet - see README 'Connecting Meta'."
+        print(f"::error::{msg}")
+        report["warnings"].append(msg)
+        write_report(report)
+        sys.exit(1)
+
+    try:
+        ig_id = find_ig_account(token)
+        expires = token_expiry(token)
+        if expires:
+            days = (expires - now).days
+            report["token_expires"] = expires.date().isoformat()
+            if days < 14:
+                msg = f"Your Meta access token expires in {days} days. See README 'Renewing the token'."
+                print(f"::warning::{msg}")
+                report["warnings"].append(msg)
+        else:
+            report["token_expires"] = "never"
+    except TokenProblem as e:
+        print(f"::error::{e}")
+        report["warnings"].append(str(e))
+        write_report(report)
+        sys.exit(1)
+
+    # 2. Look everyone up through Meta.
+    results, not_visible = {}, {}
+    todo = [a for a in athletes if clean_handle(a["instagram"])]
+    for a in athletes:
+        if not clean_handle(a["instagram"]):
+            report["failed"][a["name"]] = "no Instagram handle yet - add it to data/athletes.csv"
+    print(f"Collecting {len(todo)} profiles via Meta for {today}")
+    for i, a in enumerate(todo):
+        handle = clean_handle(a["instagram"])
+        if i:
+            time.sleep(SECONDS_BETWEEN_LOOKUPS)
+        try:
+            results[handle] = lookup_meta(handle, token, ig_id)
+            print(f"  ok   @{handle}: {results[handle]['followers']:,} followers")
+        except NotVisible as e:
+            not_visible[handle] = a
+            print(f"  --   @{handle}: not visible to Meta ({e})")
+        except RateLimited as e:
+            print(f"::warning::Meta rate limit reached at @{handle}; the rest wait until tomorrow.")
+            for b in todo[i:]:
+                report["failed"][b["name"]] = "skipped - Meta rate limit reached"
+            break
+        except TokenProblem as e:
+            print(f"::error::{e}")
+            report["warnings"].append(str(e))
+            for b in todo[i:]:
+                report["failed"][b["name"]] = "skipped - access token problem"
+            break
+        except Exception as e:  # noqa: BLE001 - keep going for other players
+            report["failed"][a["name"]] = str(e)
+            print(f"  fail @{handle}: {e}")
+
+    # 3. Personal accounts: try Apify if it's set up.
+    if not_visible and apify:
+        print(f"Trying {len(not_visible)} accounts through Apify")
+        try:
+            results.update(lookup_apify(list(not_visible), apify))
+        except requests.RequestException as e:
+            report["warnings"].append(f"Apify backup failed: {e}")
+    for handle, a in not_visible.items():
+        if handle not in results:
+            report["failed"][a["name"]] = (
+                f"@{handle} not found, or it's a personal account Meta can't see. "
+                "Check the handle" + ("." if apify else ", or add an APIFY_TOKEN secret for personal accounts."))
+
+    # 4. Name check: never publish someone else's numbers.
+    by_handle = {clean_handle(a["instagram"]): a for a in athletes}
+    for handle in list(results):
+        a = by_handle[handle]
+        prof = results[handle].get("_profile") or {}
+        if a.get("handle_checked") != "yes" and not name_matches(a["name"], prof.get("full_name"), handle):
+            report["failed"][a["name"]] = (
+                f"@{handle} belongs to '{prof.get('full_name') or 'someone else'}', not {a['name']}. "
+                "Fix the handle, or set handle_checked to yes if it really is them.")
+            del results[handle]
+
+    # 5. For handles that failed, see if Wikidata knows a better one for next time.
+    retry = [n for n, why in report["failed"].items() if why.startswith("@")]
+    if retry:
+        fill_handles_from_wikidata(fields, athletes, retry, report["handle_changes"])
 
     if results:
-        save(results, today)
-    LAST_RUN_FILE.write_text(json.dumps({
-        "ran_at": now.isoformat(timespec="seconds"),
-        "method": method,
-        "succeeded": sorted(results),
-        "failed": failures,
-    }, indent=2))
-
-    print(f"Done: {len(results)} ok, {len(failures)} failed")
-    # Only report the run as failed if nothing at all worked.
+        save_history(results, today)
+        save_profiles(results, today)
+    report["succeeded"] = sorted(by_handle[h]["name"] for h in results)
+    write_report(report)
+    print(f"Done: {len(results)} ok, {len(report['failed'])} not collected, "
+          f"{len(report['handle_changes'])} handles updated from Wikidata")
     sys.exit(0 if results else 1)
 
 

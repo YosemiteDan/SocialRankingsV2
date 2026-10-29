@@ -11,6 +11,8 @@ site has something to show, and the site displays a 'sample data' banner.
 
 import csv
 import json
+import re
+import unicodedata
 import shutil
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
@@ -21,6 +23,12 @@ SITE = ROOT / "site"
 
 PERIODS = {"7d": 7, "30d": 30, "365d": 365}
 SPARK_DAYS = 30
+
+
+def slug(name):
+    """'Ezi Magbegor' -> 'ezi-magbegor': each player's page address on the site."""
+    text = unicodedata.normalize("NFKD", name).encode("ascii", "ignore").decode().lower()
+    return re.sub(r"[^a-z0-9]+", "-", text).strip("-")
 
 
 def num(v, cast=int):
@@ -59,18 +67,24 @@ def main():
     if (DATA / "profiles.json").exists() and not sample:
         profiles = json.loads((DATA / "profiles.json").read_text())
 
-    summaries, details = [], {}
+    details = {}
+    if (DATA / "details.json").exists():
+        details = json.loads((DATA / "details.json").read_text())
+
+    summaries, pages = [], {}
     for a in athletes:
         handle = a["instagram"].strip().lstrip("@").lower()
-        rows = history.get(handle, [])
+        key = handle or (a["name"].replace(" ", "").lower() if sample else "")
+        rows = history.get(key, []) if key else []
         prof = profiles.get(handle, {})
         photo = SITE / "img" / f"{handle}.jpg"
         p = {
             "name": a["name"], "team": a["team"], "position": a["position"],
             "sport": a.get("sport", ""), "league": a.get("league", ""),
-            "instagram": handle,
+            "id": slug(a["name"]),
+            "instagram": handle or None,
             "verified": prof.get("is_verified"),
-            "photo": f"img/{handle}.jpg" if photo.exists() else None,
+            "photo": f"img/{handle}.jpg" if handle and photo.exists() else None,
             "followers": None, "spark": [],
         }
         if rows:
@@ -97,10 +111,11 @@ def main():
             cutoff = (last_day - timedelta(days=SPARK_DAYS)).isoformat()
             p["spark"] = [num(r["followers"]) for r in rows if r["date"] >= cutoff]
         summaries.append(p)
-        details[handle] = {
+        pages[p["id"]] = {
             **{k: v for k, v in p.items() if k != "spark"},
             "full_name": prof.get("full_name"),
             "bio": prof.get("biography"),
+            "details": details.get(a["name"]),
             # [date, followers, posts, engagement rate]
             "history": [[r["date"], num(r["followers"]), num(r["posts"]),
                          num(r["engagement_rate"], float)] for r in rows],
@@ -109,7 +124,7 @@ def main():
     summaries.sort(key=lambda p: -(p["followers"] or -1))
     for i, p in enumerate(summaries, 1):
         p["rank"] = i if p["followers"] is not None else None
-        details[p["instagram"]]["rank"] = p["rank"]
+        pages[p["id"]]["rank"] = p["rank"]
 
     last_run = {}
     if (DATA / "last_run.json").exists() and not sample:
@@ -125,11 +140,11 @@ def main():
     players_dir = SITE / "players"
     shutil.rmtree(players_dir, ignore_errors=True)
     players_dir.mkdir()
-    for handle, d in details.items():
-        (players_dir / f"{handle}.json").write_text(
+    for pid, d in pages.items():
+        (players_dir / f"{pid}.json").write_text(
             json.dumps({**d, "sample_data": sample}, separators=(",", ":"), ensure_ascii=False))
 
-    print(f"Wrote site/data.json and {len(details)} player files (sample={sample})")
+    print(f"Wrote site/data.json and {len(pages)} player files (sample={sample})")
 
 
 if __name__ == "__main__":

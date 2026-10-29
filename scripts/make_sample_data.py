@@ -13,7 +13,8 @@ ROOT = Path(__file__).resolve().parent.parent
 random.seed(7)
 
 with (ROOT / "data" / "athletes.csv").open(newline="") as f:
-    handles = [r["instagram"].lower() for r in csv.DictReader(f)]
+    # Players without a handle yet get a stand-in one, so the preview shows everyone.
+    handles = [(r["instagram"] or r["name"].replace(" ", "")).lower() for r in csv.DictReader(f)]
 
 end = date.today()
 days = 400

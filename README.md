@@ -1,71 +1,117 @@
 # Aussie Hoops Social
 
-A website that ranks every Australian in the NBA by Instagram: followers, growth over 7 days / 30 days / 1 year, posts, and engagement. GitHub collects the numbers every morning and republishes the site for free.
+A website that ranks Australian athletes by Instagram followers, with growth over 7 days, 30 days and a year, and a profile page for each athlete. GitHub collects the numbers every morning and republishes the site for free.
+
+**Phase 1:** every Australian in the NBA and WNBA, followers only. Engagement (likes, comments, posts) comes in a later phase.
 
 ## What's in this folder
 
 | File | What it does |
 |---|---|
-| `data/athletes.csv` | The list of players and their Instagram handles. Edit this to add or remove players. |
-| `scripts/collect.py` | Visits each profile and saves today's numbers to `data/history.csv`, plus each player's name, bio and profile photo (`data/profiles.json` and `site/img/`). |
-| `scripts/build_site_data.py` | Works out rankings and growth, and writes `site/data.json` for the rankings plus one file per player in `site/players/` for their profile page. |
+| `data/athletes.csv` | The list of athletes and their Instagram handles. Edit this to add or remove people. |
+| `scripts/collect.py` | Each morning, gets every athlete's follower count from Meta's official API and saves it to `data/history.csv`, plus their Instagram name, bio and photo (`data/profiles.json` and `site/img/`). |
+| `scripts/player_details.py` | Once a week, gets height, birthdate, draft, jersey and so on from the NBA and WNBA's official stats, saved to `data/details.json`. |
+| `scripts/build_site_data.py` | Works out rankings and growth, and writes the files the website reads (`site/data.json` and `site/players/`). |
 | `scripts/make_sample_data.py` | Makes fake numbers so you can preview the design. Not used once real data exists. |
-| `site/index.html` | The website itself: player cards, and a profile page for each player when you click their card. |
-| `.github/workflows/daily.yml` | Tells GitHub to run everything every morning at about 7:17am. |
+| `site/index.html` | The website itself. |
+| `.github/workflows/daily.yml` | Tells GitHub to run everything every morning at about 7:17am Sydney time. |
 
-You don't need to install anything on your computer. Everything below happens on the GitHub website.
+You don't need to install anything on your computer. Everything happens on the GitHub and Meta websites.
 
-## Setting it up (about 20 minutes)
+## Setting up GitHub (about 20 minutes)
 
-### 1. Create a GitHub account and a repository
+### 1. Create a repository
 1. Sign up at github.com if you haven't already.
-2. Click **+** (top right) → **New repository**.
-3. Name it something like `aussie-hoops-social`, choose **Public**, and click **Create repository**. (Public repositories get the website hosting and daily runs for free.)
+2. Click **+** (top right) → **New repository**, give it a name, choose **Public**, and click **Create repository**. (Public repositories get the website hosting and daily runs for free.)
 
 ### 2. Upload the files
 1. On the new repository page, click **uploading an existing file**.
 2. Drag in everything from this folder **except** the `.github` folder, then click **Commit changes**.
-3. The `.github` folder is hidden on most computers, so add the schedule by hand:
-   - Click **Add file** → **Create new file**.
-   - In the name box type exactly `.github/workflows/daily.yml` (the slashes create the folders).
-   - Open `daily.yml` from this folder in a text editor (Notepad or TextEdit), copy everything, and paste it into the big box.
-   - Click **Commit changes**.
+3. The `.github` folder is hidden on most computers, so add the schedule by hand: click **Add file** → **Create new file**, type exactly `.github/workflows/daily.yml` in the name box, paste in the contents of `daily.yml` from this folder, and click **Commit changes**.
 
 ### 3. Turn on the website and give the schedule permission to save
-1. Go to **Settings** → **Pages**. Under **Source**, choose **GitHub Actions**.
-2. Go to **Settings** → **Actions** → **General**. Scroll to **Workflow permissions**, choose **Read and write permissions**, and click **Save**.
+1. **Settings** → **Pages**. Under **Source**, choose **GitHub Actions**.
+2. **Settings** → **Actions** → **General**. Under **Workflow permissions**, choose **Read and write permissions** and click **Save**.
 
-### 4. Run it for the first time
-1. Go to the **Actions** tab. If asked, click the button to enable workflows.
-2. Click **Daily update** on the left, then **Run workflow** → **Run workflow**.
-3. Wait a few minutes. A green tick means it worked; a red cross means something failed (click it to see the log).
-4. Your site is at `https://YOUR-USERNAME.github.io/aussie-hoops-social/`. The link also appears in **Settings** → **Pages**.
+## Connecting Meta (one evening, once)
 
-After this it runs by itself every morning.
+Meta's Business Discovery API lets your own Instagram account look up public numbers for other Creator and Business accounts. It's free and permitted, and doesn't get blocked. Meta's screens change from time to time, so the wording may differ slightly from below.
+
+### 1. Make your Instagram account a professional account
+In the Instagram app: **Settings** → **Account type and tools** → **Switch to professional account**. Choose **Creator** or **Business**. This is free and can be switched back. A new account just for the site is fine.
+
+### 2. Link it to a Facebook Page
+1. Create a Facebook Page at facebook.com/pages/create. It can be empty, for example named after your site.
+2. On the Page, go to **Settings** → **Linked accounts** (or **Instagram**), and connect your Instagram account.
+
+### 3. Create a Meta developer app
+1. Go to developers.facebook.com, log in with Facebook, and click **Get started** to register as a developer.
+2. Click **My Apps** → **Create app**. When asked about a use case or app type, choose the options for **Business** and for managing Instagram content. Name it anything.
+3. In the app dashboard, add the **Instagram** product and choose the **API setup with Facebook login** option (not "Instagram login": only the Facebook login version can look up other accounts).
+
+The app can stay in development mode. You don't need App Review, because you're the only person using it.
+
+### 4. Get an access token
+1. Go to developers.facebook.com/tools/explorer (the **Graph API Explorer**).
+2. On the right, choose your app under **Meta App**.
+3. Under **Permissions**, add: `instagram_basic`, `pages_show_list`, `pages_read_engagement` and `business_management`.
+4. Click **Generate Access Token**. In the pop-up, choose your Facebook Page and Instagram account and approve.
+
+### 5. Make the token permanent
+The token you just made lasts about an hour. To get one that doesn't expire:
+1. Click the blue **i** next to the token, then **Open in Access Token Tool**. Click **Extend Access Token** at the bottom, and copy the new token it shows (this one lasts 60 days).
+2. Back in the Graph API Explorer, paste that token into the **Access Token** box. In the query box, enter `me/accounts?fields=name,access_token,instagram_business_account` and click **Submit**.
+3. In the result, find your Page and copy its `access_token` value (the long string, without the quote marks). This is a Page token, and because it came from an extended token, it doesn't expire.
+4. Optional check: paste it into developers.facebook.com/tools/debug/accesstoken and click **Debug**. **Expires** should say **Never**.
+
+### 6. Give the token to GitHub
+1. In your repository: **Settings** → **Secrets and variables** → **Actions** → **New repository secret**.
+2. Name: `META_ACCESS_TOKEN`. Secret: paste the Page token. Click **Add secret**.
+
+Keep this token private. Secrets are hidden even in a public repository, but never paste the token into a file.
+
+### 7. Run it
+**Actions** → **Daily update** → **Run workflow** (leave "Collect from Instagram?" ticked) → **Run workflow**. When it finishes, open `data/last_run.json` to see how it went.
+
+### Renewing the token
+If `last_run.json` or the run summary says the token has expired or been rejected (for example, after you change your Facebook password), repeat steps 4–6 and replace the secret.
 
 ## Checking the results
 
-Open `data/last_run.json` in your repository after each run. It lists which players worked and which failed, and why.
+Open `data/last_run.json` after each run. It lists who was collected, who wasn't and why, and any handles that were filled in automatically.
 
-- **"profile not found"** means the Instagram handle is wrong. Most handles in `athletes.csv` are best guesses (see the `handle_checked` column), so check each player's real handle on Instagram, then edit the file on GitHub (click the file → pencil icon → fix → **Commit changes**).
-- **"blocked"** means Instagram refused the requests. See below.
+| Message | What to do |
+|---|---|
+| **not found, or it's a personal account** | Check the athlete's real handle on Instagram and fix it in `athletes.csv`. If the handle is right, they're on a personal account, which Meta's API can't see. You can leave them out, or add Apify (below). |
+| **belongs to '…', not [athlete]** | The handle belongs to someone else, so their numbers weren't saved. Fix the handle. If the account really is the athlete (some show only a first name or nickname), set `handle_checked` to `yes`. |
+| **no Instagram handle yet** | Add the handle to `athletes.csv`. |
+| **token** messages | See "Renewing the token". |
 
-Profile photos appear after the first successful run, and are refreshed weekly. Until then each player shows their initials. Photos are saved to your own site because Instagram's photo links expire and won't display on other websites.
+**About `handle_checked` in `athletes.csv`:**
+- `no`: a best guess. The script only saves numbers if the name on the Instagram account matches the athlete.
+- `wikidata`: filled in automatically from Wikidata (the free database behind Wikipedia). Same name check applies.
+- `yes`: you've checked it yourself, so the name check is skipped.
 
-Growth figures appear once there's enough history: the 7-day numbers after a week, 30-day after a month, and 1-year after a year.
+Blank handles, and handles that fail, are looked up on Wikidata automatically, so some fix themselves by the next run.
 
-## If Instagram blocks it
+To edit `athletes.csv` on GitHub: open the file, click the pencil icon (or press **E**), make the change, and click **Commit changes**.
 
-This is likely at some point, because Instagram is wary of requests from cloud servers like GitHub's. The site keeps showing the last good numbers, and the script tries again the next morning. If it keeps failing, there are two options. Both use GitHub **secrets**: **Settings** → **Secrets and variables** → **Actions** → **New repository secret**.
+Profile photos appear after the first successful run and are refreshed weekly. Until then each athlete shows their initials. Player details (height, draft and so on) appear after the first weekly update; the NBA's stats site sometimes doesn't answer GitHub's servers, in which case it simply tries again the next day.
 
-**Option A: Apify (reliable, paid).** Sign up at apify.com, copy your API token from its settings, and save it as a secret named `APIFY_TOKEN`. The script switches to Apify's Instagram profile scraper automatically. Check Apify's current pricing first; tracking a dozen profiles a day is a small job.
+Growth figures fill in over time: weekly after 7 days, monthly after 30, yearly after a year.
 
-**Option B: a logged-in session (free, riskier).** Instagram blocks logged-in visitors less often. Log into Instagram in a browser with a spare account (not your personal one, as it could be flagged or banned), copy the `sessionid` cookie value, and save it as a secret named `IG_SESSIONID`. It stops working when that login expires, so you'll need to replace it occasionally. Automated collection breaks Instagram's terms of use either way, so keep this small.
+## Optional: Apify for personal accounts
 
-## Adding players or sports
+Meta's API only sees Creator and Business accounts. For athletes on personal accounts, sign up at apify.com, copy your API token, and add it as a repository secret named `APIFY_TOKEN`. The script then uses Apify for just those athletes. Check Apify's pricing first; a handful of profiles a day costs very little.
 
-Add a row to `data/athletes.csv` with the name, sport, league, team, position and Instagram handle. Athletes from other sports go in the same list: as soon as there's more than one league, the site shows league filters (All sports, AFL, NBA and so on) above the rankings, the headline changes to cover all sports, and each profile shows the athlete's rank within their own league.
+## Phase 2: engagement
+
+When you're ready to show likes, comments and posts, change `const SHOW_ENGAGEMENT = false;` to `true` near the top of the script in `site/index.html`. The collector will also need updating to fetch recent posts, which Meta's API supports.
+
+## Adding athletes, leagues or sports
+
+Add a row to `data/athletes.csv` with the name, sport, league, team, position and Instagram handle (or leave the handle blank to try Wikidata). With more than one league, the site shows league filters above the rankings. With more than one sport, the headline changes to cover all sports. Each profile shows the athlete's rank within their own league. Player details are only fetched for NBA and WNBA athletes for now.
 
 ## Changing the site's name
 
-The name appears in three places in `site/index.html`: the line `const SITE_NAME = "..."` near the top of the script, the `<title>` tag, and the `og:title` tag. The link-preview image shown when the site is shared on social media is `site/og.png`; replace it with your own 1200 × 630 image whenever you like. Some sites (Facebook, LinkedIn) need the full address of that image, so once your site is live, change `content="og.png"` in the `og:image` tag to `content="https://YOUR-USERNAME.github.io/aussie-hoops-social/og.png"`.
+The name appears in three places in `site/index.html`: the line `const SITE_NAME = "..."` near the top of the script, the `<title>` tag, and the `og:title` tag. The image shown when the site is shared on social media is `site/og.png`; replace it with your own 1200 × 630 image whenever you like. Some sites (Facebook, LinkedIn) need its full address, so once your site is live, change `content="og.png"` in the `og:image` tag to `content="https://YOUR-USERNAME.github.io/YOUR-REPO/og.png"`.

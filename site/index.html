@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Aussie Hoops Social</title>
-<meta name="description" content="Australian athletes ranked by Instagram. Followers, growth and engagement, updated daily.">
+<meta name="description" content="Australian athletes ranked by Instagram followers, updated daily.">
 <meta name="theme-color" content="#0E1430">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Aussie Hoops Social">
@@ -164,6 +164,9 @@
   .chart .lbl { font: 12px "Barlow", sans-serif; fill: var(--muted); }
   .tip { position: absolute; top: 0; pointer-events: none; background: var(--accent); color: #1A0B00; border-radius: 8px; padding: 6px 10px; font-size: 13px; white-space: nowrap; transform: translateX(-50%); display: none; font-weight: 600; }
   .tip b { font: italic 800 19px/1 var(--display); display: block; }
+  .facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px 20px; }
+  .facts b { display: block; font: italic 800 30px/1.05 var(--display); }
+  .facts span { color: var(--muted); font-size: 14px; }
   .eng { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 16px; }
   .eng b { display: block; font: italic 800 34px/1 var(--display); }
   .eng span { color: var(--muted); font-size: 14px; }
@@ -211,7 +214,8 @@
     .team { font-size: 13px; }
     .totals { gap: 24px; }
     .totals b { font-size: 36px; }
-    .eng { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .eng, .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .facts b { font-size: 24px; }
     .tile b { font-size: 34px; }
     .pager span b { font-size: 18px; }
   }
@@ -227,7 +231,7 @@
 </div>
 <main class="wrap" id="main"></main>
 <footer class="wrap">
-  <p>Numbers come from public Instagram profiles. Engagement is average likes and comments on recent posts, as a share of followers.</p>
+  <p>Follower numbers come from public Instagram accounts through Meta's official API. Player details come from the leagues' official stats.</p>
   <p>Not affiliated with any league, team or governing body.</p>
 </footer>
 <div class="toast" id="toast" role="status"></div>
@@ -236,6 +240,9 @@
 /* ---------------------------------------------------------------- setup */
 // Change the site's name here (also update the <title> and og:title tags at the top).
 const SITE_NAME = "Aussie Hoops Social";
+// Phase 1 tracks followers only. Switch this to true when engagement
+// (likes, comments, posts) is being collected, to show those features.
+const SHOW_ENGAGEMENT = false;
 
 const VIEWS = {
   followers:  { key: "followers",       tab: "Most followed",       label: "followers",  fmt: v => compact(v) },
@@ -243,6 +250,7 @@ const VIEWS = {
   growth30:   { key: "change_30d_pct",  tab: "Hot this month",      label: "this month", fmt: v => signed(v) + "%", change: true },
   engagement: { key: "engagement_rate", tab: "Best engagement",     label: "engagement", fmt: v => v.toFixed(2) + "%" },
 };
+if (!SHOW_ENGAGEMENT) delete VIEWS.engagement;
 const RANGES = { "30D": 30, "90D": 90, "1Y": 365, "All": Infinity };
 let DATA = null, league = "All", view = "followers", range = "90D", current = null;
 const $ = id => document.getElementById(id);
@@ -263,7 +271,14 @@ function nameLines(n) { const i = n.indexOf(" "); return i < 0 ? esc(n) : esc(n.
 
 function photo(p) {
   const ph = `<span class="ph">${esc(initials(p.name))}</span>`;
-  return p.photo ? `<img src="${esc(p.photo)}" alt="${esc(p.name)}" loading="lazy" onerror="this.outerHTML='${ph.replace(/'/g, "\\'")}'">` : ph;
+  return p.photo ? `<img src="${esc(p.photo)}" alt="${esc(p.name)}" loading="lazy" data-initials="${esc(initials(p.name))}" onerror="imgFail(this)">` : ph;
+}
+// If a photo can't load, show the initials card instead.
+function imgFail(img) {
+  const ph = document.createElement("span");
+  ph.className = "ph";
+  ph.textContent = img.dataset.initials || "";
+  img.replaceWith(ph);
 }
 const TICK = `<svg class="tick" viewBox="0 0 24 24" aria-label="Verified"><circle cx="12" cy="12" r="11" fill="#3897F0"/><path d="M7 12.5l3.2 3L17 9" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 const SHARE = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V3M7 8l5-5 5 5M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"/></svg>`;
@@ -293,23 +308,25 @@ function showRankings() {
   document.title = SITE_NAME;
   const leagues = [...new Set(DATA.players.map(p => p.league).filter(Boolean))].sort();
   if (!leagues.includes(league)) league = "All";
-  const one = leagues.length === 1 ? leagues[0] : null;
+  const sports = [...new Set(DATA.players.map(p => p.sport).filter(Boolean))];
+  // e.g. "NBA" or "NBA & WNBA" while there's one sport; "athletes" once there are several.
+  const scope = sports.length === 1 && leagues.length <= 3 ? leagues.join(" & ") : null;
   const ranked = DATA.players.filter(p => p.followers != null);
   const total = ranked.reduce((s, p) => s + p.followers, 0);
   const weekGain = ranked.reduce((s, p) => s + (p.change_7d || 0), 0);
   $("main").innerHTML = `
     <section class="hero">
-      <h1>${one ? `Every Aussie in the ${esc(one)}` : "Australia's athletes"}, ranked by <em>Instagram</em></h1>
-      <p class="lede">Who's winning the feed. Followers, growth and engagement for Australia's ${one ? `${esc(one)} players` : "pro athletes"}, refreshed each morning.</p>
+      <h1>${scope ? `Every Aussie in the ${esc(scope)}` : "Australia's athletes"}, ranked by <em>Instagram</em></h1>
+      <p class="lede">Who's winning the feed. Followers and growth for Australia's ${scope ? `${esc(scope)} players` : "pro athletes"}${SHOW_ENGAGEMENT ? ", plus engagement" : ""}, refreshed each morning.</p>
       <div class="totals">
-        <div><b>${DATA.players.length}</b><span>${one ? `Aussies in the ${esc(one)}` : "athletes tracked"}</span></div>
+        <div><b>${DATA.players.length}</b><span>${scope ? `Aussies in the ${esc(scope)}` : "athletes tracked"}</span></div>
         <div><b>${compact(total)}</b><span>combined followers</span></div>
         ${weekGain ? `<div><b class="${weekGain >= 0 ? "up" : "down"}">${weekGain >= 0 ? "+" : "−"}${compact(Math.abs(weekGain))}</b><span>followers this week</span></div>` : ""}
       </div>
     </section>
     ${DATA.sample_data ? `<div class="notice">Preview mode: these are made-up sample numbers. Real numbers and photos replace them after the first daily collection.</div>` : ""}
     ${leagues.length > 1 ? `<div class="tabs leagues" role="tablist" aria-label="League">
-      ${["All", ...leagues].map(l => `<button role="tab" data-league="${esc(l)}" aria-selected="${l === league}">${l === "All" ? "All sports" : esc(l)}</button>`).join("")}
+      ${["All", ...leagues].map(l => `<button role="tab" data-league="${esc(l)}" aria-selected="${l === league}">${l === "All" ? (sports.length > 1 ? "All sports" : "All leagues") : esc(l)}</button>`).join("")}
     </div>` : ""}
     <div class="tabs views" role="tablist" aria-label="Ranking">
       ${Object.entries(VIEWS).map(([k, v]) => `<button role="tab" data-view="${k}" aria-selected="${k === view}">${v.tab}</button>`).join("")}
@@ -340,14 +357,14 @@ function renderGrid() {
     : `<span class="chip ${p.change_7d_pct >= 0 ? "up" : "down"}">${signed(p.change_7d_pct)}% wk</span>`;
 
   $("grid").innerHTML = `<div class="grid">${rows.map((p, i) => {
-    const href = `#/p/${encodeURIComponent(p.instagram)}`;
+    const href = `#/p/${encodeURIComponent(p.id)}`;
     const shot = `
       <div class="shot">
         ${photo(p)}
         <span class="rank" aria-label="Rank ${i + 1}">${i + 1}</span>
         <div class="shot-foot">
           <span class="name">${nameLines(p.name)}${p.verified ? TICK : ""}</span>
-          <span class="team">${esc(shortTeam(p.team))} · ${esc(p.position)}</span>
+          <span class="team">${esc(shortTeam(p.team))} · ${esc(p.league)}</span>
         </div>
       </div>`;
     if (i === 0) {
@@ -362,7 +379,9 @@ function renderGrid() {
             <div class="rows">
               <div>Followers <b>${compact(p.followers)}</b></div>
               <div>This week <b>${ch(p.change_7d)}</b></div>
-              <div>Engagement <b>${p.engagement_rate != null ? p.engagement_rate.toFixed(2) + "%" : "–"}</b></div>
+              ${SHOW_ENGAGEMENT
+                ? `<div>Engagement <b>${p.engagement_rate != null ? p.engagement_rate.toFixed(2) + "%" : "–"}</b></div>`
+                : `<div>This month <b>${ch(p.change_30d)}</b></div>`}
             </div>
             <svg class="spark" viewBox="0 0 300 64" preserveAspectRatio="none" aria-hidden="true">${sparkline(p.spark || [], 300, 64)}</svg>
           </div>
@@ -379,20 +398,22 @@ function renderGrid() {
 }
 
 /* ---------------------------------------------------------------- profile */
-async function showProfile(handle) {
-  const summary = DATA.players.find(p => p.instagram === handle);
+async function showProfile(id) {
+  const summary = DATA.players.find(p => p.id === id || p.instagram === id);
   if (!summary) { location.hash = "#/"; return; }
+  id = summary.id;
+  const handle = summary.instagram;
   let p;
-  try { p = await (await fetch(`players/${encodeURIComponent(handle)}.json`, { cache: "no-store" })).json(); }
+  try { p = await (await fetch(`players/${encodeURIComponent(id)}.json`, { cache: "no-store" })).json(); }
   catch { p = { ...summary, history: [] }; }
   p.photo = summary.photo;
   current = p;
   document.title = `${p.name} on Instagram – ${SITE_NAME}`;
 
   const ranked = DATA.players.filter(x => x.rank && x.league === p.league);
-  const lgRank = ranked.findIndex(x => x.instagram === handle) + 1 || null;
-  const idx = ranked.findIndex(x => x.instagram === handle);
-  const prev = ranked[idx - 1], next = ranked[idx + 1];
+  const idx = ranked.findIndex(x => x.id === id);
+  const lgRank = idx + 1 || null;
+  const prev = idx > 0 ? ranked[idx - 1] : null, next = idx >= 0 ? ranked[idx + 1] : null;
   const delta = (n, pct, label) => `<div class="tile"><b class="${n == null ? "" : n >= 0 ? "up" : "down"}">${n == null ? "–" : (n >= 0 ? "+" : "−") + compact(Math.abs(n))}</b><span>${label}${pct != null ? ` · ${signed(pct)}%` : ""}</span></div>`;
   const mini = q => `<span class="mini">${photo(q)}</span>`;
 
@@ -403,11 +424,11 @@ async function showProfile(handle) {
       <div class="shot">${photo(p)}${lgRank ? `<span class="rank">${lgRank}</span>` : ""}</div>
       <div>
         <h1>${nameLines(p.name)}${p.verified ? TICK : ""}</h1>
-        <div class="sub">${esc(p.team)} · ${esc(p.league)} · ${esc(p.position)} · @${esc(handle)}</div>
+        <div class="sub">${esc(p.team)} · ${esc(p.league)} · ${esc(p.details?.position || p.position)}${handle ? ` · @${esc(handle)}` : ""}</div>
         ${p.bio ? `<p class="bio">${esc(p.bio)}</p>` : ""}
         <div class="actions">
           <button class="btn primary" id="shareBtn">${SHARE}Share</button>
-          <a class="btn" href="https://www.instagram.com/${encodeURIComponent(handle)}/" rel="noopener" target="_blank">${IG}View on Instagram</a>
+          ${handle ? `<a class="btn" href="https://www.instagram.com/${encodeURIComponent(handle)}/" rel="noopener" target="_blank">${IG}View on Instagram</a>` : ""}
         </div>
       </div>
     </section>
@@ -429,7 +450,9 @@ async function showProfile(handle) {
       <div class="chart" id="chart"><div class="tip" id="tip"></div></div>
     </section>
 
-    <section class="panel">
+    ${detailsPanel(p.details)}
+
+    ${SHOW_ENGAGEMENT ? `<section class="panel">
       <h2>Posting and engagement</h2>
       <p class="hint">Based on their most recent posts.</p>
       <div class="eng">
@@ -439,11 +462,11 @@ async function showProfile(handle) {
         <div><b>${p.posts_last_30d ?? "–"}</b><span>posts in 30 days</span></div>
         <div><b>${p.posts ?? "–"}</b><span>posts all time</span></div>
       </div>
-    </section>
+    </section>` : ""}
 
     <nav class="pager" aria-label="More players">
-      ${prev ? `<a href="#/p/${encodeURIComponent(prev.instagram)}">${mini(prev)}<span><small>← ${ordinal(idx)}</small><b>${esc(prev.name)}</b></span></a>` : "<span></span>"}
-      ${next ? `<a class="next" href="#/p/${encodeURIComponent(next.instagram)}"><span><small>${ordinal(idx + 2)} →</small><b>${esc(next.name)}</b></span>${mini(next)}</a>` : "<span></span>"}
+      ${prev ? `<a href="#/p/${encodeURIComponent(prev.id)}">${mini(prev)}<span><small>← ${ordinal(idx)}</small><b>${esc(prev.name)}</b></span></a>` : "<span></span>"}
+      ${next ? `<a class="next" href="#/p/${encodeURIComponent(next.id)}"><span><small>${ordinal(idx + 2)} →</small><b>${esc(next.name)}</b></span>${mini(next)}</a>` : "<span></span>"}
     </nav>`;
 
   $("shareBtn").addEventListener("click", () =>
@@ -456,6 +479,25 @@ async function showProfile(handle) {
   });
   drawChart();
   window.scrollTo(0, 0);
+}
+
+function detailsPanel(d) {
+  if (!d) return "";
+  const age = d.birthdate ? Math.floor((Date.now() - new Date(d.birthdate + "T00:00:00")) / 31557600000) : null;
+  const items = [
+    [d.height_cm ? d.height_cm + " cm" : d.height, d.height ? `height · ${d.height.replace("-", "′")}″` : "height"],
+    [age, d.birthdate ? `years old · born ${niceDate(d.birthdate, { day: "numeric", month: "short", year: "numeric" })}` : ""],
+    [d.jersey ? "#" + d.jersey : null, "jersey"],
+    [d.draft, "draft"],
+    [d.college, "college or last team"],
+    [d.first_season, "first season in the league"],
+  ].filter(([v]) => v != null && v !== "");
+  if (!items.length) return "";
+  return `<section class="panel">
+      <h2>Player details</h2>
+      <p class="hint">From the league's official stats.</p>
+      <div class="facts">${items.map(([v, l]) => `<div><b>${esc(v)}</b><span>${esc(l)}</span></div>`).join("")}</div>
+    </section>`;
 }
 
 function drawChart() {
