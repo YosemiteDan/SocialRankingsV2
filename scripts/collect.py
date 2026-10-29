@@ -36,6 +36,10 @@ ROOT = Path(__file__).resolve().parent.parent
 ATHLETES_FILE = ROOT / "data" / "athletes.csv"
 HISTORY_FILE = ROOT / "data" / "history.csv"
 LAST_RUN_FILE = ROOT / "data" / "last_run.json"
+# Accounts Meta couldn't see (usually personal accounts), with the date last checked.
+# They're re-checked weekly rather than daily, to save Meta's daily allowance.
+NOT_VISIBLE_FILE = ROOT / "data" / "not_visible.json"
+RECHECK_DAYS = 7
 PROFILES_FILE = ROOT / "data" / "profiles.json"
 IMG_DIR = ROOT / "site" / "img"
 PHOTO_REFRESH_DAYS = 7
@@ -204,7 +208,7 @@ MEDIA_STATE = {"ok": None, "images": False}
 POST_FIELDS = "permalink,media_type,media_product_type,timestamp,caption"
 IMAGE_FIELDS = ",media_url,thumbnail_url"
 HL_DIR = IMG_DIR / "hl"           # featured highlight thumbnails
-HL_WIDTH = 540                    # small enough to keep the site (and repository) light
+HL_WIDTH = 440                    # small enough to keep the site (and repository) light
 
 
 def check_media_allowed(token, ig_id):
@@ -406,7 +410,7 @@ def save_thumbnail(url, path):
             im = Image.open(BytesIO(resp.content)).convert("RGB")
             if im.width > HL_WIDTH:
                 im = im.resize((HL_WIDTH, round(im.height * HL_WIDTH / im.width)))
-            im.save(path, "JPEG", quality=78, optimize=True, progressive=True)
+            im.save(path, "JPEG", quality=72, optimize=True, progressive=True)
         except ImportError:
             path.write_bytes(resp.content)
         return True
@@ -485,7 +489,15 @@ def run(now, report):
 
     # 2. Look everyone up through Meta.
     results, not_visible = {}, {}
-    todo = [p for p in people.values() if p["instagram"]]
+    seen_hidden = json.loads(NOT_VISIBLE_FILE.read_text()) if NOT_VISIBLE_FILE.exists() else {}
+    def recently_hidden(h):
+        d = seen_hidden.get(h)
+        return d and (now.date() - datetime.fromisoformat(d).date()).days < RECHECK_DAYS
+    skipped = {p["instagram"]: p for p in people.values() if p["instagram"] and recently_hidden(p["instagram"])}
+    not_visible.update(skipped)          # still offered to Apify, if it's set up
+    todo = [p for p in people.values() if p["instagram"] and p["instagram"] not in skipped]
+    if skipped:
+        print(f"Skipping {len(skipped)} accounts Meta couldn't see in the last {RECHECK_DAYS} days")
     # Start at a different point each day, so if Meta's limit cuts a run short,
     # it isn't always the same athletes who miss out.
     if todo:
@@ -501,9 +513,11 @@ def run(now, report):
             time.sleep(SECONDS_BETWEEN_LOOKUPS)
         try:
             results[handle] = lookup_meta(handle, token, ig_id)
+            seen_hidden.pop(handle, None)
             print(f"  ok   @{handle}: {results[handle]['followers']:,} followers")
         except NotVisible as e:
             not_visible[handle] = a
+            seen_hidden[handle] = today
             print(f"  --   @{handle}: not visible to Meta ({e})")
         except RateLimited as e:
             print(f"::warning::Meta rate limit reached at @{handle}; the rest wait until tomorrow.")
@@ -530,11 +544,15 @@ def run(now, report):
     for handle, a in not_visible.items():
         if handle not in results:
             report["failed"][a["name"]] = (
-                f"@{handle} not found, or it's a personal account Meta can't see. "
+                f"@{handle} not found, or it's a personal account Meta can't see "
+                f"(checked {seen_hidden.get(handle, today)}; re-checked weekly). "
                 "Check the handle" + ("." if apify else ", or add an APIFY_TOKEN secret for personal accounts."))
+    # Forget handles that are no longer in the list.
+    current = {p["instagram"] for p in people.values() if p["instagram"]}
+    NOT_VISIBLE_FILE.write_text(json.dumps({h: d for h, d in sorted(seen_hidden.items()) if h in current}, indent=1))
 
     # 4. Name check: never publish someone else's numbers.
-    by_handle = {p["instagram"]: p for p in todo}
+    by_handle = {p["instagram"]: p for p in people.values() if p["instagram"]}
     for handle in list(results):
         a = by_handle[handle]
         prof = results[handle].get("_profile") or {}
