@@ -13,16 +13,16 @@ Ben Simmons,Basketball,NBA,Sacramento Kings,G-F,,bensimmons,no
 Josh Green,Basketball,NBA,Utah Jazz,G-F,,joshgreen,no
 Alanna Smith,Basketball,WNBA,Dallas Wings,F,,alannas96,wikidata
 Ezi Magbegor,Basketball,WNBA,Seattle Storm,F-C,,ezimagbegor,no
-Jade Melbourne,Basketball,WNBA,Seattle Storm,G,,jade.melbourne,wikidata
-Georgia Amoore,Basketball,WNBA,Washington Mystics,G,,georgiaamoore,no
-Isobel Borlase,Basketball,WNBA,Atlanta Dream,G,,isobelborlase,no
-Nyadiew Puoch,Basketball,WNBA,Portland Fire,F,,nyadiewpuoch,no
+Jade Melbourne,Basketball,WNBA,Seattle Storm,G,,jade.melbourne,yes
+Georgia Amoore,Basketball,WNBA,Washington Mystics,G,,georgiaamoore,yes
+Isobel Borlase,Basketball,WNBA,Atlanta Dream,G,,izzyborlase,yes
+Nyadiew Puoch,Basketball,WNBA,Portland Fire,F,,nyadiewpuoch_,yes
 Rebecca Allen,Basketball,WNBA,New York Liberty,F-G,,bec.allen9,wikidata
 Sami Whitcomb,Basketball,WNBA,Phoenix Mercury,G,,bamsam32,wikidata
-Stephanie Talbot,Basketball,WNBA,Las Vegas Aces,F,,stephtalbot7,wikidata
+Stephanie Talbot,Basketball,WNBA,Las Vegas Aces,F,,stephtalbot7,yes
 Chloe Bibby,Basketball,WNBA,Minnesota Lynx,F,,chloebibby,no
-Anneli Maley,Basketball,WNBA,New York Liberty,F,,annelimaley,no
-Miela Sowah,Basketball,WNBA,Golden State Valkyries,G,,mielasowah,no
+Anneli Maley,Basketball,WNBA,New York Liberty,F,,annelimaley,yes
+Miela Sowah,Basketball,WNBA,Golden State Valkyries,G,,mielasowah,yes
 Flynn Cameron,Basketball,NBL,Adelaide 36ers,G-F,,flynncam21,yes
 Zylan Cheatham,Basketball,NBL,Adelaide 36ers,F,yes,z_takeoff14,yes
 Bryce Cotton,Basketball,NBL,Adelaide 36ers,G,,b_cotton11,yes
@@ -181,122 +181,129 @@ Dakota Mathias,Basketball,NBL,Tasmania JackJumpers,G,yes,dakotamathias,yes
 Jed Richardson,Basketball,NBL,Tasmania JackJumpers,F-C,,_jedrichardson,yes
 Kody Stattmann,Basketball,NBL,Tasmania JackJumpers,G-F,,kodystattmann_,yes
 Nicholas Stoddart,Basketball,NBL,Tasmania JackJumpers,G,,nickstoddart_,yes
-Zitina Aokuso,Basketball,WNBL,Adelaide Lightning,,,,no
-Tayla Brazel,Basketball,WNBL,Adelaide Lightning,,,,no
-Elissa Brett,Basketball,WNBL,Adelaide Lightning,,,,no
-Shay Ciezki,Basketball,WNBL,Adelaide Lightning,,yes,,no
-Aspen Crase,Basketball,WNBL,Adelaide Lightning,,,,no
-Coco Hodges,Basketball,WNBL,Adelaide Lightning,,,,no
-Sienna Lehmann,Basketball,WNBL,Adelaide Lightning,,,,no
-Jess McDowell-White,Basketball,WNBL,Adelaide Lightning,,,,no
-Gemma Potter,Basketball,WNBL,Adelaide Lightning,,,,no
-Stephanie Talbot,Basketball,WNBL,Adelaide Lightning,,,stephtalbot7,wikidata
-Kiara Waite,Basketball,WNBL,Adelaide Lightning,,,,no
-Maddy Westbeld,Basketball,WNBL,Adelaide Lightning,,yes,,no
-Georgia Booth,Basketball,WNBL,Bendigo Spirit,,,,no
-Isobel Borlase,Basketball,WNBL,Bendigo Spirit,,,isobelborlase,no
-Kelsey Griffin,Basketball,WNBL,Bendigo Spirit,,,,no
-Catherine MacGregor,Basketball,WNBL,Bendigo Spirit,,,,no
-Jade Melbourne,Basketball,WNBL,Bendigo Spirit,,,jade.melbourne,wikidata
-Olivia Olechnowicz,Basketball,WNBL,Bendigo Spirit,,,,no
-Olivia Pollerd,Basketball,WNBL,Bendigo Spirit,,,,no
-Kelsey Rees,Basketball,WNBL,Bendigo Spirit,,,,no
-Casey Samuels,Basketball,WNBL,Bendigo Spirit,,,,no
-Marianna Tolo,Basketball,WNBL,Bendigo Spirit,,,mariannatolo,wikidata
-Abbey Wehrung,Basketball,WNBL,Bendigo Spirit,,,,no
+Zitina Aokuso,Basketball,WNBL,Adelaide Lightning,,,zitinaokuso,yes
+Tayla Brazel,Basketball,WNBL,Adelaide Lightning,,,_taylabrazel,yes
+Elissa Brett,Basketball,WNBL,Adelaide Lightning,,,elissabrett,yes
+Shay Ciezki,Basketball,WNBL,Adelaide Lightning,,yes,shay.ciezki,yes
+Aspen Crase,Basketball,WNBL,Adelaide Lightning,,,aspen.crase,yes
+Coco Hodges,Basketball,WNBL,Adelaide Lightning,,,cocohodgess,yes
+Sienna Lehmann,Basketball,WNBL,Adelaide Lightning,,,sienna.lehmann,yes
+Jess McDowell-White,Basketball,WNBL,Adelaide Lightning,,,jess_white4,yes
+Gemma Potter,Basketball,WNBL,Adelaide Lightning,,,gemmapotterr,yes
+Stephanie Talbot,Basketball,WNBL,Adelaide Lightning,,,stephtalbot7,yes
+Kiara Waite,Basketball,WNBL,Adelaide Lightning,,,kiara_white,yes
+Maddy Westbeld,Basketball,WNBL,Adelaide Lightning,,yes,maddy.westbeld,yes
+Abbey Jones,Basketball,WNBL,Adelaide Lightning,,,abbey_jones059,yes
+Georgia Booth,Basketball,WNBL,Bendigo Spirit,,,georgiiabooth,yes
+Isobel Borlase,Basketball,WNBL,Bendigo Spirit,,,izzyborlase,yes
+Kelsey Griffin,Basketball,WNBL,Bendigo Spirit,,,kelseyg23,yes
+Catherine MacGregor,Basketball,WNBL,Bendigo Spirit,,,catherinemacgregor_,yes
+Jade Melbourne,Basketball,WNBL,Bendigo Spirit,,,jade.melbourne,yes
+Olivia Olechnowicz,Basketball,WNBL,Bendigo Spirit,,,olivia_olechnowicz,yes
+Olivia Pollerd,Basketball,WNBL,Bendigo Spirit,,,livpollerd,yes
+Kelsey Rees,Basketball,WNBL,Bendigo Spirit,,,_kelseyrees,yes
+Casey Samuels,Basketball,WNBL,Bendigo Spirit,,,lifeof.caseysamuels,yes
+Marianna Tolo,Basketball,WNBL,Bendigo Spirit,,,mariannatolo,yes
+Abbey Wehrung,Basketball,WNBL,Bendigo Spirit,,,abigailwehrung,yes
 Kelly Wilson,Basketball,WNBL,Bendigo Spirit,,,,no
-Indiah Bowyer,Basketball,WNBL,Geelong Venom,,,,no
-Bec Cole,Basketball,WNBL,Geelong Venom,,,,no
-Aleks Connolly,Basketball,WNBL,Geelong Venom,,,,no
-Dakota Crichton,Basketball,WNBL,Geelong Venom,,,,no
-Mackenzie Clinch Hoycard,Basketball,WNBL,Geelong Venom,,,,no
-Jasmine King,Basketball,WNBL,Geelong Venom,,,,no
-Millie McCarthy,Basketball,WNBL,Geelong Venom,,,,no
-Maddy Rocci,Basketball,WNBL,Geelong Venom,,,,no
-Lilly Rotunno,Basketball,WNBL,Geelong Venom,,,,no
-Alex Sharp,Basketball,WNBL,Geelong Venom,,,,no
-Sara-Rose Smith,Basketball,WNBL,Geelong Venom,,,,no
-Poppy Stevens,Basketball,WNBL,Geelong Venom,,,,no
-Han Xu,Basketball,WNBL,Geelong Venom,,yes,hanxu_521,wikidata
-Wanglai Zhang,Basketball,WNBL,Geelong Venom,,yes,,no
-Georgia Amoore,Basketball,WNBL,Perth Lynx,,,georgiaamoore,no
-Samantha Ashby,Basketball,WNBL,Perth Lynx,,,,no
-Alex Ciabattoni,Basketball,WNBL,Perth Lynx,,,,no
-Steph Gorman,Basketball,WNBL,Perth Lynx,,,,no
-Chloe Hodges,Basketball,WNBL,Perth Lynx,,,,no
-Teonni Key,Basketball,WNBL,Perth Lynx,,yes,,no
-Anneli Maley,Basketball,WNBL,Perth Lynx,,,annelimaley,no
-Brooke Malone,Basketball,WNBL,Perth Lynx,,,,no
-Teige Morrell,Basketball,WNBL,Perth Lynx,,,,no
-Haley Peters,Basketball,WNBL,Perth Lynx,,yes,haleypeters,wikidata
-Kyana Weir,Basketball,WNBL,Perth Lynx,,,,no
+Mia Harvey,Basketball,WNBL,Bendigo Spirit,,,miaharves,yes
+Indiah Bowyer,Basketball,WNBL,Geelong Venom,,,indigal,yes
+Bec Cole,Basketball,WNBL,Geelong Venom,,,rebeccajcole,yes
+Aleks Connolly,Basketball,WNBL,Geelong Venom,,,aleksconnolly,yes
+Dakota Crichton,Basketball,WNBL,Geelong Venom,,,dakotacrichtonn,yes
+Mackenzie Clinch Hoycard,Basketball,WNBL,Geelong Venom,,,mackenziehoycard,yes
+Jasmine King,Basketball,WNBL,Geelong Venom,,,jasmineking.1,yes
+Millie McCarthy,Basketball,WNBL,Geelong Venom,,,milliemccarthy_,yes
+Maddy Rocci,Basketball,WNBL,Geelong Venom,,,maddyrocci,yes
+Lilly Rotunno,Basketball,WNBL,Geelong Venom,,,lillyrotunno,yes
+Alex Sharp,Basketball,WNBL,Geelong Venom,,,alexsharpyy,yes
+Sara-Rose Smith,Basketball,WNBL,Geelong Venom,,,sara.smith,yes
+Poppy Stevens,Basketball,WNBL,Geelong Venom,,,poppystevens,yes
+Han Xu,Basketball,WNBL,Geelong Venom,,yes,hanxu_521,yes
+Wanglai Zhang,Basketball,WNBL,Geelong Venom,,yes,lai.lai.36,yes
+Georgia Amoore,Basketball,WNBL,Perth Lynx,,,georgiaamoore,yes
+Samantha Ashby,Basketball,WNBL,Perth Lynx,,,samashby01,yes
+Alex Ciabattoni,Basketball,WNBL,Perth Lynx,,,aciabattoni,yes
+Steph Gorman,Basketball,WNBL,Perth Lynx,,,stephgormann,yes
+Chloe Hodges,Basketball,WNBL,Perth Lynx,,,chloehodges,yes
+Teonni Key,Basketball,WNBL,Perth Lynx,,yes,teonnikeyy,yes
+Anneli Maley,Basketball,WNBL,Perth Lynx,,,annelimaley,yes
+Brooke Malone,Basketball,WNBL,Perth Lynx,,,brookeebonyy,yes
+Teige Morrell,Basketball,WNBL,Perth Lynx,,,proballbuddy,yes
+Haley Peters,Basketball,WNBL,Perth Lynx,,yes,haleypeters,yes
+Kyana Weir,Basketball,WNBL,Perth Lynx,,,ky.weir,yes
 Sami Whitcomb,Basketball,WNBL,Perth Lynx,,,bamsam32,wikidata
-Haylee Andrews,Basketball,WNBL,Southside Melbourne Flyers,,,,no
-Macey Boyle,Basketball,WNBL,Southside Melbourne Flyers,,,,no
-Lara Edmanson,Basketball,WNBL,Southside Melbourne Flyers,,,,no
-Carly Ernst,Basketball,WNBL,Southside Melbourne Flyers,,,,no
+Reece Anticevic,Basketball,WNBL,Perth Lynx,,,reece_anticevic,yes
+Haylee Andrews,Basketball,WNBL,Southside Melbourne Flyers,,,hayleeandrewss,yes
+Macey Boyle,Basketball,WNBL,Southside Melbourne Flyers,,,macey.boyle,yes
+Lara Edmanson,Basketball,WNBL,Southside Melbourne Flyers,,,laraedmanson,yes
+Carly Ernst,Basketball,WNBL,Southside Melbourne Flyers,,,carleymijovic,yes
 Cayla George,Basketball,WNBL,Southside Melbourne Flyers,,,cfrannykg,wikidata
-Holly Griffiths,Basketball,WNBL,Southside Melbourne Flyers,,,,no
-Hannah Hank,Basketball,WNBL,Southside Melbourne Flyers,,,,no
-Tess Heal,Basketball,WNBL,Southside Melbourne Flyers,,,,no
-Claire Jacobs,Basketball,WNBL,Southside Melbourne Flyers,,,,no
-Saffron Shiels,Basketball,WNBL,Southside Melbourne Flyers,,,,no
-Wang Siyu,Basketball,WNBL,Southside Melbourne Flyers,,yes,,no
-Sakima Walker,Basketball,WNBL,Southside Melbourne Flyers,,yes,,no
-Isobelle Wightman,Basketball,WNBL,Southside Melbourne Flyers,,,,no
-Issy Bourne,Basketball,WNBL,Sydney Flames,,,,no
-Maya Dodson,Basketball,WNBL,Sydney Flames,,yes,,no
-Charlise Dunn,Basketball,WNBL,Sydney Flames,,,,no
-Agnes Emma-Nnopu,Basketball,WNBL,Sydney Flames,,,,no
-Zoey Miller,Basketball,WNBL,Sydney Flames,,,,no
-Issy Morgan,Basketball,WNBL,Sydney Flames,,,,no
-Lauren Nicholson,Basketball,WNBL,Sydney Flames,,,,no
-Alex Oliver,Basketball,WNBL,Sydney Flames,,,,no
-Kaila Proctor,Basketball,WNBL,Sydney Flames,,,,no
-Darcy Rees,Basketball,WNBL,Sydney Flames,,,,no
-Peggy Schell,Basketball,WNBL,Sydney Flames,,,,no
-Jaz Shelley,Basketball,WNBL,Sydney Flames,,,,no
-Yang Shuyu,Basketball,WNBL,Sydney Flames,,yes,shuyu_yang0306,wikidata
-Shaneice Swain,Basketball,WNBL,Sydney Flames,,,shaneiceswain,wikidata
-Ally Wilson,Basketball,WNBL,Sydney Flames,,,,no
-Brooke Basham,Basketball,WNBL,Tasmania Jewels,,,,no
-Chloe Broomhall,Basketball,WNBL,Tasmania Jewels,,,,no
-Portia Chopping,Basketball,WNBL,Tasmania Jewels,,,,no
-Katie Deeble,Basketball,WNBL,Tasmania Jewels,,,,no
-Keely Froling,Basketball,WNBL,Tasmania Jewels,,,,no
-Darcee Garbin,Basketball,WNBL,Tasmania Jewels,,,,no
-Mia Jacobs,Basketball,WNBL,Tasmania Jewels,,,,no
-Gianna Kneepkens,Basketball,WNBL,Tasmania Jewels,,yes,,no
-Ava McDonald,Basketball,WNBL,Tasmania Jewels,,,,no
-Taylor Mole,Basketball,WNBL,Tasmania Jewels,,,,no
-Madina Okot,Basketball,WNBL,Tasmania Jewels,,yes,,no
-Nikki Parker,Basketball,WNBL,Tasmania Jewels,,,,no
-Steph Reid,Basketball,WNBL,Tasmania Jewels,,,,no
-Andie Smith,Basketball,WNBL,Tasmania Jewels,,,,no
-Georgia Taylor,Basketball,WNBL,Tasmania Jewels,,,,no
-Ella Tofaeono,Basketball,WNBL,Tasmania Jewels,,,,no
-Cheyenne Bobongie,Basketball,WNBL,Townsville Fire,,,,no
-Emma Clarke,Basketball,WNBL,Townsville Fire,,,emma.clarke3,wikidata
-Abbey Ellis,Basketball,WNBL,Townsville Fire,,,,no
-Antoniette Emma-Nnopu,Basketball,WNBL,Townsville Fire,,,,no
-Catelyn Van Es,Basketball,WNBL,Townsville Fire,,,,no
-Chloe Forster,Basketball,WNBL,Townsville Fire,,,,no
-Alex Fowler,Basketball,WNBL,Townsville Fire,,,,no
-Alicia Froling,Basketball,WNBL,Townsville Fire,,,,no
-Marie Gülich,Basketball,WNBL,Townsville Fire,,yes,marie_gulitsch,wikidata
-Lauren Jensen,Basketball,WNBL,Townsville Fire,,yes,,no
-Miela Sowah,Basketball,WNBL,Townsville Fire,,,mielasowah,no
-Bree Stephens,Basketball,WNBL,Townsville Fire,,,,no
-Courtney Woods,Basketball,WNBL,Townsville Fire,,,,no
-Amy Atwell,Basketball,WNBL,UC Capitals,,,amyatwell98,wikidata
-Jasmyn Boutzos,Basketball,WNBL,UC Capitals,,,,no
-Isabella Brancatisano,Basketball,WNBL,UC Capitals,,,,no
-Zara Funnell,Basketball,WNBL,UC Capitals,,,,no
-Caitlyn Jones,Basketball,WNBL,UC Capitals,,,,no
-Megan McConnell,Basketball,WNBL,UC Capitals,,yes,,no
-Nicole Munger,Basketball,WNBL,UC Capitals,,yes,,no
-Isabel Palmer,Basketball,WNBL,UC Capitals,,,,no
-Nyadiew Puoch,Basketball,WNBL,UC Capitals,,,nyadiewpuoch,no
-Manuela Puoch,Basketball,WNBL,UC Capitals,,,,no
-Sharne Robati,Basketball,WNBL,UC Capitals,,,,no
-Charlotte Whittaker,Basketball,WNBL,UC Capitals,,,,no
+Holly Griffiths,Basketball,WNBL,Southside Melbourne Flyers,,,holly.griffithss,yes
+Hannah Hank,Basketball,WNBL,Southside Melbourne Flyers,,,hannah__hank,yes
+Tess Heal,Basketball,WNBL,Southside Melbourne Flyers,,,tessheal_,yes
+Claire Jacobs,Basketball,WNBL,Southside Melbourne Flyers,,,claire.jacobs01,yes
+Saffron Shiels,Basketball,WNBL,Southside Melbourne Flyers,,,saffronshiels,yes
+Wang Siyu,Basketball,WNBL,Southside Melbourne Flyers,,yes,rainy_wang5,yes
+Sakima Walker,Basketball,WNBL,Southside Melbourne Flyers,,yes,sakimawalker,yes
+Isobelle Wightman,Basketball,WNBL,Southside Melbourne Flyers,,,izzy.wightman,yes
+Lucy Cochrane,Basketball,WNBL,Southside Melbourne Flyers,,,lucycochrane,yes
+Marianela Fakalata,Basketball,WNBL,Southside Melbourne Flyers,,,nela_fakalata,yes
+Madi Ryan,Basketball,WNBL,Southside Melbourne Flyers,,,madiryan53,yes
+Issy Bourne,Basketball,WNBL,Sydney Flames,,,issiebourne,yes
+Maya Dodson,Basketball,WNBL,Sydney Flames,,yes,macd_15,yes
+Charlise Dunn,Basketball,WNBL,Sydney Flames,,,charlisedunn,yes
+Agnes Emma-Nnopu,Basketball,WNBL,Sydney Flames,,,agnes_emmannopu,yes
+Zoey Miller,Basketball,WNBL,Sydney Flames,,,zoey.miller,yes
+Issy Morgan,Basketball,WNBL,Sydney Flames,,,issymorgann,yes
+Lauren Nicholson,Basketball,WNBL,Sydney Flames,,,loznicholson,yes
+Alex Oliver,Basketball,WNBL,Sydney Flames,,,aloiiverr,yes
+Kaila Proctor,Basketball,WNBL,Sydney Flames,,,krp4_x,yes
+Darcy Rees,Basketball,WNBL,Sydney Flames,,,darcyr53,yes
+Peggy Schell,Basketball,WNBL,Sydney Flames,,,peggy.schelll,yes
+Jaz Shelley,Basketball,WNBL,Sydney Flames,,,jaz_shelley,yes
+Yang Shuyu,Basketball,WNBL,Sydney Flames,,yes,shuyu_yang0306,yes
+Shaneice Swain,Basketball,WNBL,Sydney Flames,,,shaneiceswain,yes
+Ally Wilson,Basketball,WNBL,Sydney Flames,,,allywilsonnn,yes
+Brooke Basham,Basketball,WNBL,Tasmania Jewels,,,brookebasham,yes
+Chloe Broomhall,Basketball,WNBL,Tasmania Jewels,,,chloe.broomhall_,yes
+Portia Chopping,Basketball,WNBL,Tasmania Jewels,,,portia_chopping,yes
+Katie Deeble,Basketball,WNBL,Tasmania Jewels,,,katiedeeble1,yes
+Keely Froling,Basketball,WNBL,Tasmania Jewels,,,keelyfroling,yes
+Darcee Garbin,Basketball,WNBL,Tasmania Jewels,,,darceegarbin,yes
+Mia Jacobs,Basketball,WNBL,Tasmania Jewels,,,_miajacobs_,yes
+Gianna Kneepkens,Basketball,WNBL,Tasmania Jewels,,yes,giannakneepkens,yes
+Ava McDonald,Basketball,WNBL,Tasmania Jewels,,,avagracemcdonald_,yes
+Taylor Mole,Basketball,WNBL,Tasmania Jewels,,,taylormole11,yes
+Madina Okot,Basketball,WNBL,Tasmania Jewels,,yes,okotmadina,yes
+Nikki Parker,Basketball,WNBL,Tasmania Jewels,,,nikkikayparker,yes
+Steph Reid,Basketball,WNBL,Tasmania Jewels,,,steph_reid,yes
+Andie Smith,Basketball,WNBL,Tasmania Jewels,,,andie_smithh,yes
+Georgia Taylor,Basketball,WNBL,Tasmania Jewels,,,georgia.tayylorr,yes
+Ella Tofaeono,Basketball,WNBL,Tasmania Jewels,,,ellatofaeono,yes
+Mikaela Ruef,Basketball,WNBL,Tasmania Jewels,,,mikaeladuh,yes
+Cheyenne Bobongie,Basketball,WNBL,Townsville Fire,,,cheybobongie_,yes
+Emma Clarke,Basketball,WNBL,Townsville Fire,,,emma.clarke3,yes
+Abbey Ellis,Basketball,WNBL,Townsville Fire,,,_abbeyellis,yes
+Antoniette Emma-Nnopu,Basketball,WNBL,Townsville Fire,,,antoniette.emma,yes
+Catelyn Van Es,Basketball,WNBL,Townsville Fire,,,catie.vanes,yes
+Chloe Forster,Basketball,WNBL,Townsville Fire,,,chloeforsterr,yes
+Alex Fowler,Basketball,WNBL,Townsville Fire,,,alexx.fowlerr,yes
+Alicia Froling,Basketball,WNBL,Townsville Fire,,,aliciafroling9,yes
+Marie Gülich,Basketball,WNBL,Townsville Fire,,yes,marie_gulitsch,yes
+Lauren Jensen,Basketball,WNBL,Townsville Fire,,yes,lauren.jensen15,yes
+Miela Sowah,Basketball,WNBL,Townsville Fire,,,mielasowah,yes
+Bree Stephens,Basketball,WNBL,Townsville Fire,,,bree.stephenss,yes
+Courtney Woods,Basketball,WNBL,Townsville Fire,,,courtney.woods_,yes
+Amy Atwell,Basketball,WNBL,UC Capitals,,,amyatwell98,yes
+Jasmyn Boutzos,Basketball,WNBL,UC Capitals,,,jazboutzos,yes
+Isabella Brancatisano,Basketball,WNBL,UC Capitals,,,isabrancat_,yes
+Zara Funnell,Basketball,WNBL,UC Capitals,,,zara.funnell,yes
+Caitlyn Jones,Basketball,WNBL,UC Capitals,,,catiej0nes,yes
+Megan McConnell,Basketball,WNBL,UC Capitals,,yes,megg_mcconnell,yes
+Nicole Munger,Basketball,WNBL,UC Capitals,,yes,nicolemunger10,yes
+Isabel Palmer,Basketball,WNBL,UC Capitals,,,isabelpalmer11,yes
+Nyadiew Puoch,Basketball,WNBL,UC Capitals,,,nyadiewpuoch_,yes
+Manuela Puoch,Basketball,WNBL,UC Capitals,,,manuela.puoch,yes
+Sharne Robati,Basketball,WNBL,UC Capitals,,,sharnerobati,yes
+Charlotte Whittaker,Basketball,WNBL,UC Capitals,,,char_whittaker,yes
