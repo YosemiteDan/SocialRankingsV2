@@ -39,11 +39,18 @@ jobs:
       - name: Collect today's numbers
         id: collect
         if: github.event_name == 'schedule' || inputs.collect
-        continue-on-error: true   # still publish the site even if Instagram blocks us today
+        continue-on-error: true   # still publish the site even if collection has a problem today
         env:
+          META_ACCESS_TOKEN: ${{ secrets.META_ACCESS_TOKEN }}
+          META_IG_USER_ID: ${{ secrets.META_IG_USER_ID }}
           APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
-          IG_SESSIONID: ${{ secrets.IG_SESSIONID }}
         run: python scripts/collect.py
+
+      - name: Update player details (weekly)
+        if: github.event_name == 'schedule' || inputs.collect
+        continue-on-error: true   # the NBA's stats site is sometimes unreachable; try again next time
+        timeout-minutes: 15
+        run: python scripts/player_details.py
 
       - name: Build the website data
         run: python scripts/build_site_data.py
