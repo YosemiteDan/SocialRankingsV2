@@ -75,9 +75,40 @@ def name_matches(athlete_name, ig_name, ig_username):
     account. (The username alone isn't trusted: we often guessed it from the
     athlete's name, so it would always 'match'.) Only if the account shows no
     name at all do we fall back to the username."""
-    surname = plain(athlete_name.split()[-1])
+    words = [w for w in athlete_name.split() if plain(w) not in SUFFIXES]
+    surname = plain(words[-1]) if words else ""
     shown = plain(ig_name) or plain(ig_username)
     return bool(surname) and surname in shown
+
+
+SUFFIXES = {"jr", "jnr", "sr", "ii", "iii", "iv"}
+
+
+def people_from(athletes):
+    """One entry per athlete. Someone can have several rows (e.g. WNBA and WNBL);
+    they share one Instagram account, taken from whichever row has it."""
+    people = {}
+    for a in athletes:
+        p = people.setdefault(a["name"], {"name": a["name"], "instagram": "", "handle_checked": "no"})
+        if not p["instagram"] and clean_handle(a["instagram"]):
+            p["instagram"] = clean_handle(a["instagram"])
+        if a.get("handle_checked") == "yes":
+            p["handle_checked"] = "yes"
+        elif a.get("handle_checked") == "wikidata" and p["handle_checked"] == "no":
+            p["handle_checked"] = "wikidata"
+    return people
+
+
+def sync_rows(fields, athletes, people):
+    """Copy each athlete's handle onto all of their rows, so the file stays consistent."""
+    changed = False
+    for a in athletes:
+        p = people[a["name"]]
+        if clean_handle(a["instagram"]) != p["instagram"] or a.get("handle_checked") != p["handle_checked"]:
+            a["instagram"], a["handle_checked"] = p["instagram"], p["handle_checked"]
+            changed = True
+    if changed:
+        save_athletes(fields, athletes)
 
 
 def load_athletes():
@@ -113,6 +144,10 @@ def graph_get(path, token, **params):
             raise TokenProblem(f"Meta rejected the access token: {msg}")
         if code in (4, 17, 32, 613) or "limit" in msg.lower():
             raise RateLimited(msg)
+        if code in (10, 200):
+            raise TokenProblem(
+                f"Meta says the app doesn't have permission ({msg}). If your Facebook Page is in a "
+                "business portfolio, the token also needs ads_read - see README 'Connecting Meta'.")
         if code in (100, 110) or sub == 2207013:
             raise NotVisible(msg)
         raise RuntimeError(f"Meta error {code}: {msg}")
@@ -126,9 +161,14 @@ def find_ig_account(token):
         return fixed
     # A Page token: the page itself is "me".
     try:
-        me = graph_get("me", token, fields="instagram_business_account")
+        me = graph_get("me", token, fields="name,instagram_business_account")
         if me.get("instagram_business_account"):
             return me["instagram_business_account"]["id"]
+        # It's a Page token, but Meta shows no Instagram account linked to the Page.
+        raise TokenProblem(
+            f"The token works and belongs to the Facebook Page '{me.get('name')}', but Meta can't see "
+            "an Instagram professional account linked to that Page. Link them (README step 2), then make "
+            "a new token with instagram_basic ticked (steps 4-5).")
     except NotVisible:
         pass
     # A user token: look through the pages this person manages.
@@ -218,16 +258,14 @@ def wikidata_handles(names):
     return {n: hs.pop() for n, hs in found.items() if len(hs) == 1}
 
 
-def fill_handles_from_wikidata(fields, athletes, names, changes):
+def fill_handles_from_wikidata(fields, athletes, people, names, changes):
     suggestions = wikidata_handles(names)
-    for a in athletes:
-        new = suggestions.get(a["name"]) if a["name"] in names else None
-        if new and new != clean_handle(a["instagram"]) and a.get("handle_checked") != "yes":
-            changes[a["name"]] = {"from": a["instagram"] or None, "to": new}
-            a["instagram"] = new
-            a["handle_checked"] = "wikidata"
-    if changes:
-        save_athletes(fields, athletes)
+    for name in names:
+        p, new = people[name], suggestions.get(name)
+        if new and new != p["instagram"] and p["handle_checked"] != "yes":
+            changes[name] = {"from": p["instagram"] or None, "to": new}
+            p["instagram"], p["handle_checked"] = new, "wikidata"
+    sync_rows(fields, athletes, people)
     return suggestions
 
 
@@ -303,12 +341,14 @@ def main():
 def run(now, report):
     today = now.date().isoformat()
     fields, athletes = load_athletes()
+    people = people_from(athletes)
+    sync_rows(fields, athletes, people)
 
     # 1. Fill blank handles from Wikidata before looking anyone up.
-    blanks = [a["name"] for a in athletes if not clean_handle(a["instagram"])]
+    blanks = [n for n, p in people.items() if not p["instagram"]]
     if blanks:
         print(f"Looking up {len(blanks)} missing handles on Wikidata")
-        fill_handles_from_wikidata(fields, athletes, blanks, report["handle_changes"])
+        fill_handles_from_wikidata(fields, athletes, people, blanks, report["handle_changes"])
 
     token = os.environ.get("META_ACCESS_TOKEN", "").strip()
     apify = os.environ.get("APIFY_TOKEN", "").strip()
@@ -339,10 +379,15 @@ def run(now, report):
 
     # 2. Look everyone up through Meta.
     results, not_visible = {}, {}
-    todo = [a for a in athletes if clean_handle(a["instagram"])]
-    for a in athletes:
-        if not clean_handle(a["instagram"]):
-            report["failed"][a["name"]] = "no Instagram handle yet - add it to data/athletes.csv"
+    todo = [p for p in people.values() if p["instagram"]]
+    # Start at a different point each day, so if Meta's limit cuts a run short,
+    # it isn't always the same athletes who miss out.
+    if todo:
+        start = now.toordinal() % len(todo)
+        todo = todo[start:] + todo[:start]
+    for p in people.values():
+        if not p["instagram"]:
+            report["failed"][p["name"]] = "no Instagram handle yet - add it to data/athletes.csv"
     print(f"Collecting {len(todo)} profiles via Meta for {today}")
     for i, a in enumerate(todo):
         handle = clean_handle(a["instagram"])
@@ -383,7 +428,7 @@ def run(now, report):
                 "Check the handle" + ("." if apify else ", or add an APIFY_TOKEN secret for personal accounts."))
 
     # 4. Name check: never publish someone else's numbers.
-    by_handle = {clean_handle(a["instagram"]): a for a in athletes}
+    by_handle = {p["instagram"]: p for p in todo}
     for handle in list(results):
         a = by_handle[handle]
         prof = results[handle].get("_profile") or {}
@@ -396,7 +441,7 @@ def run(now, report):
     # 5. For handles that failed, see if Wikidata knows a better one for next time.
     retry = [n for n, why in report["failed"].items() if why.startswith("@")]
     if retry:
-        fill_handles_from_wikidata(fields, athletes, retry, report["handle_changes"])
+        fill_handles_from_wikidata(fields, athletes, people, retry, report["handle_changes"])
 
     if results:
         save_history(results, today)

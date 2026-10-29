@@ -71,9 +71,16 @@ def main():
     if (DATA / "details.json").exists():
         details = json.loads((DATA / "details.json").read_text())
 
-    summaries, pages = [], {}
+    # One entry per athlete, even if they play in two leagues (e.g. WNBA and WNBL).
+    grouped = {}
     for a in athletes:
-        handle = a["instagram"].strip().lstrip("@").lower()
+        grouped.setdefault(a["name"], []).append(a)
+
+    summaries, pages = [], {}
+    for name, memberships in grouped.items():
+        a = memberships[0]                      # first row = main league and team
+        handle = next((m["instagram"].strip().lstrip("@").lower()
+                       for m in memberships if m["instagram"].strip()), "")
         key = handle or (a["name"].replace(" ", "").lower() if sample else "")
         rows = history.get(key, []) if key else []
         prof = profiles.get(handle, {})
@@ -81,6 +88,10 @@ def main():
         p = {
             "name": a["name"], "team": a["team"], "position": a["position"],
             "sport": a.get("sport", ""), "league": a.get("league", ""),
+            # Every league and team they're in: [league, team, position]
+            "teams": [[m.get("league", ""), m["team"], m["position"]] for m in memberships],
+            "leagues": [m.get("league", "") for m in memberships],
+            "import": any(m.get("import") == "yes" for m in memberships),
             "id": slug(a["name"]),
             "instagram": handle or None,
             "verified": prof.get("is_verified"),

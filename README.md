@@ -2,13 +2,13 @@
 
 A website that ranks Australian athletes by Instagram followers, with growth over 7 days, 30 days and a year, and a profile page for each athlete. GitHub collects the numbers every morning and republishes the site for free.
 
-**Phase 1:** every Australian in the NBA and WNBA, followers only. Engagement (likes, comments, posts) comes in a later phase.
+**Phase 1:** basketball, followers only. Every Australian in the NBA and WNBA, plus every player in the NBL and WNBL (imports included and labelled). Engagement (likes, comments, posts) comes in a later phase.
 
 ## What's in this folder
 
 | File | What it does |
 |---|---|
-| `data/athletes.csv` | The list of athletes and their Instagram handles. Edit this to add or remove people. |
+| `data/athletes.csv` | The list of athletes, their teams and Instagram handles. Edit this to add or remove people. |
 | `scripts/collect.py` | Each morning, gets every athlete's follower count from Meta's official API and saves it to `data/history.csv`, plus their Instagram name, bio and photo (`data/profiles.json` and `site/img/`). |
 | `scripts/player_details.py` | Once a week, gets height, birthdate, draft, jersey and so on from the NBA and WNBA's official stats, saved to `data/details.json`. |
 | `scripts/build_site_data.py` | Works out rankings and growth, and writes the files the website reads (`site/data.json` and `site/players/`). |
@@ -110,7 +110,19 @@ When you're ready to show likes, comments and posts, change `const SHOW_ENGAGEME
 
 ## Adding athletes, leagues or sports
 
-Add a row to `data/athletes.csv` with the name, sport, league, team, position and Instagram handle (or leave the handle blank to try Wikidata). With more than one league, the site shows league filters above the rankings. With more than one sport, the headline changes to cover all sports. Each profile shows the athlete's rank within their own league. Player details are only fetched for NBA and WNBA athletes for now.
+Each row in `data/athletes.csv` is one athlete in one league:
+
+| Column | What goes in it |
+|---|---|
+| `name` | Full name, spelled the same on every row for that athlete |
+| `sport`, `league`, `team`, `position` | e.g. `Basketball`, `NBL`, `Sydney Kings`, `G` |
+| `import` | `yes` for import players, otherwise blank. The site has an "Aussies only" switch that hides them. |
+| `instagram` | Their handle without the @, or blank to let Wikidata try to find it |
+| `handle_checked` | `no`, `wikidata` or `yes` (see "Checking the results") |
+
+Someone who plays in two leagues (e.g. the WNBA in the northern summer and the WNBL in the Australian summer) gets one row per league with the same name. They appear once on the site, under both leagues, sharing one Instagram account.
+
+**Keeping rosters current:** NBL and WNBL squads change between seasons and with injury replacements during them. Rosters aren't updated automatically yet, so add and remove rows as players come and go. The current lists come from basketball.com.au's NBL27 and WNBL27 roster pages (October 2026). With more than one league, the site shows league filters above the rankings. With more than one sport, the headline changes to cover all sports. Each profile shows the athlete's rank within their own league. Player details are only fetched for NBA and WNBA athletes for now.
 
 ## Changing the site's name
 

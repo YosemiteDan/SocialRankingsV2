@@ -1,25 +1,302 @@
-name,sport,league,team,position,instagram,handle_checked
-Josh Giddey,Basketball,NBA,Chicago Bulls,G,joshgiddey,no
-Dyson Daniels,Basketball,NBA,Atlanta Hawks,G,dysondaniels,no
-Jock Landale,Basketball,NBA,Atlanta Hawks,C,jocklandale,yes
-Tyrese Proctor,Basketball,NBA,Cleveland Cavaliers,G,tyreseproctor,no
-Kyrie Irving,Basketball,NBA,Dallas Mavericks,G,kyrieirving,no
-Alex Toohey,Basketball,NBA,Golden State Warriors,F,alextoohey,no
-Johnny Furphy,Basketball,NBA,Indiana Pacers,F,johnnyfurphy,no
-Matisse Thybulle,Basketball,NBA,Los Angeles Lakers,G-F,theycallmetisse,yes
-Rocco Zikarsky,Basketball,NBA,Minnesota Timberwolves,C,roccozikarsky,no
-Duop Reath,Basketball,NBA,Phoenix Suns,C,duop.reath,wikidata
-Ben Simmons,Basketball,NBA,Sacramento Kings,G-F,bensimmons,no
-Josh Green,Basketball,NBA,Utah Jazz,G-F,joshgreen,no
-Alanna Smith,Basketball,WNBA,Dallas Wings,F,alannas96,wikidata
-Ezi Magbegor,Basketball,WNBA,Seattle Storm,F-C,ezimagbegor,no
-Jade Melbourne,Basketball,WNBA,Seattle Storm,G,jade.melbourne,wikidata
-Georgia Amoore,Basketball,WNBA,Washington Mystics,G,georgiaamoore,no
-Isobel Borlase,Basketball,WNBA,Atlanta Dream,G,isobelborlase,no
-Nyadiew Puoch,Basketball,WNBA,Portland Fire,F,nyadiewpuoch,no
-Rebecca Allen,Basketball,WNBA,New York Liberty,F-G,bec.allen9,wikidata
-Sami Whitcomb,Basketball,WNBA,Phoenix Mercury,G,bamsam32,wikidata
-Stephanie Talbot,Basketball,WNBA,Las Vegas Aces,F,stephtalbot7,wikidata
-Chloe Bibby,Basketball,WNBA,Minnesota Lynx,F,chloebibby,no
-Anneli Maley,Basketball,WNBA,New York Liberty,F,annelimaley,no
-Miela Sowah,Basketball,WNBA,Golden State Valkyries,G,mielasowah,no
+name,sport,league,team,position,import,instagram,handle_checked
+Josh Giddey,Basketball,NBA,Chicago Bulls,G,,joshgiddey,no
+Dyson Daniels,Basketball,NBA,Atlanta Hawks,G,,dysondaniels,no
+Jock Landale,Basketball,NBA,Atlanta Hawks,C,,jocklandale,yes
+Tyrese Proctor,Basketball,NBA,Cleveland Cavaliers,G,,tyreseproctor,no
+Kyrie Irving,Basketball,NBA,Dallas Mavericks,G,,kyrieirving,no
+Alex Toohey,Basketball,NBA,Golden State Warriors,F,,alextoohey,no
+Johnny Furphy,Basketball,NBA,Indiana Pacers,F,,johnnyfurphy,no
+Matisse Thybulle,Basketball,NBA,Los Angeles Lakers,G-F,,theycallmetisse,yes
+Rocco Zikarsky,Basketball,NBA,Minnesota Timberwolves,C,,roccozikarsky,no
+Duop Reath,Basketball,NBA,Phoenix Suns,C,,duop.reath,wikidata
+Ben Simmons,Basketball,NBA,Sacramento Kings,G-F,,bensimmons,no
+Josh Green,Basketball,NBA,Utah Jazz,G-F,,joshgreen,no
+Alanna Smith,Basketball,WNBA,Dallas Wings,F,,alannas96,wikidata
+Ezi Magbegor,Basketball,WNBA,Seattle Storm,F-C,,ezimagbegor,no
+Jade Melbourne,Basketball,WNBA,Seattle Storm,G,,jade.melbourne,wikidata
+Georgia Amoore,Basketball,WNBA,Washington Mystics,G,,georgiaamoore,no
+Isobel Borlase,Basketball,WNBA,Atlanta Dream,G,,isobelborlase,no
+Nyadiew Puoch,Basketball,WNBA,Portland Fire,F,,nyadiewpuoch,no
+Rebecca Allen,Basketball,WNBA,New York Liberty,F-G,,bec.allen9,wikidata
+Sami Whitcomb,Basketball,WNBA,Phoenix Mercury,G,,bamsam32,wikidata
+Stephanie Talbot,Basketball,WNBA,Las Vegas Aces,F,,stephtalbot7,wikidata
+Chloe Bibby,Basketball,WNBA,Minnesota Lynx,F,,chloebibby,no
+Anneli Maley,Basketball,WNBA,New York Liberty,F,,annelimaley,no
+Miela Sowah,Basketball,WNBA,Golden State Valkyries,G,,mielasowah,no
+Flynn Cameron,Basketball,NBL,Adelaide 36ers,G-F,,,no
+Zylan Cheatham,Basketball,NBL,Adelaide 36ers,F,yes,,no
+Bryce Cotton,Basketball,NBL,Adelaide 36ers,G,,,no
+Ben Griscti,Basketball,NBL,Adelaide 36ers,C,,,no
+John Jenkins III,Basketball,NBL,Adelaide 36ers,G,yes,,no
+Raheim Brown Jnr,Basketball,NBL,Adelaide 36ers,G,,,no
+Matt Kenyon,Basketball,NBL,Adelaide 36ers,G-F,,,no
+Bul Kuol,Basketball,NBL,Adelaide 36ers,G-F,,,no
+Mangok Mathiang,Basketball,NBL,Adelaide 36ers,C,,,no
+Nick Rakocevic,Basketball,NBL,Adelaide 36ers,F-C,yes,,no
+Keanu Rasmussen,Basketball,NBL,Adelaide 36ers,G,,,no
+Jacob Rigoni,Basketball,NBL,Adelaide 36ers,F,,,no
+Corey Webster,Basketball,NBL,Adelaide 36ers,G,,,no
+Isaac White,Basketball,NBL,Adelaide 36ers,G,,,no
+Harvey White,Basketball,NBL,Adelaide 36ers,G,,,no
+Deonte Williams,Basketball,NBL,Adelaide 36ers,G,,,no
+Rio Bruton,Basketball,NBL,Brisbane Bullets,G,,,no
+Josh Duach,Basketball,NBL,Brisbane Bullets,G,,,no
+Tyrell Harrison,Basketball,NBL,Brisbane Bullets,C,,,no
+Nate Hinton,Basketball,NBL,Brisbane Bullets,G-F,yes,,no
+Jacob Holt,Basketball,NBL,Brisbane Bullets,F-C,,,no
+Max Mackinnon,Basketball,NBL,Brisbane Bullets,G-F,,,no
+Mawot Mag,Basketball,NBL,Brisbane Bullets,G-F,,,no
+Lat Mayen,Basketball,NBL,Brisbane Bullets,F,,,no
+Sam McDaniel,Basketball,NBL,Brisbane Bullets,G-F,,,no
+Billy McRae,Basketball,NBL,Brisbane Bullets,F,,,no
+Taine Murray,Basketball,NBL,Brisbane Bullets,G,,,no
+Raul Neto,Basketball,NBL,Brisbane Bullets,G,,,no
+Mitch Norton,Basketball,NBL,Brisbane Bullets,G,,,no
+Harry Rouhliadeff,Basketball,NBL,Brisbane Bullets,F,,,no
+Arnas Velicka,Basketball,NBL,Brisbane Bullets,G,yes,,no
+Jaylin Williams,Basketball,NBL,Brisbane Bullets,F,yes,,no
+Archie Woodhill,Basketball,NBL,Brisbane Bullets,F,,,no
+Jonah Bolden,Basketball,NBL,Cairns Taipans,F-C,,,no
+Jaylon Brown,Basketball,NBL,Cairns Taipans,G,yes,,no
+Walter Brown,Basketball,NBL,Cairns Taipans,G-F,,,no
+Shaun Bruce,Basketball,NBL,Cairns Taipans,G,,,no
+Sunday Dech,Basketball,NBL,Cairns Taipans,G-F,,,no
+Jaylin Galloway,Basketball,NBL,Cairns Taipans,G-F,,,no
+Kyrin Galloway,Basketball,NBL,Cairns Taipans,F-C,,,no
+Malique Lewis,Basketball,NBL,Cairns Taipans,F,yes,,no
+Jack McVeigh,Basketball,NBL,Cairns Taipans,F,,,no
+Lloyd McVeigh,Basketball,NBL,Cairns Taipans,G,,,no
+Brody Nunn,Basketball,NBL,Cairns Taipans,G,,,no
+Luke Paul,Basketball,NBL,Cairns Taipans,G,,,no
+Keanu Pinder,Basketball,NBL,Cairns Taipans,F-C,,,no
+Reyne Smith,Basketball,NBL,Cairns Taipans,G,,,no
+Kobe Williamson,Basketball,NBL,Cairns Taipans,F-C,,,no
+Luca Yates,Basketball,NBL,Cairns Taipans,F-C,,,no
+Kyle Adnam,Basketball,NBL,Illawarra Hawks,G,,,no
+Todd Blanchfield,Basketball,NBL,Illawarra Hawks,F,,,no
+Wani Swaka Lo Buluk,Basketball,NBL,Illawarra Hawks,G-F,,,no
+Milton Doyle,Basketball,NBL,Illawarra Hawks,G,yes,,no
+Amarco Doyle,Basketball,NBL,Illawarra Hawks,F,,,no
+Sam Froling,Basketball,NBL,Illawarra Hawks,F-C,,,no
+Dan Grida,Basketball,NBL,Illawarra Hawks,G-F,,,no
+Tyler Harvey,Basketball,NBL,Illawarra Hawks,G,,,no
+William Hickey,Basketball,NBL,Illawarra Hawks,G,,,no
+Fletcher MacDonald,Basketball,NBL,Illawarra Hawks,F,,,no
+Makur Maker,Basketball,NBL,Illawarra Hawks,C,,,no
+Kelan Martin,Basketball,NBL,Illawarra Hawks,F,yes,,no
+Brodie McGregor,Basketball,NBL,Illawarra Hawks,F,,,no
+Johny Narkle,Basketball,NBL,Illawarra Hawks,G-F,,,no
+Lamar Patterson,Basketball,NBL,Illawarra Hawks,G-F,yes,,no
+Mason Peatling,Basketball,NBL,Illawarra Hawks,F-C,,,no
+Kobe McDowell-White,Basketball,NBL,Illawarra Hawks,,,,no
+Cole Anthony,Basketball,NBL,Melbourne United,G,yes,,no
+Kyle Bowen,Basketball,NBL,Melbourne United,F,,,no
+Jensen Bradtke,Basketball,NBL,Melbourne United,F-C,,,no
+Christian D'Angelo,Basketball,NBL,Melbourne United,G,,,no
+Jai Fa'ale,Basketball,NBL,Melbourne United,G-F,,,no
+Chris Goulding,Basketball,NBL,Melbourne United,G,,,no
+Will Hynes,Basketball,NBL,Melbourne United,G,,,no
+Shea Ili,Basketball,NBL,Melbourne United,G,,,no
+Joe Ingles,Basketball,NBL,Melbourne United,G-F,,,no
+Fabijan Krslovic,Basketball,NBL,Melbourne United,C,,,no
+Sean Macdonald,Basketball,NBL,Melbourne United,G,,,no
+Malith Machar,Basketball,NBL,Melbourne United,G-F,,,no
+Josh Oduro,Basketball,NBL,Melbourne United,F-C,yes,,no
+Austin Shelley,Basketball,NBL,Melbourne United,G,,,no
+Luke Travers,Basketball,NBL,Melbourne United,G-F,,,no
+Sam Waardenburg,Basketball,NBL,Melbourne United,F-C,,,no
+Tom Wilson,Basketball,NBL,Melbourne United,G,,,no
+Charles Bediako,Basketball,NBL,New Zealand Breakers,C,yes,,no
+Aubrey Chunga,Basketball,NBL,New Zealand Breakers,G-F,,,no
+Tukaha Cooper,Basketball,NBL,New Zealand Breakers,G,,,no
+Carlin Davison,Basketball,NBL,New Zealand Breakers,F,,,no
+Preston Le Gassick,Basketball,NBL,New Zealand Breakers,G,,,no
+Parker Jackson-Cartwright,Basketball,NBL,New Zealand Breakers,G,yes,,no
+Josiah-Jordan James,Basketball,NBL,New Zealand Breakers,F,yes,,no
+Kazlo Evans Jr.,Basketball,NBL,New Zealand Breakers,G,,,no
+Mojave King,Basketball,NBL,New Zealand Breakers,G-F,,,no
+Izayah Le'Afa,Basketball,NBL,New Zealand Breakers,G,,,no
+Sam Mennenga,Basketball,NBL,New Zealand Breakers,F-C,,,no
+Kouat Noi,Basketball,NBL,New Zealand Breakers,F,,,no
+Reuben Te Rangi,Basketball,NBL,New Zealand Breakers,F,,,no
+Anzac Rissetto,Basketball,NBL,New Zealand Breakers,C,,,no
+Kael Robinson,Basketball,NBL,New Zealand Breakers,F,,,no
+Dejan Vasiljevic,Basketball,NBL,New Zealand Breakers,G,,,no
+Nelson Weidemann,Basketball,NBL,New Zealand Breakers,G,,,no
+Angus Brandt,Basketball,NBL,Perth Wildcats,C,,,no
+Anthony Dell'Orso,Basketball,NBL,Perth Wildcats,G,,,no
+Kristian Doolittle,Basketball,NBL,Perth Wildcats,F,yes,,no
+Alex Higgins-Titsha,Basketball,NBL,Perth Wildcats,F,,,no
+Cameron Huefner,Basketball,NBL,Perth Wildcats,F,,,no
+Jo Lual-Acuil Jr,Basketball,NBL,Perth Wildcats,C,,,no
+Brandon Knight,Basketball,NBL,Perth Wildcats,G,yes,,no
+Tana Kopa,Basketball,NBL,Perth Wildcats,G,,,no
+Blake Nielsen,Basketball,NBL,Perth Wildcats,,,,no
+Elijah Pepper,Basketball,NBL,Perth Wildcats,G,,,no
+Jaron Rillie,Basketball,NBL,Perth Wildcats,G,,,no
+Marley Sam,Basketball,NBL,Perth Wildcats,G,,,no
+Jesse Wagstaff,Basketball,NBL,Perth Wildcats,F,,,no
+Dylan Windler,Basketball,NBL,Perth Wildcats,G-F,yes,,no
+Akech Aliir,Basketball,NBL,South East Melbourne Phoenix,F-C,,,no
+Ellis Biggar,Basketball,NBL,South East Melbourne Phoenix,F-C,,,no
+Dash Daniels,Basketball,NBL,South East Melbourne Phoenix,G,,,no
+Sam Davidson,Basketball,NBL,South East Melbourne Phoenix,G,,,no
+Daniel Foster,Basketball,NBL,South East Melbourne Phoenix,G,,,no
+Angus Glover,Basketball,NBL,South East Melbourne Phoenix,G,,,no
+Hunter Goodrick,Basketball,NBL,South East Melbourne Phoenix,F-C,,,no
+Jordan Hunter,Basketball,NBL,South East Melbourne Phoenix,C,,,no
+Tanner Krebs,Basketball,NBL,South East Melbourne Phoenix,G-F,,,no
+Skylar Mays,Basketball,NBL,South East Melbourne Phoenix,G,yes,,no
+Yannis Morin,Basketball,NBL,South East Melbourne Phoenix,F-C,yes,,no
+Patrick Ryan,Basketball,NBL,South East Melbourne Phoenix,G-F,,,no
+D'Shawn Schwartz,Basketball,NBL,South East Melbourne Phoenix,F,yes,,no
+Nathan Sobey,Basketball,NBL,South East Melbourne Phoenix,G,,,no
+Lachlan Bofinger,Basketball,NBL,Sydney Kings,F,,,no
+Andrew Carr,Basketball,NBL,Sydney Kings,F-C,,,no
+Xavier Cooks,Basketball,NBL,Sydney Kings,F,,,no
+Torrey Craig,Basketball,NBL,Sydney Kings,F,yes,,no
+Kendric Davis,Basketball,NBL,Sydney Kings,G,yes,,no
+Matthew Dellavedova,Basketball,NBL,Sydney Kings,G,,,no
+Bailey Hanson,Basketball,NBL,Sydney Kings,G,,,no
+Will Johnston,Basketball,NBL,Sydney Kings,G,,,no
+Keli Leaupepe,Basketball,NBL,Sydney Kings,F-C,,,no
+Peitok Machar,Basketball,NBL,Sydney Kings,F,,,no
+Makuach Maluach,Basketball,NBL,Sydney Kings,G-F,,,no
+Tyler Robertson,Basketball,NBL,Sydney Kings,G,,,no
+Jason Spurgin,Basketball,NBL,Sydney Kings,F-C,,,no
+Jayden Stone,Basketball,NBL,Sydney Kings,G,,,no
+Harry Wessels,Basketball,NBL,Sydney Kings,C,,,no
+Taran Armstrong,Basketball,NBL,Tasmania JackJumpers,G,,,no
+Ben Ayre,Basketball,NBL,Tasmania JackJumpers,G,,,no
+Josh Bannan,Basketball,NBL,Tasmania JackJumpers,F,,,no
+Biwali Bayles,Basketball,NBL,Tasmania JackJumpers,G,,,no
+Majok Deng,Basketball,NBL,Tasmania JackJumpers,F,,,no
+Ben Gold,Basketball,NBL,Tasmania JackJumpers,F-C,,,no
+Bryce Hamilton,Basketball,NBL,Tasmania JackJumpers,G-F,yes,,no
+Ryley Haywood,Basketball,NBL,Tasmania JackJumpers,G,,,no
+David Johnson,Basketball,NBL,Tasmania JackJumpers,G-F,yes,,no
+Will Magnay,Basketball,NBL,Tasmania JackJumpers,C,,,no
+Nick Marshall,Basketball,NBL,Tasmania JackJumpers,G-F,,,no
+Dakota Mathias,Basketball,NBL,Tasmania JackJumpers,G,yes,,no
+Jed Richardson,Basketball,NBL,Tasmania JackJumpers,F-C,,,no
+Kody Stattmann,Basketball,NBL,Tasmania JackJumpers,G-F,,,no
+Nicholas Stoddart,Basketball,NBL,Tasmania JackJumpers,G,,,no
+Zitina Aokuso,Basketball,WNBL,Adelaide Lightning,,,,no
+Tayla Brazel,Basketball,WNBL,Adelaide Lightning,,,,no
+Elissa Brett,Basketball,WNBL,Adelaide Lightning,,,,no
+Shay Ciezki,Basketball,WNBL,Adelaide Lightning,,yes,,no
+Aspen Crase,Basketball,WNBL,Adelaide Lightning,,,,no
+Coco Hodges,Basketball,WNBL,Adelaide Lightning,,,,no
+Sienna Lehmann,Basketball,WNBL,Adelaide Lightning,,,,no
+Jess McDowell-White,Basketball,WNBL,Adelaide Lightning,,,,no
+Gemma Potter,Basketball,WNBL,Adelaide Lightning,,,,no
+Stephanie Talbot,Basketball,WNBL,Adelaide Lightning,,,stephtalbot7,wikidata
+Kiara Waite,Basketball,WNBL,Adelaide Lightning,,,,no
+Maddy Westbeld,Basketball,WNBL,Adelaide Lightning,,yes,,no
+Georgia Booth,Basketball,WNBL,Bendigo Spirit,,,,no
+Isobel Borlase,Basketball,WNBL,Bendigo Spirit,,,isobelborlase,no
+Kelsey Griffin,Basketball,WNBL,Bendigo Spirit,,,,no
+Catherine MacGregor,Basketball,WNBL,Bendigo Spirit,,,,no
+Jade Melbourne,Basketball,WNBL,Bendigo Spirit,,,jade.melbourne,wikidata
+Olivia Olechnowicz,Basketball,WNBL,Bendigo Spirit,,,,no
+Olivia Pollerd,Basketball,WNBL,Bendigo Spirit,,,,no
+Kelsey Rees,Basketball,WNBL,Bendigo Spirit,,,,no
+Casey Samuels,Basketball,WNBL,Bendigo Spirit,,,,no
+Marianna Tolo,Basketball,WNBL,Bendigo Spirit,,,,no
+Abbey Wehrung,Basketball,WNBL,Bendigo Spirit,,,,no
+Kelly Wilson,Basketball,WNBL,Bendigo Spirit,,,,no
+Indiah Bowyer,Basketball,WNBL,Geelong Venom,,,,no
+Bec Cole,Basketball,WNBL,Geelong Venom,,,,no
+Aleks Connolly,Basketball,WNBL,Geelong Venom,,,,no
+Dakota Crichton,Basketball,WNBL,Geelong Venom,,,,no
+Mackenzie Clinch Hoycard,Basketball,WNBL,Geelong Venom,,,,no
+Jasmine King,Basketball,WNBL,Geelong Venom,,,,no
+Millie McCarthy,Basketball,WNBL,Geelong Venom,,,,no
+Maddy Rocci,Basketball,WNBL,Geelong Venom,,,,no
+Lilly Rotunno,Basketball,WNBL,Geelong Venom,,,,no
+Alex Sharp,Basketball,WNBL,Geelong Venom,,,,no
+Sara-Rose Smith,Basketball,WNBL,Geelong Venom,,,,no
+Poppy Stevens,Basketball,WNBL,Geelong Venom,,,,no
+Han Xu,Basketball,WNBL,Geelong Venom,,yes,,no
+Wanglai Zhang,Basketball,WNBL,Geelong Venom,,yes,,no
+Georgia Amoore,Basketball,WNBL,Perth Lynx,,,georgiaamoore,no
+Samantha Ashby,Basketball,WNBL,Perth Lynx,,,,no
+Alex Ciabattoni,Basketball,WNBL,Perth Lynx,,,,no
+Steph Gorman,Basketball,WNBL,Perth Lynx,,,,no
+Chloe Hodges,Basketball,WNBL,Perth Lynx,,,,no
+Teonni Key,Basketball,WNBL,Perth Lynx,,yes,,no
+Anneli Maley,Basketball,WNBL,Perth Lynx,,,annelimaley,no
+Brooke Malone,Basketball,WNBL,Perth Lynx,,,,no
+Teige Morrell,Basketball,WNBL,Perth Lynx,,,,no
+Haley Peters,Basketball,WNBL,Perth Lynx,,yes,,no
+Kyana Weir,Basketball,WNBL,Perth Lynx,,,,no
+Sami Whitcomb,Basketball,WNBL,Perth Lynx,,,bamsam32,wikidata
+Haylee Andrews,Basketball,WNBL,Southside Melbourne Flyers,,,,no
+Macey Boyle,Basketball,WNBL,Southside Melbourne Flyers,,,,no
+Lara Edmanson,Basketball,WNBL,Southside Melbourne Flyers,,,,no
+Carly Ernst,Basketball,WNBL,Southside Melbourne Flyers,,,,no
+Cayla George,Basketball,WNBL,Southside Melbourne Flyers,,,,no
+Holly Griffiths,Basketball,WNBL,Southside Melbourne Flyers,,,,no
+Hannah Hank,Basketball,WNBL,Southside Melbourne Flyers,,,,no
+Tess Heal,Basketball,WNBL,Southside Melbourne Flyers,,,,no
+Claire Jacobs,Basketball,WNBL,Southside Melbourne Flyers,,,,no
+Saffron Shiels,Basketball,WNBL,Southside Melbourne Flyers,,,,no
+Wang Siyu,Basketball,WNBL,Southside Melbourne Flyers,,yes,,no
+Sakima Walker,Basketball,WNBL,Southside Melbourne Flyers,,yes,,no
+Isobelle Wightman,Basketball,WNBL,Southside Melbourne Flyers,,,,no
+Issy Bourne,Basketball,WNBL,Sydney Flames,,,,no
+Maya Dodson,Basketball,WNBL,Sydney Flames,,yes,,no
+Charlise Dunn,Basketball,WNBL,Sydney Flames,,,,no
+Agnes Emma-Nnopu,Basketball,WNBL,Sydney Flames,,,,no
+Zoey Miller,Basketball,WNBL,Sydney Flames,,,,no
+Issy Morgan,Basketball,WNBL,Sydney Flames,,,,no
+Lauren Nicholson,Basketball,WNBL,Sydney Flames,,,,no
+Alex Oliver,Basketball,WNBL,Sydney Flames,,,,no
+Kaila Proctor,Basketball,WNBL,Sydney Flames,,,,no
+Darcy Rees,Basketball,WNBL,Sydney Flames,,,,no
+Peggy Schell,Basketball,WNBL,Sydney Flames,,,,no
+Jaz Shelley,Basketball,WNBL,Sydney Flames,,,,no
+Yang Shuyu,Basketball,WNBL,Sydney Flames,,yes,,no
+Shaneice Swain,Basketball,WNBL,Sydney Flames,,,,no
+Ally Wilson,Basketball,WNBL,Sydney Flames,,,,no
+Brooke Basham,Basketball,WNBL,Tasmania Jewels,,,,no
+Chloe Broomhall,Basketball,WNBL,Tasmania Jewels,,,,no
+Portia Chopping,Basketball,WNBL,Tasmania Jewels,,,,no
+Katie Deeble,Basketball,WNBL,Tasmania Jewels,,,,no
+Keely Froling,Basketball,WNBL,Tasmania Jewels,,,,no
+Darcee Garbin,Basketball,WNBL,Tasmania Jewels,,,,no
+Mia Jacobs,Basketball,WNBL,Tasmania Jewels,,,,no
+Gianna Kneepkens,Basketball,WNBL,Tasmania Jewels,,yes,,no
+Ava McDonald,Basketball,WNBL,Tasmania Jewels,,,,no
+Taylor Mole,Basketball,WNBL,Tasmania Jewels,,,,no
+Madina Okot,Basketball,WNBL,Tasmania Jewels,,yes,,no
+Nikki Parker,Basketball,WNBL,Tasmania Jewels,,,,no
+Steph Reid,Basketball,WNBL,Tasmania Jewels,,,,no
+Andie Smith,Basketball,WNBL,Tasmania Jewels,,,,no
+Georgia Taylor,Basketball,WNBL,Tasmania Jewels,,,,no
+Ella Tofaeono,Basketball,WNBL,Tasmania Jewels,,,,no
+Cheyenne Bobongie,Basketball,WNBL,Townsville Fire,,,,no
+Emma Clarke,Basketball,WNBL,Townsville Fire,,,,no
+Abbey Ellis,Basketball,WNBL,Townsville Fire,,,,no
+Antoniette Emma-Nnopu,Basketball,WNBL,Townsville Fire,,,,no
+Catelyn Van Es,Basketball,WNBL,Townsville Fire,,,,no
+Chloe Forster,Basketball,WNBL,Townsville Fire,,,,no
+Alex Fowler,Basketball,WNBL,Townsville Fire,,,,no
+Alicia Froling,Basketball,WNBL,Townsville Fire,,,,no
+Marie Gülich,Basketball,WNBL,Townsville Fire,,yes,,no
+Lauren Jensen,Basketball,WNBL,Townsville Fire,,yes,,no
+Miela Sowah,Basketball,WNBL,Townsville Fire,,,mielasowah,no
+Bree Stephens,Basketball,WNBL,Townsville Fire,,,,no
+Courtney Woods,Basketball,WNBL,Townsville Fire,,,,no
+Amy Atwell,Basketball,WNBL,UC Capitals,,,,no
+Jasmyn Boutzos,Basketball,WNBL,UC Capitals,,,,no
+Isabella Brancatisano,Basketball,WNBL,UC Capitals,,,,no
+Zara Funnell,Basketball,WNBL,UC Capitals,,,,no
+Caitlyn Jones,Basketball,WNBL,UC Capitals,,,,no
+Megan McConnell,Basketball,WNBL,UC Capitals,,yes,,no
+Nicole Munger,Basketball,WNBL,UC Capitals,,yes,,no
+Isabel Palmer,Basketball,WNBL,UC Capitals,,,,no
+Nyadiew Puoch,Basketball,WNBL,UC Capitals,,,nyadiewpuoch,no
+Manuela Puoch,Basketball,WNBL,UC Capitals,,,,no
+Sharne Robati,Basketball,WNBL,UC Capitals,,,,no
+Charlotte Whittaker,Basketball,WNBL,UC Capitals,,,,no

@@ -14,10 +14,11 @@ random.seed(7)
 
 with (ROOT / "data" / "athletes.csv").open(newline="") as f:
     # Players without a handle yet get a stand-in one, so the preview shows everyone.
-    handles = [(r["instagram"] or r["name"].replace(" ", "")).lower() for r in csv.DictReader(f)]
+    handles = list(dict.fromkeys((r["instagram"] or r["name"].replace(" ", "")).lower()
+                                 for r in csv.DictReader(f)))
 
 end = date.today()
-days = 400
+days = 120  # enough for the 30- and 90-day views; keeps the file small
 rows = []
 for h in handles:
     followers = int(10 ** random.uniform(4.3, 6.6))  # roughly 20K to 4M

@@ -125,6 +125,17 @@
   .card.feature .name { font-size: 40px; }
 
   .waiting { color: var(--muted); margin-top: 18px; }
+  details.waiting summary { cursor: pointer; font-weight: 600; }
+  .more { display: flex; justify-content: center; margin-top: 22px; }
+  .finder { display: flex; gap: 12px; align-items: center; margin: -8px 0 20px; flex-wrap: wrap; }
+  .finder input[type=search] {
+    flex: 1 1 260px; max-width: 420px; font: 500 16px/1 "Barlow", sans-serif; color: var(--text);
+    background: var(--bg-2); border: 1px solid var(--line); border-radius: 99px; padding: 12px 18px;
+  }
+  .finder input[type=search]::placeholder { color: var(--muted); }
+  .toggle { display: inline-flex; gap: 8px; align-items: center; color: var(--muted); font-weight: 600; cursor: pointer; }
+  .toggle input { width: 18px; height: 18px; accent-color: var(--accent); }
+  .badge { display: inline-block; font: 700 12px/1 "Barlow", sans-serif; padding: 5px 8px; border-radius: 99px; background: rgba(176,124,255,.18); color: #D9C4FF; vertical-align: middle; margin-left: 8px; }
 
   /* ---------- profile ---------- */
   .back { display: inline-flex; gap: 8px; align-items: center; color: var(--muted); text-decoration: none; font-weight: 600; margin: 26px 0 18px; }
@@ -252,7 +263,8 @@ const VIEWS = {
 };
 if (!SHOW_ENGAGEMENT) delete VIEWS.engagement;
 const RANGES = { "30D": 30, "90D": 90, "1Y": 365, "All": Infinity };
-let DATA = null, league = "All", view = "followers", range = "90D", current = null;
+const PAGE_SIZE = 24;
+let DATA = null, league = "All", aussiesOnly = false, query = "", shown = PAGE_SIZE, view = "followers", range = "90D", current = null;
 const $ = id => document.getElementById(id);
 
 function compact(n) {
@@ -266,6 +278,18 @@ function esc(s) { return String(s ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;"
 function ordinal(n) { const s = ["th","st","nd","rd"], v = n % 100; return n + (s[(v - 20) % 10] || s[v] || s[0]); }
 function initials(name) { return name.split(/\s+/).map(w => w[0]).slice(0, 2).join("").toUpperCase(); }
 function niceDate(iso, opts = { day: "numeric", month: "short" }) { return new Date(iso + "T12:00:00").toLocaleDateString("en-AU", opts); }
+// The team an athlete plays for in a given league (or their main team).
+function teamIn(p, lg) {
+  const t = (p.teams || []).find(t => t[0] === lg) || (p.teams || [])[0] || [p.league, p.team, p.position];
+  return { league: t[0], team: t[1], position: t[2] };
+}
+function inLeague(p, lg) { return (p.leagues || [p.league]).includes(lg); }
+// Rank by followers within one league.
+function leagueRank(p, lg) {
+  const r = DATA.players.filter(x => x.followers != null && inLeague(x, lg)).sort((a, b) => b.followers - a.followers);
+  const i = r.findIndex(x => x.id === p.id);
+  return { rank: i >= 0 ? i + 1 : null, of: r.length, list: r };
+}
 function shortTeam(t) { const w = t.split(" "); return w.at(-2) === "Trail" ? "Trail Blazers" : w.at(-1); }
 function nameLines(n) { const i = n.indexOf(" "); return i < 0 ? esc(n) : esc(n.slice(0, i)) + "<br>" + esc(n.slice(i + 1)); }
 
@@ -306,20 +330,27 @@ async function share(title, text) {
 function showRankings() {
   current = null;
   document.title = SITE_NAME;
-  const leagues = [...new Set(DATA.players.map(p => p.league).filter(Boolean))].sort();
+  const order = ["NBA", "WNBA", "NBL", "WNBL"];
+  const leagues = [...new Set(DATA.players.flatMap(p => p.leagues || [p.league]).filter(Boolean))]
+    .sort((a, b) => ((order.indexOf(a) + 1) || 99) - ((order.indexOf(b) + 1) || 99) || a.localeCompare(b));
   if (!leagues.includes(league)) league = "All";
   const sports = [...new Set(DATA.players.map(p => p.sport).filter(Boolean))];
-  // e.g. "NBA" or "NBA & WNBA" while there's one sport; "athletes" once there are several.
-  const scope = sports.length === 1 && leagues.length <= 3 ? leagues.join(" & ") : null;
+  const hasImports = DATA.players.some(p => p.import);
+  // Headline: "Every Aussie in the NBA & WNBA" for a couple of leagues,
+  // "Australian basketball" for one sport, "Australia's athletes" for several.
+  const scope = sports.length === 1 && leagues.length <= 2 && !hasImports ? leagues.join(" & ") : null;
+  const sportName = sports.length === 1 ? sports[0].toLowerCase() : null;
+  const headline = scope ? `Every Aussie in the ${esc(scope)}` : sportName ? `Australian ${esc(sportName)}` : "Australia's athletes";
+  const leagueList = leagues.length > 1 ? leagues.slice(0, -1).join(", ") + " & " + leagues.at(-1) : leagues[0] || "";
   const ranked = DATA.players.filter(p => p.followers != null);
   const total = ranked.reduce((s, p) => s + p.followers, 0);
   const weekGain = ranked.reduce((s, p) => s + (p.change_7d || 0), 0);
   $("main").innerHTML = `
     <section class="hero">
-      <h1>${scope ? `Every Aussie in the ${esc(scope)}` : "Australia's athletes"}, ranked by <em>Instagram</em></h1>
-      <p class="lede">Who's winning the feed. Followers and growth for Australia's ${scope ? `${esc(scope)} players` : "pro athletes"}${SHOW_ENGAGEMENT ? ", plus engagement" : ""}, refreshed each morning.</p>
+      <h1>${headline}, ranked by <em>Instagram</em></h1>
+      <p class="lede">Who's winning the feed. Followers and growth for ${scope ? `Australia's ${esc(scope)} players` : `every player in the ${esc(leagueList)}`}${SHOW_ENGAGEMENT ? ", plus engagement" : ""}, refreshed each morning.</p>
       <div class="totals">
-        <div><b>${DATA.players.length}</b><span>${scope ? `Aussies in the ${esc(scope)}` : "athletes tracked"}</span></div>
+        <div><b>${DATA.players.length}</b><span>${scope ? `Aussies in the ${esc(scope)}` : "players tracked"}</span></div>
         <div><b>${compact(total)}</b><span>combined followers</span></div>
         ${weekGain ? `<div><b class="${weekGain >= 0 ? "up" : "down"}">${weekGain >= 0 ? "+" : "−"}${compact(Math.abs(weekGain))}</b><span>followers this week</span></div>` : ""}
       </div>
@@ -331,22 +362,34 @@ function showRankings() {
     <div class="tabs views" role="tablist" aria-label="Ranking">
       ${Object.entries(VIEWS).map(([k, v]) => `<button role="tab" data-view="${k}" aria-selected="${k === view}">${v.tab}</button>`).join("")}
     </div>
+    <div class="finder">
+      <input id="search" type="search" placeholder="Search players or teams" value="${esc(query)}" aria-label="Search players or teams">
+      ${hasImports ? `<label class="toggle"><input type="checkbox" id="aussies" ${aussiesOnly ? "checked" : ""}> Aussies only</label>` : ""}
+    </div>
     <div id="grid"></div>`;
   $("main").querySelectorAll(".tabs").forEach(bar => bar.addEventListener("click", e => {
     const b = e.target.closest("button"); if (!b) return;
     if (b.dataset.view) view = b.dataset.view; else league = b.dataset.league;
     bar.querySelectorAll("button").forEach(x => x.setAttribute("aria-selected", String(x === b)));
+    shown = PAGE_SIZE;
     renderGrid();
   }));
+  $("search").addEventListener("input", e => { query = e.target.value; shown = PAGE_SIZE; renderGrid(); });
+  $("aussies")?.addEventListener("change", e => { aussiesOnly = e.target.checked; shown = PAGE_SIZE; renderGrid(); });
   renderGrid();
 }
 
 function renderGrid() {
   const v = VIEWS[view];
-  const pool = DATA.players.filter(p => league === "All" || p.league === league);
-  const rows = pool.filter(p => p[v.key] != null).sort((a, b) => b[v.key] - a[v.key]);
-  const missing = pool.filter(p => p[v.key] == null);
-  if (!rows.length) {
+  const q = query.trim().toLowerCase();
+  const pool = DATA.players.filter(p => (league === "All" || inLeague(p, league)) && !(aussiesOnly && p.import));
+  // Rank first, then search, so a search shows each player's real rank.
+  const ranked = pool.filter(p => p[v.key] != null).sort((a, b) => b[v.key] - a[v.key]);
+  ranked.forEach((p, i) => p._rank = i + 1);
+  const matches = p => !q || p.name.toLowerCase().includes(q) || (p.teams || []).some(t => t[1].toLowerCase().includes(q));
+  const rows = ranked.filter(matches);
+  const missing = pool.filter(p => p[v.key] == null && matches(p));
+  if (!ranked.length) {
     $("grid").innerHTML = `<p class="waiting">${v.change
       ? "Growth rankings appear once there are enough days of history to compare. Check back after the first week of collection."
       : "No numbers yet. They appear after the first daily collection run."}</p>`;
@@ -356,18 +399,25 @@ function renderGrid() {
   const chip = p => p.change_7d_pct == null || view === "growth7" ? ""
     : `<span class="chip ${p.change_7d_pct >= 0 ? "up" : "down"}">${signed(p.change_7d_pct)}% wk</span>`;
 
-  $("grid").innerHTML = `<div class="grid">${rows.map((p, i) => {
+  if (!rows.length) {
+    $("grid").innerHTML = `<p class="waiting">No players match "${esc(query)}".</p>`;
+    return;
+  }
+  const page = rows.slice(0, shown);
+  $("grid").innerHTML = `<div class="grid">${page.map((p, i) => {
     const href = `#/p/${encodeURIComponent(p.id)}`;
+    const t = teamIn(p, league);
+    const rank = p._rank;
     const shot = `
       <div class="shot">
         ${photo(p)}
-        <span class="rank" aria-label="Rank ${i + 1}">${i + 1}</span>
+        <span class="rank" aria-label="Rank ${rank}">${rank}</span>
         <div class="shot-foot">
           <span class="name">${nameLines(p.name)}${p.verified ? TICK : ""}</span>
-          <span class="team">${esc(shortTeam(p.team))} · ${esc(p.league)}</span>
+          <span class="team">${esc(shortTeam(t.team))} · ${esc(t.league)}</span>
         </div>
       </div>`;
-    if (i === 0) {
+    if (i === 0 && rank === 1) {
       const ch = (n, pct) => n == null ? "–" : `<span class="${n >= 0 ? "up" : "down"}">${n >= 0 ? "+" : "−"}${compact(Math.abs(n))}</span>`;
       return `
         <a class="card feature podium" href="${href}">
@@ -388,13 +438,17 @@ function renderGrid() {
         </a>`;
     }
     return `
-      <a class="card${i < 3 ? " podium" : ""}" href="${href}">
+      <a class="card${rank <= 3 ? " podium" : ""}" href="${href}">
         ${shot}
         <div class="meta"><div>${val(p)}<small>${v.label}</small></div>${chip(p)}</div>
         <svg class="spark" viewBox="0 0 200 40" preserveAspectRatio="none" aria-hidden="true">${sparkline(p.spark || [], 200, 40)}</svg>
       </a>`;
   }).join("")}</div>
-  ${missing.length ? `<p class="waiting">No data yet for ${missing.map(p => esc(p.name)).join(", ")}.</p>` : ""}`;
+  ${rows.length > shown ? `<div class="more"><button class="btn" id="moreBtn">Show more players (${rows.length - shown} to go)</button></div>` : ""}
+  ${missing.length ? `<details class="waiting"><summary>No numbers yet for ${missing.length} player${missing.length > 1 ? "s" : ""}</summary>
+      <p>${missing.map(p => esc(p.name)).join(", ")}</p>
+      <p>Usually their Instagram handle hasn't been found yet, or their account is personal rather than Creator or Business.</p></details>` : ""}`;
+  $("moreBtn")?.addEventListener("click", () => { shown += PAGE_SIZE * 2; renderGrid(); });
 }
 
 /* ---------------------------------------------------------------- profile */
@@ -407,12 +461,19 @@ async function showProfile(id) {
   try { p = await (await fetch(`players/${encodeURIComponent(id)}.json`, { cache: "no-store" })).json(); }
   catch { p = { ...summary, history: [] }; }
   p.photo = summary.photo;
+  p.teams = p.teams || summary.teams;
+  p.leagues = p.leagues || summary.leagues;
   current = p;
   document.title = `${p.name} on Instagram – ${SITE_NAME}`;
 
-  const ranked = DATA.players.filter(x => x.rank && x.league === p.league);
-  const idx = ranked.findIndex(x => x.id === id);
-  const lgRank = idx + 1 || null;
+  // Ranked within the league you came from, or their main league.
+  const lg = league !== "All" && inLeague(p, league) ? league : (p.leagues || [p.league])[0];
+  const { rank: lgRank, of: lgCount, list: ranked } = leagueRank(p, lg);
+  const idx = lgRank ? lgRank - 1 : -1;
+  const rankText = (p.leagues || [p.league]).map(l => {
+    const r = leagueRank(p, l);
+    return r.rank ? `${ordinal(r.rank)} of ${r.of} in the ${esc(l)}` : null;
+  }).filter(Boolean).join(" · ");
   const prev = idx > 0 ? ranked[idx - 1] : null, next = idx >= 0 ? ranked[idx + 1] : null;
   const delta = (n, pct, label) => `<div class="tile"><b class="${n == null ? "" : n >= 0 ? "up" : "down"}">${n == null ? "–" : (n >= 0 ? "+" : "−") + compact(Math.abs(n))}</b><span>${label}${pct != null ? ` · ${signed(pct)}%` : ""}</span></div>`;
   const mini = q => `<span class="mini">${photo(q)}</span>`;
@@ -424,7 +485,8 @@ async function showProfile(id) {
       <div class="shot">${photo(p)}${lgRank ? `<span class="rank">${lgRank}</span>` : ""}</div>
       <div>
         <h1>${nameLines(p.name)}${p.verified ? TICK : ""}</h1>
-        <div class="sub">${esc(p.team)} · ${esc(p.league)} · ${esc(p.details?.position || p.position)}${handle ? ` · @${esc(handle)}` : ""}</div>
+        <div class="sub">${(p.teams || [[p.league, p.team, p.position]]).map(t => `${esc(t[1])} · ${esc(t[0])}`).join("<br>")}${p.import ? `<span class="badge">Import</span>` : ""}</div>
+        <div class="sub">${esc(p.details?.position || (p.teams || []).map(t => t[2]).find(Boolean) || p.position || "")}${handle ? ` · @${esc(handle)}` : ""}</div>
         ${p.bio ? `<p class="bio">${esc(p.bio)}</p>` : ""}
         <div class="actions">
           <button class="btn primary" id="shareBtn">${SHARE}Share</button>
@@ -434,7 +496,7 @@ async function showProfile(id) {
     </section>
 
     <div class="tiles">
-      <div class="tile hot"><b>${compact(p.followers)}</b><span>followers · ${lgRank ? `${ordinal(lgRank)} of ${ranked.length} in the ${esc(p.league || "list")}` : "unranked"}</span></div>
+      <div class="tile hot"><b>${compact(p.followers)}</b><span>followers${rankText ? ` · ${rankText}` : " · unranked"}</span></div>
       ${delta(p.change_7d, p.change_7d_pct, "this week")}
       ${delta(p.change_30d, p.change_30d_pct, "this month")}
       ${delta(p.change_365d, p.change_365d_pct, "this year")}
@@ -465,12 +527,12 @@ async function showProfile(id) {
     </section>` : ""}
 
     <nav class="pager" aria-label="More players">
-      ${prev ? `<a href="#/p/${encodeURIComponent(prev.id)}">${mini(prev)}<span><small>← ${ordinal(idx)}</small><b>${esc(prev.name)}</b></span></a>` : "<span></span>"}
-      ${next ? `<a class="next" href="#/p/${encodeURIComponent(next.id)}"><span><small>${ordinal(idx + 2)} →</small><b>${esc(next.name)}</b></span>${mini(next)}</a>` : "<span></span>"}
+      ${prev ? `<a href="#/p/${encodeURIComponent(prev.id)}">${mini(prev)}<span><small>← ${ordinal(idx)} in the ${esc(lg)}</small><b>${esc(prev.name)}</b></span></a>` : "<span></span>"}
+      ${next ? `<a class="next" href="#/p/${encodeURIComponent(next.id)}"><span><small>${ordinal(idx + 2)} in the ${esc(lg)} →</small><b>${esc(next.name)}</b></span>${mini(next)}</a>` : "<span></span>"}
     </nav>`;
 
   $("shareBtn").addEventListener("click", () =>
-    share(`${p.name} on Instagram`, `${p.name} has ${compact(p.followers)} Instagram followers${lgRank ? `, ${ordinal(lgRank)} among Aussies in the ${p.league}` : ""}.`));
+    share(`${p.name} on Instagram`, `${p.name} has ${compact(p.followers)} Instagram followers${lgRank ? `, ${ordinal(lgRank)} in the ${lg}` : ""}.`));
   $("main").querySelector(".range").addEventListener("click", e => {
     const b = e.target.closest("button"); if (!b) return;
     range = b.dataset.range;
