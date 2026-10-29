@@ -1,34 +1,48 @@
 {
-  "ran_at": "2026-10-29T06:20:13+00:00",
+  "ran_at": "2026-10-29T06:41:03+00:00",
   "method": "meta",
-  "succeeded": [],
+  "succeeded": [
+    "Alanna Smith",
+    "Anneli Maley",
+    "Ben Simmons",
+    "Ezi Magbegor",
+    "Georgia Amoore",
+    "Jock Landale",
+    "Johnny Furphy",
+    "Josh Giddey",
+    "Josh Green",
+    "Kyrie Irving",
+    "Matisse Thybulle",
+    "Miela Sowah",
+    "Rebecca Allen",
+    "Rocco Zikarsky",
+    "Stephanie Talbot"
+  ],
   "failed": {
-    "Josh Giddey": "Meta error 10: (#10) Application does not have permission for this action",
-    "Dyson Daniels": "Meta error 10: (#10) Application does not have permission for this action",
-    "Jock Landale": "Meta error 10: (#10) Application does not have permission for this action",
-    "Tyrese Proctor": "Meta error 10: (#10) Application does not have permission for this action",
-    "Kyrie Irving": "Meta error 10: (#10) Application does not have permission for this action",
-    "Alex Toohey": "Meta error 10: (#10) Application does not have permission for this action",
-    "Johnny Furphy": "Meta error 10: (#10) Application does not have permission for this action",
-    "Matisse Thybulle": "Meta error 10: (#10) Application does not have permission for this action",
-    "Rocco Zikarsky": "Meta error 10: (#10) Application does not have permission for this action",
-    "Duop Reath": "Meta error 10: (#10) Application does not have permission for this action",
-    "Ben Simmons": "Meta error 10: (#10) Application does not have permission for this action",
-    "Josh Green": "Meta error 10: (#10) Application does not have permission for this action",
-    "Alanna Smith": "Meta error 10: (#10) Application does not have permission for this action",
-    "Ezi Magbegor": "Meta error 10: (#10) Application does not have permission for this action",
-    "Jade Melbourne": "Meta error 10: (#10) Application does not have permission for this action",
-    "Georgia Amoore": "Meta error 10: (#10) Application does not have permission for this action",
-    "Isobel Borlase": "Meta error 10: (#10) Application does not have permission for this action",
-    "Nyadiew Puoch": "Meta error 10: (#10) Application does not have permission for this action",
-    "Rebecca Allen": "Meta error 10: (#10) Application does not have permission for this action",
-    "Sami Whitcomb": "Meta error 10: (#10) Application does not have permission for this action",
-    "Stephanie Talbot": "Meta error 10: (#10) Application does not have permission for this action",
-    "Chloe Bibby": "Meta error 10: (#10) Application does not have permission for this action",
-    "Anneli Maley": "Meta error 10: (#10) Application does not have permission for this action",
-    "Miela Sowah": "Meta error 10: (#10) Application does not have permission for this action"
+    "Tyrese Proctor": "@tyreseproctor not found, or it's a personal account Meta can't see. Check the handle, or add an APIFY_TOKEN secret for personal accounts.",
+    "Alex Toohey": "@alextoohey not found, or it's a personal account Meta can't see. Check the handle, or add an APIFY_TOKEN secret for personal accounts.",
+    "Duop Reath": "@duopreath not found, or it's a personal account Meta can't see. Check the handle, or add an APIFY_TOKEN secret for personal accounts.",
+    "Jade Melbourne": "@jademelbourne not found, or it's a personal account Meta can't see. Check the handle, or add an APIFY_TOKEN secret for personal accounts.",
+    "Isobel Borlase": "@isobelborlase not found, or it's a personal account Meta can't see. Check the handle, or add an APIFY_TOKEN secret for personal accounts.",
+    "Nyadiew Puoch": "@nyadiewpuoch not found, or it's a personal account Meta can't see. Check the handle, or add an APIFY_TOKEN secret for personal accounts.",
+    "Sami Whitcomb": "@samiwhitcomb not found, or it's a personal account Meta can't see. Check the handle, or add an APIFY_TOKEN secret for personal accounts.",
+    "Chloe Bibby": "@chloebibby not found, or it's a personal account Meta can't see. Check the handle, or add an APIFY_TOKEN secret for personal accounts.",
+    "Dyson Daniels": "@dysondaniels belongs to 'DD 🇦🇺', not Dyson Daniels. Fix the handle, or set handle_checked to yes if it really is them."
   },
-  "handle_changes": {},
+  "handle_changes": {
+    "Duop Reath": {
+      "from": "duopreath",
+      "to": "duop.reath"
+    },
+    "Jade Melbourne": {
+      "from": "jademelbourne",
+      "to": "jade.melbourne"
+    },
+    "Sami Whitcomb": {
+      "from": "samiwhitcomb",
+      "to": "bamsam32"
+    }
+  },
   "warnings": [],
   "token_expires": "never"
 }
