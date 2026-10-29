@@ -88,7 +88,7 @@ def load_athletes():
 
 def save_athletes(fields, rows):
     with ATHLETES_FILE.open("w", newline="") as f:
-        w = csv.DictWriter(f, fieldnames=fields)
+        w = csv.DictWriter(f, fieldnames=fields, lineterminator="\n")
         w.writeheader()
         w.writerows(rows)
 
@@ -132,7 +132,12 @@ def find_ig_account(token):
     except NotVisible:
         pass
     # A user token: look through the pages this person manages.
-    pages = graph_get("me/accounts", token, fields="name,instagram_business_account")
+    try:
+        pages = graph_get("me/accounts", token, fields="name,instagram_business_account")
+    except (NotVisible, RuntimeError) as e:
+        raise TokenProblem(
+            f"Couldn't find your Facebook Page with this token ({e}). Make sure the token is the "
+            "Page's access_token from README step 5, or that it has the pages_show_list permission.")
     for page in pages.get("data", []):
         if page.get("instagram_business_account"):
             return page["instagram_business_account"]["id"]
@@ -238,7 +243,7 @@ def save_history(results, today):
         rows.append({"date": today, "instagram": handle, **r})
     rows.sort(key=lambda r: (r["date"], r["instagram"]))
     with HISTORY_FILE.open("w", newline="") as f:
-        w = csv.DictWriter(f, fieldnames=HISTORY_COLUMNS)
+        w = csv.DictWriter(f, fieldnames=HISTORY_COLUMNS, lineterminator="\n")
         w.writeheader()
         for r in rows:
             w.writerow({k: ("" if r.get(k) is None else r.get(k)) for k in HISTORY_COLUMNS})
@@ -281,10 +286,23 @@ def write_report(report):
 
 def main():
     now = datetime.now(timezone.utc)
-    today = now.date().isoformat()
-    fields, athletes = load_athletes()
     report = {"ran_at": now.isoformat(timespec="seconds"), "method": "meta",
               "succeeded": [], "failed": {}, "handle_changes": {}, "warnings": []}
+    try:
+        run(now, report)
+    except SystemExit:
+        raise
+    except Exception as e:  # noqa: BLE001 - always leave a report explaining what went wrong
+        msg = f"The collector stopped unexpectedly: {type(e).__name__}: {e}"
+        print(f"::error::{msg}")
+        report["warnings"].append(msg)
+        write_report(report)
+        raise
+
+
+def run(now, report):
+    today = now.date().isoformat()
+    fields, athletes = load_athletes()
 
     # 1. Fill blank handles from Wikidata before looking anyone up.
     blanks = [a["name"] for a in athletes if not clean_handle(a["instagram"])]
