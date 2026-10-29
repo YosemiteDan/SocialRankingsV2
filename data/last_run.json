@@ -1,19 +1,10 @@
 {
-  "ran_at": "2026-10-29T05:17:23+00:00",
-  "method": "instagram",
+  "ran_at": "2026-10-29T05:53:22+00:00",
+  "method": "meta",
   "succeeded": [],
-  "failed": {
-    "joshgiddey": "blocked (Instagram answered 429)",
-    "dysondaniels": "blocked (Instagram answered 429)",
-    "jocklandale": "blocked (Instagram answered 429)",
-    "tyreseproctor": "blocked (Instagram answered 429)",
-    "kyrieirving": "blocked (Instagram answered 429)",
-    "alextoohey": "blocked (Instagram answered 429)",
-    "johnnyfurphy": "blocked (Instagram answered 429)",
-    "theycallmetisse": "blocked (Instagram answered 429)",
-    "roccozikarsky": "blocked (Instagram answered 429)",
-    "duopreath": "blocked (Instagram answered 429)",
-    "bensimmons": "blocked (Instagram answered 429)",
-    "joshgreen": "blocked (Instagram answered 429)"
-  }
+  "failed": {},
+  "handle_changes": {},
+  "warnings": [
+    "Couldn't find your Facebook Page with this token ((#100) Tried accessing nonexisting field (accounts)). Make sure the token is the Page's access_token from README step 5, or that it has the pages_show_list permission."
+  ]
 }
