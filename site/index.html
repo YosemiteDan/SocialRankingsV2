@@ -946,8 +946,10 @@ function detailsPanel(d) {
   if (!d) return "";
   const age = d.birthdate ? Math.floor((Date.now() - new Date(d.birthdate + "T00:00:00")) / 31557600000) : null;
   const items = [
-    [d.height_cm ? d.height_cm + " cm" : d.height, d.height ? `height · ${d.height.replace("-", "′")}″` : "height"],
+    [d.height_cm ? d.height_cm + " cm" : d.height, d.height ? `height · ${d.height.replace("-", "′")}″`
+      : d.height_cm ? `height · ${Math.floor(d.height_cm / 30.48)}′${Math.round(d.height_cm / 2.54 % 12)}″` : "height"],
     [age, d.birthdate ? `years old · born ${niceDate(d.birthdate, { day: "numeric", month: "short", year: "numeric" })}` : ""],
+    [d.birthplace, "born in"],
     [d.jersey ? "#" + d.jersey : null, "jersey"],
     [d.draft, "draft"],
     [d.college, "college or last team"],
@@ -956,7 +958,7 @@ function detailsPanel(d) {
   if (!items.length) return "";
   return `<section class="panel">
       <h2>Player details</h2>
-      <p class="hint">From the league's official stats.</p>
+      <p class="hint">${d.source === "Wikidata" ? `From <a href="https://www.wikidata.org/wiki/${esc(d.wikidata)}" target="_blank" rel="noopener">Wikidata</a>, the open database behind Wikipedia.` : "From the league's official stats."}</p>
       <div class="facts">${items.map(([v, l]) => `<div><b>${esc(v)}</b><span>${esc(l)}</span></div>`).join("")}</div>
     </section>`;
 }

@@ -56,6 +56,11 @@ jobs:
         timeout-minutes: 15
         run: python scripts/player_details.py
 
+      - name: Fill in heights and birthdates from Wikidata (weekly)
+        continue-on-error: true
+        timeout-minutes: 10
+        run: python scripts/wikidata_details.py
+
       - name: Build the website data
         run: python scripts/build_site_data.py
 
