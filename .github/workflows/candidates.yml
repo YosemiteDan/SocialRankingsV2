@@ -1,0 +1,32 @@
+# Run by hand: builds data/candidates.csv, a shortlist of active Australian
+# athletes with Instagram accounts, biggest names first. Doesn't change the site.
+name: Find candidate athletes
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  find:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - name: Find candidates on Wikidata
+        run: python scripts/find_candidates.py
+      - name: Save the list
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/candidates.csv
+          git diff --cached --quiet || git commit -m "Candidate athlete list"
+          for attempt in 1 2 3; do
+            git pull --rebase --autostash -X theirs && git push && exit 0
+            sleep 10
+          done
