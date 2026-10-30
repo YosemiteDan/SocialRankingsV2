@@ -1,0 +1,19 @@
+# Run by hand: checks whether a name is free as a domain and an Instagram handle.
+name: Check a name
+on:
+  workflow_dispatch:
+    inputs:
+      name:
+        description: "Name to check, e.g. socialete"
+        required: true
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - run: pip install requests
+      - run: python scripts/check_name.py "${{ inputs.name }}"
+        env:
+          META_ACCESS_TOKEN: ${{ secrets.META_ACCESS_TOKEN }}
+          META_IG_USER_ID: ${{ secrets.META_IG_USER_ID }}
