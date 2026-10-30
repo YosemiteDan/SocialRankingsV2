@@ -296,7 +296,10 @@ def lookup_apify(handles, token):
 
 # Wikidata occupations searched for handles: basketball, soccer and American football players.
 # To cover another sport, add its occupation here (e.g. "wd:Q12299841" for cricketers).
-WIKIDATA_JOBS = ["wd:Q3665646", "wd:Q937857", "wd:Q19204627"]
+# Occupations: basketball, soccer, American football, tennis, Australian rules football,
+# rugby league, cricket.
+WIKIDATA_JOBS = ["wd:Q3665646", "wd:Q937857", "wd:Q19204627", "wd:Q10833314",
+                 "wd:Q13414980", "wd:Q14089670", "wd:Q12299841"]
 
 
 def wikidata_handles(names):
@@ -495,7 +498,14 @@ def run(now, report):
         return d and (now.date() - datetime.fromisoformat(d).date()).days < RECHECK_DAYS
     skipped = {p["instagram"]: p for p in people.values() if p["instagram"] and recently_hidden(p["instagram"])}
     not_visible.update(skipped)          # still offered to Apify, if it's set up
-    todo = [p for p in people.values() if p["instagram"] and p["instagram"] not in skipped]
+    done_today = set()
+    if HISTORY_FILE.exists():
+        with HISTORY_FILE.open(newline="") as f:
+            done_today = {r["instagram"] for r in csv.DictReader(f) if r["date"] == today}
+    todo = [p for p in people.values() if p["instagram"] and p["instagram"] not in skipped
+            and clean_handle(p["instagram"]) not in done_today]
+    if done_today:
+        print(f"{len(done_today)} accounts already collected today; collecting the rest")
     if skipped:
         print(f"Skipping {len(skipped)} accounts Meta couldn't see in the last {RECHECK_DAYS} days")
     # Start at a different point each day, so if Meta's limit cuts a run short,

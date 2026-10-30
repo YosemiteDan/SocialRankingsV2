@@ -4,6 +4,10 @@ name: Daily update
 on:
   schedule:
     - cron: "17 20 * * *"   # 20:17 UTC = about 7:17am in Sydney/Melbourne
+    # Meta allows roughly 200-250 lookups an hour, so two catch-up runs a few hours
+    # later collect anyone the first run didn't reach. They skip anyone already done today.
+    - cron: "43 22 * * *"   # about 9:43am Sydney
+    - cron: "11 1 * * *"    # about 12:11pm Sydney
   workflow_dispatch:         # adds a "Run workflow" button so you can run it any time
     inputs:
       collect:
