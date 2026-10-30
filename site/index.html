@@ -524,7 +524,7 @@
 </div>
 <main class="wrap" id="main"></main>
 <footer class="wrap">
-  <p>Follower numbers come from public Instagram accounts through Meta's official API. Heights and birthdates come from Wikidata, the open database behind Wikipedia.</p>
+  <p>Follower numbers come from public Instagram accounts through Meta's official API. Heights and ages come from Wikidata, the open database behind Wikipedia.</p>
   <p>Not affiliated with any league, team or governing body.</p>
 </footer>
 <div class="toast" id="toast" role="status"></div>
@@ -963,19 +963,25 @@ function engagementPanel(p) {
     </section>`;
 }
 
+// Age in whole years, counted from the birthday (not shown: the birth date itself).
+function ageFrom(iso) {
+  if (!iso) return null;
+  const [y, m, day] = iso.split("-").map(Number), now = new Date();
+  return now.getFullYear() - y - ((now.getMonth() + 1 < m || (now.getMonth() + 1 === m && now.getDate() < day)) ? 1 : 0);
+}
 // Player details as a compact strip in the profile header.
 const POSITION_NAMES = { G: "Guard", F: "Forward", C: "Centre", "G-F": "Guard / forward", "F-G": "Forward / guard", "F-C": "Forward / centre", "C-F": "Centre / forward",
   GK: "Goalkeeper", D: "Defender", M: "Midfielder", MID: "Midfielder", FWD: "Forward", DEF: "Defender", RUC: "Ruck", FB: "Fullback", HB: "Halfback", FE: "Five-eighth",
   HK: "Hooker", PR: "Prop", CE: "Centre", WG: "Winger", "2R": "Second row", OT: "Offensive tackle", P: "Punter" };
 function factsStrip(p) {
   const d = p.details || {};
-  const age = d.birthdate ? Math.floor((Date.now() - new Date(d.birthdate + "T00:00:00")) / 31557600000) : null;
+  const age = ageFrom(d.birthdate);
   const pos = d.position || (p.teams || []).map(t => t[2]).find(Boolean) || p.position || "";
   const height = d.height_cm ? `${d.height_cm} cm` : d.height ? d.height.replace("-", "′") + "″" : null;
   const heightSub = d.height_cm ? `${Math.floor(d.height_cm / 30.48)}′${Math.round(d.height_cm / 2.54 % 12)}″` : null;
   const items = [
     ["Height", height, heightSub],
-    ["Age", age, d.birthdate ? niceDate(d.birthdate, { day: "numeric", month: "short", year: "numeric" }) : null],
+    ["Age", age != null ? `${age} yrs` : null, null],
     ["Born", d.birthplace, null],
     ["Position", POSITION_NAMES[pos] || pos, null],
     ["Jersey", d.jersey ? "#" + d.jersey : null, null],
