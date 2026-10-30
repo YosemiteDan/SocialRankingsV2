@@ -372,6 +372,19 @@
   /* story rings */
   .ring { display: inline-block; flex: none; padding: 3px; border-radius: 50%; background: conic-gradient(from 200deg, var(--accent), #FFB15C, var(--accent), #FF4FA3, var(--accent)); }
   .ring img, .ring .ph { display: block; position: static; width: 74px; height: 74px; border-radius: 50%; object-fit: cover; border: 3px solid var(--bg); font-size: 22px; padding: 0; }
+  .sq { display: inline-block; flex: none; width: 46px; height: 46px; border-radius: 8px; overflow: hidden; position: relative; background: var(--card-2); outline: 2px solid var(--line); }
+  .sq img, .sq .ph { position: static; display: grid; place-items: center; width: 100%; height: 100%; object-fit: cover; font-size: 15px; padding: 0; }
+  .pro-facts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+  .pro-facts div { background: var(--card); border: 2px solid var(--line); padding: 9px 14px 10px; min-width: 92px; }
+  .pro-facts small { display: block; font: 700 10px/1 var(--display); letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
+  .pro-facts b { display: block; font: 700 22px/1.1 var(--display); margin-top: 5px; white-space: nowrap; }
+  .pro-facts em { display: block; font: 600 12px/1.2 var(--display); font-style: normal; color: var(--muted); margin-top: 2px; }
+  .facts-src { display: inline-block; margin-top: 8px; font: 600 12px/1 var(--display); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); text-decoration: none; }
+  .facts-src:hover { color: var(--accent); }
+  .pro .sub.handle { color: var(--accent); font: 700 14px/1 var(--display); letter-spacing: .1em; }
+  .eng-panel .eng div { background: var(--bg-2); border: 2px solid var(--line); padding: 14px; }
+  .eng-panel .eng div.hot { background: var(--accent); border-color: var(--accent); color: var(--bg); }
+  .eng-panel .eng div.hot span { color: rgba(14,20,48,.75); }
   .ring.sm img, .ring.sm .ph { width: 42px; height: 42px; border-width: 2px; font-size: 14px; }
   .stories { padding: 20px 0 4px; }
   .disc-head { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
@@ -511,7 +524,7 @@
 </div>
 <main class="wrap" id="main"></main>
 <footer class="wrap">
-  <p>Follower numbers come from public Instagram accounts through Meta's official API. Player details come from the leagues' official stats.</p>
+  <p>Follower numbers come from public Instagram accounts through Meta's official API. Heights and birthdates come from Wikidata, the open database behind Wikipedia.</p>
   <p>Not affiliated with any league, team or governing body.</p>
 </footer>
 <div class="toast" id="toast" role="status"></div>
@@ -524,7 +537,8 @@ const SITE_NAME = "Socialete";
 const LOGO_PARTS = ["Social", "ete"];
 // Phase 1 tracks followers only. Switch this to true when engagement
 // (likes, comments, posts) is being collected, to show those features.
-const SHOW_ENGAGEMENT = false;
+const SHOW_ENGAGEMENT = false;          // engagement as a ranking on the rankings page
+const SHOW_ENGAGEMENT_PROFILE = true;   // engagement panel on athlete profiles
 
 const VIEWS = {
   followers:  { key: "followers",       tab: "Most followed",       label: "followers",  fmt: v => compact(v) },
@@ -797,7 +811,8 @@ async function showProfile(id) {
       <div>
         <h1>${nameLines(p.name)}${p.verified ? TICK : ""}</h1>
         <div class="sub">${(p.teams || [[p.league, p.team, p.position]]).map(t => `${esc(t[1])} · ${esc(t[0])}`).join("<br>")}${p.import ? `<span class="badge">Import</span>` : ""}</div>
-        <div class="sub">${esc(p.details?.position || (p.teams || []).map(t => t[2]).find(Boolean) || p.position || "")}${handle ? ` · @${esc(handle)}` : ""}</div>
+        ${handle ? `<div class="sub handle">@${esc(handle)}</div>` : ""}
+        ${factsStrip(p)}
         ${p.bio ? `<p class="bio">${esc(p.bio)}</p>` : ""}
         <div class="actions">
           <button class="btn primary" id="shareBtn">${SHARE}Share</button>
@@ -816,6 +831,8 @@ async function showProfile(id) {
       ${delta(p.change_365d, p.change_365d_pct, "this year")}
     </div>
 
+    ${SHOW_ENGAGEMENT_PROFILE ? engagementPanel(p) : ""}
+
     <section class="panel">
       <div class="chart-head">
         <div><h2>Follower growth</h2><p class="hint" id="chartHint"></p></div>
@@ -828,19 +845,7 @@ async function showProfile(id) {
 
     ${videoPanel(p)}
 
-    ${detailsPanel(p.details)}
 
-    ${SHOW_ENGAGEMENT ? `<section class="panel">
-      <h2>Posting and engagement</h2>
-      <p class="hint">Based on their most recent posts.</p>
-      <div class="eng">
-        <div><b>${p.engagement_rate != null ? p.engagement_rate.toFixed(2) + "%" : "–"}</b><span>engagement rate</span></div>
-        <div><b>${compact(p.avg_likes)}</b><span>average likes</span></div>
-        <div><b>${compact(p.avg_comments)}</b><span>average comments</span></div>
-        <div><b>${p.posts_last_30d ?? "–"}</b><span>posts in 30 days</span></div>
-        <div><b>${p.posts ?? "–"}</b><span>posts all time</span></div>
-      </div>
-    </section>` : ""}
 
     <nav class="pager" aria-label="More players">
       ${prev ? `<a href="#/p/${encodeURIComponent(prev.id)}">${mini(prev)}<span><small>← ${ordinal(idx)} in the ${esc(lg)}</small><b>${esc(prev.name)}</b></span></a>` : "<span></span>"}
@@ -940,6 +945,46 @@ function loadVideosWhenVisible() {
   if (!("IntersectionObserver" in window)) return go();
   const io = new IntersectionObserver(es => { if (es.some(e => e.isIntersecting)) { io.disconnect(); go(); } }, { rootMargin: "200px" });
   io.observe(sec);
+}
+
+function engagementPanel(p) {
+  const has = p.engagement_rate != null;
+  const items = [
+    [has ? p.engagement_rate.toFixed(2) + "%" : "–", "engagement rate", true],
+    [p.avg_likes != null ? compact(p.avg_likes) : "–", "average likes"],
+    [p.avg_comments != null ? compact(Math.round(p.avg_comments)) : "–", "average comments"],
+    [p.posts_last_30d ?? "–", "posts in the last 30 days"],
+    [p.posts != null ? exact(p.posts) : "–", "posts all time"],
+  ];
+  return `<section class="panel eng-panel">
+      <h2>Engagement</h2>
+      <p class="hint">${has ? "From their last 10 posts: likes and comments, with reels and comments weighted higher." : "Engagement figures start with the next daily update."}</p>
+      <div class="eng">${items.map(([v, l, hot]) => `<div class="${hot ? "hot" : ""}"><b>${esc(v)}</b><span>${esc(l)}</span></div>`).join("")}</div>
+    </section>`;
+}
+
+// Player details as a compact strip in the profile header.
+const POSITION_NAMES = { G: "Guard", F: "Forward", C: "Centre", "G-F": "Guard / forward", "F-G": "Forward / guard", "F-C": "Forward / centre", "C-F": "Centre / forward",
+  GK: "Goalkeeper", D: "Defender", M: "Midfielder", MID: "Midfielder", FWD: "Forward", DEF: "Defender", RUC: "Ruck", FB: "Fullback", HB: "Halfback", FE: "Five-eighth",
+  HK: "Hooker", PR: "Prop", CE: "Centre", WG: "Winger", "2R": "Second row", OT: "Offensive tackle", P: "Punter" };
+function factsStrip(p) {
+  const d = p.details || {};
+  const age = d.birthdate ? Math.floor((Date.now() - new Date(d.birthdate + "T00:00:00")) / 31557600000) : null;
+  const pos = d.position || (p.teams || []).map(t => t[2]).find(Boolean) || p.position || "";
+  const height = d.height_cm ? `${d.height_cm} cm` : d.height ? d.height.replace("-", "′") + "″" : null;
+  const heightSub = d.height_cm ? `${Math.floor(d.height_cm / 30.48)}′${Math.round(d.height_cm / 2.54 % 12)}″` : null;
+  const items = [
+    ["Height", height, heightSub],
+    ["Age", age, d.birthdate ? niceDate(d.birthdate, { day: "numeric", month: "short", year: "numeric" }) : null],
+    ["Born", d.birthplace, null],
+    ["Position", POSITION_NAMES[pos] || pos, null],
+    ["Jersey", d.jersey ? "#" + d.jersey : null, null],
+    ["Draft", d.draft, null],
+    ["College", d.college, null],
+  ].filter(([, v]) => v != null && v !== "");
+  if (!items.length) return "";
+  const src = d.source === "Wikidata" ? `<a class="facts-src" href="https://www.wikidata.org/wiki/${esc(d.wikidata)}" target="_blank" rel="noopener">Details: Wikidata</a>` : "";
+  return `<div class="pro-facts">${items.map(([k, v, sub]) => `<div><small>${k}</small><b>${esc(v)}</b>${sub ? `<em>${esc(sub)}</em>` : ""}</div>`).join("")}</div>${src}`;
 }
 
 function detailsPanel(d) {
@@ -1130,6 +1175,7 @@ function growthGroups(by) {
 }
 const href = p => `#/p/${encodeURIComponent(p.id)}`;
 const ring = (p, cls = "") => `<span class="ring ${cls}">${photo(p)}</span>`;
+const sq = p => `<span class="sq">${photo(p)}</span>`;
 const growthTxt = g => g && g.pct != null && g.n ? `${g.pct >= 0 ? "▲" : "▼"} ${Math.abs(g.pct) < 10 ? Math.abs(g.pct).toFixed(1) : Math.abs(g.pct).toFixed(0)}%` : "";
 function teamLine(p) { const t = teamIn(p, "All"); return `${esc(shortTeam(t.team, p.sport))} · ${esc(t.league)}`; }
 
@@ -1194,7 +1240,7 @@ function showHome() {
       <div class="sechead"><h2>Most followed</h2><span class="hand">the big names</span><span class="sechint">Instagram followers today</span></div>
       <div class="mf">${["women", "men"].map(g => `
         <div class="mf-col"><h3>${GENDER_LABEL[g]}</h3>
-          ${mostF(g).slice(0, 10).map((p, i) => `<a class="lrow" href="${href(p)}"><span class="n">${i + 1}</span>${ring(p, "sm")}
+          ${mostF(g).slice(0, 10).map((p, i) => `<a class="lrow" href="${href(p)}"><span class="n">${i + 1}</span>${sq(p)}
             <span class="who"><b>${esc(p.name)}</b><small>${teamLine(p)}</small></span>
             <span class="val"><b>${compact(p.followers)}</b>${p.change_7d != null ? `<small class="${p.change_7d >= 0 ? "up" : "down"}">${exactSigned(p.change_7d)}</small>` : ""}</span></a>`).join("") || `<p class="empty">No numbers yet.</p>`}
           <a class="all" href="${link({ gender: g })}">See all ${GENDER_LABEL[g].toLowerCase()} →</a>
@@ -1205,7 +1251,7 @@ function showHome() {
     <section class="mx-lower">
       <div>
         <div class="sechead"><h2>Up &amp; coming</h2><span class="hand">admit one</span><span class="sechint">Under ${compact(UP_AND_COMING_CAP)} followers · growth ${window_}</span></div>
-        ${rising.length ? `<div class="stubs">${rising.map((x, i) => `<a class="stub" href="${href(x.p)}"><span class="n">${i + 1}</span>${ring(x.p, "sm")}
+        ${rising.length ? `<div class="stubs">${rising.map((x, i) => `<a class="stub" href="${href(x.p)}"><span class="n">${i + 1}</span>${sq(x.p)}
           <span class="who"><b>${esc(x.p.name)}</b><small>${teamLine(x.p)}</small></span>
           <span class="pct">+${x.g.pct.toFixed(1)}%<small>${compact(x.p.followers)} followers</small></span></a>`).join("")}</div>`
           : `<p class="empty">Growth rankings start once there are two days of numbers. Check back tomorrow.</p>`}
@@ -1249,7 +1295,7 @@ function renderTopProfiles() {
       <span class="tm">${teamLine(p)}</span>
       <span class="foot"><b>${compact(p.followers)}</b>${g && g.n ? `<span class="${g.pct >= 0 ? "gr" : "dn"}">${growthTxt(g)}</span>` : ""}</span>
     </a>`).join("");
-  const rest = tp.list.slice(5).map(({ p, g }, i) => `<a class="lrow" href="${href(p)}"><span class="n">${i + 6}</span>${ring(p, "sm")}
+  const rest = tp.list.slice(5).map(({ p, g }, i) => `<a class="lrow" href="${href(p)}"><span class="n">${i + 6}</span>${sq(p)}
       <span class="who"><b>${esc(p.name)}</b><small>${teamLine(p)}</small></span>
       <span class="val"><b>${compact(p.followers)}</b>${g && g.n ? `<small class="up">${growthTxt(g)}</small>` : ""}</span></a>`).join("");
   const how = tp.byGrowth
