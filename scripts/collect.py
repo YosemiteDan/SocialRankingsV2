@@ -248,11 +248,19 @@ def recent_media(items):
     return out
 
 
-def engagement(followers, recent, today=None):
-    """Engagement from the latest posts (phase 2; not shown on the site yet).
+# ---- Engagement formula (phase 2; not shown on the site yet). Change these to tune it.
+COMMENT_WEIGHT = 1.3    # a comment is worth 1.3 likes
+REEL_MULTIPLIER = 1.4   # a reel's likes + comments count 1.4x
+ATHLETE_UPLIFT = 1.2    # final x1.2: athletes' posts get more saves and sends, which Meta doesn't share
 
-    engagement_rate = average of (likes + comments) / followers x 100, over the
-    recent posts that show their like count. Swap in your own formula here.
+
+def engagement(followers, recent, today=None):
+    """Engagement over the latest posts.
+
+    For each post that shows its like count:
+        score = (likes + comments x COMMENT_WEIGHT) x (REEL_MULTIPLIER if it's a reel)
+        rate  = score / followers x 100
+    engagement_rate = average rate x ATHLETE_UPLIFT
     """
     out = {"avg_likes": None, "avg_comments": None, "engagement_rate": None, "posts_last_30d": None}
     if not recent:
@@ -264,8 +272,11 @@ def engagement(followers, recent, today=None):
     if commented:
         out["avg_comments"] = round(sum(m["comments"] for m in commented) / len(commented), 1)
     if liked and followers:
-        out["engagement_rate"] = round(sum((m["likes"] + (m.get("comments") or 0)) / followers * 100
-                                           for m in liked) / len(liked), 3)
+        def score(m):
+            s = m["likes"] + (m.get("comments") or 0) * COMMENT_WEIGHT
+            return s * (REEL_MULTIPLIER if m.get("type") == "reel" else 1)
+        avg = sum(score(m) / followers * 100 for m in liked) / len(liked)
+        out["engagement_rate"] = round(avg * ATHLETE_UPLIFT, 3)
     today = today or datetime.now(timezone.utc).date()
     dates = [m.get("date") for m in recent if m.get("date")]
     if dates:
