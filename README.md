@@ -1,6 +1,6 @@
-# Social Scoreboard
+# Socialete
 
-A website (working title: Social Scoreboard) that ranks Australian athletes by Instagram followers, with growth over 7 days, 30 days and a year, and a profile page for each athlete. GitHub collects the numbers every morning and republishes the site for free.
+Socialete is a website that ranks Australian athletes by Instagram followers, with growth over 7 days, 30 days and a year, and a profile page for each athlete. GitHub collects the numbers every morning and republishes the site for free.
 
 **Phase 1:** followers only, across three sports. Basketball: every Australian in the NBA and WNBA, plus every player in the NBL and WNBL (imports included and labelled). Soccer: the latest Matildas and Socceroos squads. NFL: the Australians on NFL rosters. Engagement (likes, comments, posts) comes in a later phase.
 
@@ -146,4 +146,4 @@ Someone who plays in two leagues (e.g. the WNBA in the northern summer and the W
 
 ## Changing the site's name
 
-The name appears in three places in `site/index.html`: the line `const SITE_NAME = "..."` near the top of the script, the `<title>` tag, and the `og:title` tag. The image shown when the site is shared on social media is `site/og.png`; replace it with your own 1200 × 630 image whenever you like. Some sites (Facebook, LinkedIn) need its full address, so once your site is live, change `content="og.png"` in the `og:image` tag to `content="https://YOUR-USERNAME.github.io/YOUR-REPO/og.png"`.
+The name appears in three places in `site/index.html`: the line `const SITE_NAME = "..."` near the top of the script (and `LOGO_PARTS` just below it, which splits the name into the cream and orange parts of the masthead), the `<title>` tag, and the `og:title` tag. The image shown when the site is shared on social media is `site/og.png`; replace it with your own 1200 × 630 image whenever you like. Some sites (Facebook, LinkedIn) need its full address, so once your site is live, change `content="og.png"` in the `og:image` tag to `content="https://YOUR-USERNAME.github.io/YOUR-REPO/og.png"`.

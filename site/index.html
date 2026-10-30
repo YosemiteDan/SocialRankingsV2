@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Social Scoreboard</title>
+<title>Socialete</title>
 <meta name="description" content="Australian athletes ranked by Instagram followers, updated daily.">
 <meta name="theme-color" content="#0E1430">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Social Scoreboard">
+<meta property="og:title" content="Socialete – Australia's athletes, ranked by Instagram">
 <meta property="og:description" content="Australian athletes ranked by Instagram. Updated daily.">
 <meta property="og:image" content="og.png">
 <meta name="twitter:card" content="summary_large_image">
@@ -504,7 +504,7 @@
 <body>
 <div class="bar">
   <div class="wrap">
-    <a class="logo" href="#/"><i aria-hidden="true"></i><span id="siteName">Social Scoreboard</span></a>
+    <a class="logo" href="#/"><i aria-hidden="true"></i><span id="siteName">Social<b>ete</b></span></a>
     <nav class="nav" id="nav" aria-label="Main"></nav>
     <span class="updated" id="updated"></span>
   </div>
@@ -519,7 +519,9 @@
 <script>
 /* ---------------------------------------------------------------- setup */
 // Change the site's name here (also update the <title> and og:title tags at the top).
-const SITE_NAME = "Social Scoreboard";
+const SITE_NAME = "Socialete";
+// How the name is split in the masthead: the second part shows in orange italics.
+const LOGO_PARTS = ["Social", "ete"];
 // Phase 1 tracks followers only. Switch this to true when engagement
 // (likes, comments, posts) is being collected, to show those features.
 const SHOW_ENGAGEMENT = false;
@@ -1291,8 +1293,7 @@ window.addEventListener("hashchange", route);
 fetch("data.json", { cache: "no-store" }).then(r => r.json()).then(d => {
   DATA = d;
   const asOf = d.players.map(p => p.as_of).filter(Boolean).sort().at(-1);
-  const sp = SITE_NAME.lastIndexOf(" ");
-  $("siteName").innerHTML = sp > 0 ? `${esc(SITE_NAME.slice(0, sp))} <b>${esc(SITE_NAME.slice(sp + 1))}</b>` : esc(SITE_NAME);
+  $("siteName").innerHTML = LOGO_PARTS.join("") === SITE_NAME ? `${esc(LOGO_PARTS[0])}<b>${esc(LOGO_PARTS[1])}</b>` : esc(SITE_NAME);
   buildNav();
   if (asOf) $("updated").innerHTML = `<span class="live"></span>Updated ${niceDate(asOf, { day: "numeric", month: "short" })}`;
   route();
