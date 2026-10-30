@@ -39,7 +39,14 @@ def slug(name):
 
 
 def num(v, cast=int):
-    return cast(v) if v not in (None, "") else None
+    """A number from the history file ("8.0" and "8" both read fine); blank -> None."""
+    if v in (None, ""):
+        return None
+    try:
+        return cast(v)
+    except ValueError:
+        x = float(v)
+        return round(x) if cast is int else cast(x)
 
 
 def load_history():
@@ -116,7 +123,7 @@ def main():
                 "following": num(latest["following"]),
                 "posts": num(latest["posts"]),
                 "avg_likes": num(latest["avg_likes"]),
-                "avg_comments": num(latest["avg_comments"]),
+                "avg_comments": num(latest["avg_comments"], float),
                 "engagement_rate": num(latest["engagement_rate"], float),
                 "posts_last_30d": num(latest["posts_last_30d"]),
             })
