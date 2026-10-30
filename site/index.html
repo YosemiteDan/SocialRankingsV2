@@ -982,11 +982,6 @@ function factsStrip(p) {
   const items = [
     ["Height", height, heightSub],
     ["Age", age != null ? `${age} yrs` : null, null],
-    ["Born", d.birthplace, null],
-    ["Position", POSITION_NAMES[pos] || pos, null],
-    ["Jersey", d.jersey ? "#" + d.jersey : null, null],
-    ["Draft", d.draft, null],
-    ["College", d.college, null],
   ].filter(([, v]) => v != null && v !== "");
   if (!items.length) return "";
   const src = d.source === "Wikidata" ? `<a class="facts-src" href="https://www.wikidata.org/wiki/${esc(d.wikidata)}" target="_blank" rel="noopener">Details: Wikidata</a>` : "";
