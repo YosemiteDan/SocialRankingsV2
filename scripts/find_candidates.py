@@ -6,8 +6,10 @@ database behind Wikipedia), biggest names first.
 Nothing here changes the site. It's a shortlist to choose from; copy the rows you
 want into data/athletes.csv. Run it from GitHub: Actions -> "Find candidate athletes".
 
-How "biggest names" is measured: the number of Wikipedia language editions with
-an article about the athlete. A global star has dozens; a fringe player has one.
+How "biggest names" is measured: views of their English Wikipedia article over the
+last 60 days, i.e. who people are reading about right now. (Counting Wikipedia
+language editions instead would favour soccer players and Olympians, whose
+articles are translated widely, over AFL and NRL stars.)
 
 How "active" is decided. Wikidata often doesn't record when a career ends, so
 "no end date" isn't enough: every athlete needs positive evidence of being active:
@@ -66,7 +68,7 @@ def base_people():
     """Australians (citizens or representing Australia) with a sport and an Instagram handle."""
     born_after = date(date.today().year - MAX_AGE, 1, 1).isoformat()
     q = f"""
-    SELECT ?p ?name ?ig ?born ?links
+    SELECT ?p ?name ?ig ?born ?links ?article
            (GROUP_CONCAT(DISTINCT ?sportName; separator="|") AS ?sports) WHERE {{
       {{ ?p wdt:P27 wd:Q408 }} UNION {{ ?p wdt:P1532 wd:Q408 }}
       ?p wdt:P31 wd:Q5 ; wdt:P641 ?sport ; wdt:P2003 ?ig ; wikibase:sitelinks ?links .
@@ -74,11 +76,12 @@ def base_people():
       FILTER NOT EXISTS {{ ?p wdt:P570 [] }}          # no date of death
       FILTER NOT EXISTS {{ ?p wdt:P2032 [] }}         # no recorded career end
       OPTIONAL {{ ?p wdt:P569 ?born }}
+      OPTIONAL {{ ?article schema:about ?p ; schema:isPartOf <https://en.wikipedia.org/> }}
       FILTER(!BOUND(?born) || ?born >= "{born_after}"^^xsd:dateTime)
       ?p rdfs:label ?name . FILTER(LANG(?name) = "en")
       ?sport rdfs:label ?sportName . FILTER(LANG(?sportName) = "en")
     }}
-    GROUP BY ?p ?name ?ig ?born ?links
+    GROUP BY ?p ?name ?ig ?born ?links ?article
     """
     people = {}
     for b in sparql(q):
@@ -86,7 +89,7 @@ def base_people():
         p = people.setdefault(qid, {
             "qid": qid, "name": val(b, "name"), "instagram": val(b, "ig").lstrip("@").lower(),
             "born": val(b, "born")[:10], "articles": int(val(b, "links") or 0),
-            "sports": set(),
+            "sports": set(), "article": val(b, "article"),
         })
         p["sports"].update(s for s in val(b, "sports").split("|") if s)
     return people
@@ -136,6 +139,30 @@ def events(qids):
     return out
 
 
+NOT_SPORT = ("eurovision", "song contest", "election", "music", "award")
+
+
+def pageviews(article_url, days=60):
+    """Views of an English Wikipedia article over the last `days` days."""
+    if not article_url:
+        return 0
+    title = article_url.rsplit("/wiki/", 1)[-1]
+    end = date.today()
+    start = date.fromordinal(end.toordinal() - days)
+    url = ("https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/en.wikipedia/all-access/user/"
+           f"{title}/daily/{start:%Y%m%d}00/{end:%Y%m%d}00")
+    for attempt in range(3):
+        try:
+            r = requests.get(url, headers={"User-Agent": USER_AGENT}, timeout=30)
+            if r.status_code == 404:
+                return 0
+            r.raise_for_status()
+            return sum(i.get("views", 0) for i in r.json().get("items", []))
+        except requests.RequestException:
+            time.sleep(3 * (attempt + 1))
+    return 0
+
+
 def active_evidence(age, team_spells, event_list, this_year):
     """A short reason they look active, or "" if there's no evidence."""
     for t, s, e in team_spells:
@@ -146,7 +173,8 @@ def active_evidence(age, team_spells, event_list, this_year):
             return f"at {t} since {s}"
     if age != "" and age <= 32 and any(not e for t, s, e in team_spells):
         return f"at {next(t for t, s, e in team_spells if not e)}"
-    recent = sorted((y, n) for n, y in event_list if y >= this_year - 3)
+    recent = sorted((y, n) for n, y in event_list
+                    if y >= this_year - 3 and not any(w in n.lower() for w in NOT_SPORT))
     if recent:
         return f"competed at {recent[-1][1]}"
     return ""
@@ -188,13 +216,19 @@ def main():
             "age": age,
             "active_because": evidence,
             "instagram": p["instagram"],
+            "wikipedia_views_60d": 0,
             "wikipedia_articles": p["articles"],
             "already_tracked": "yes" if (p["name"].lower() in tracked_names or p["instagram"] in tracked_handles) else "",
             "wikidata": f"https://www.wikidata.org/wiki/{qid}",
+            "_article": p["article"],
         })
 
+    print(f"  Checking Wikipedia page views for {len(rows) + len(unconfirmed)} athletes...")
+    for r in rows + unconfirmed:
+        r["wikipedia_views_60d"] = pageviews(r.pop("_article"))
+        time.sleep(0.05)
     for out_rows, path in ((rows, OUT), (unconfirmed, OUT_UNCONFIRMED)):
-        out_rows.sort(key=lambda r: -r["wikipedia_articles"])
+        out_rows.sort(key=lambda r: (-r["wikipedia_views_60d"], -r["wikipedia_articles"]))
         del out_rows[TOP_N:]
         with path.open("w", newline="") as f:
             w = csv.DictWriter(f, fieldnames=list(out_rows[0]) if out_rows else ["name"], lineterminator="\n")
