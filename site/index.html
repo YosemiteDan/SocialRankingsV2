@@ -373,13 +373,22 @@
   .ring { display: inline-block; flex: none; padding: 3px; border-radius: 50%; background: conic-gradient(from 200deg, var(--accent), #FFB15C, var(--accent), #FF4FA3, var(--accent)); }
   .ring img, .ring .ph { display: block; position: static; width: 74px; height: 74px; border-radius: 50%; object-fit: cover; border: 3px solid var(--bg); font-size: 22px; padding: 0; }
   .ring.sm img, .ring.sm .ph { width: 42px; height: 42px; border-width: 2px; font-size: 14px; }
-  .stories { display: flex; align-items: flex-start; gap: 16px; padding: 22px 0 4px; }
-  .stories-row { display: flex; gap: 14px; overflow-x: auto; scrollbar-width: none; padding-bottom: 4px; }
-  .stories-row::-webkit-scrollbar { display: none; }
-  .story { width: 86px; flex: none; text-align: center; text-decoration: none; }
+  .stories { padding: 20px 0 4px; }
+  .disc-head { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+  .disc-k { font: 700 13px/1 var(--display); letter-spacing: .2em; text-transform: uppercase; color: var(--accent); }
+  .disc-s { font: 600 22px/1 var(--hand); color: var(--muted); }
+  .shuffle { margin-left: auto; font: 700 12px/1 var(--display); letter-spacing: .12em; text-transform: uppercase; padding: 8px 14px; border: 2px solid var(--cream); border-radius: 30px; background: none; color: var(--text); cursor: pointer; }
+  @media (max-width: 560px) { .disc-s { display: none; } }
+  .shuffle:hover { background: var(--cream); color: var(--bg); }
+  .stories-row { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 10px; }
+  @media (max-width: 1100px) {
+    .stories-row { display: flex; gap: 14px; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 10px; scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
+    .story { scroll-snap-align: start; }
+  }
+  .story { min-width: 86px; flex: none; text-align: center; text-decoration: none; }
+  .story .ring:hover { transform: scale(1.05); }
   .story b { display: block; font: 700 12px/1.2 var(--display); letter-spacing: .06em; text-transform: uppercase; margin-top: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .story small { font: 700 12px/1 var(--display); }
-  .stories-note { font-size: 22px; transform: rotate(-5deg); margin-top: 24px; white-space: nowrap; }
+  .story small { display: block; font: 700 11px/1.3 var(--display); letter-spacing: .06em; color: var(--muted); white-space: nowrap; }
 
   /* hero */
   .mx-hero { display: grid; grid-template-columns: minmax(0, 1fr) 400px; gap: 36px; padding: 30px 0 44px; align-items: center; }
@@ -477,7 +486,6 @@
     .mx-hero, .mx-lower, .mf { grid-template-columns: 1fr; }
     .cover-wrap { max-width: 340px; margin-top: 10px; }
     .cover-note { left: auto; right: 0; top: -36px; }
-    .stories-note { display: none; }
   }
   @media (max-width: 460px) {
     .stamp { width: 86px; height: 86px; right: -10px; font-size: 10px; } .stamp b { font-size: 28px; }
@@ -1148,12 +1156,7 @@ function showHome() {
   const coverG = cover ? cover.g : null;
   $("main").innerHTML = `
     ${DATA.sample_data ? `<div class="notice" style="margin-top:20px">Preview mode: these are made-up sample numbers.</div>` : ""}
-    <section class="stories" aria-label="Top profiles this week">
-      <div class="stories-row">${tp.list.map(({ p, g }) => `
-        <a class="story" href="${href(p)}">${ring(p)}<b>${esc(p.name.split(" ").slice(-1)[0])}</b><small class="up">${growthTxt(g)}</small></a>`).join("")}
-      </div>
-      <span class="hand stories-note">← tap a ring to open their profile</span>
-    </section>
+    <section class="stories" id="discover" aria-label="Discover athletes"></section>
 
     <section class="mx-hero">
       <div>
@@ -1206,9 +1209,29 @@ function showHome() {
       </div>
       <div><section class="board" id="widget"></section><div class="hand board-note">chalked up every morning ✎</div></div>
     </section>`;
+  // Discover skips anyone already shown in the lists below.
+  discoverSkip = new Set([...tp.list, ...topProfiles("women").list, ...topProfiles("men").list].map(x => x.p.id)
+    .concat(["women", "men"].flatMap(g => mostF(g).slice(0, 10).map(p => p.id))));
+  renderDiscover();
   renderTopProfiles();
   renderWidget("league");
   window.scrollTo(0, 0);
+}
+
+function surname(n) { const w = n.split(" ").filter(x => !/^(jr|jnr|sr|ii|iii|iv)\.?$/i.test(x)); return w.at(-1) || n; }
+// Discover: a random handful of athletes, reshuffled on demand.
+let discoverSkip = new Set();
+function renderDiscover() {
+  const pool = DATA.players.filter(p => p.followers != null && p.photo && !discoverSkip.has(p.id));
+  for (let i = pool.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [pool[i], pool[j]] = [pool[j], pool[i]]; }
+  const pick = pool.slice(0, 12);
+  $("discover").innerHTML = `
+    <div class="disc-head"><span class="disc-k">Discover</span><span class="disc-s">athletes you might not know</span>
+      <button class="shuffle" id="shuffleBtn" aria-label="Show different athletes">↻ Shuffle</button></div>
+    <div class="stories-row">${pick.map(p => `
+      <a class="story" href="${href(p)}">${ring(p)}<b>${esc(surname(p.name))}</b><small>${esc((p.leagues || [p.league])[0] || "")} · ${compact(p.followers)}</small></a>`).join("")}
+    </div>`;
+  $("shuffleBtn").addEventListener("click", renderDiscover);
 }
 
 function renderTopProfiles() {
