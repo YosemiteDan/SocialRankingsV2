@@ -142,25 +142,42 @@ def events(qids):
 NOT_SPORT = ("eurovision", "song contest", "election", "music", "award")
 
 
-def pageviews(article_url, days=60):
-    """Views of an English Wikipedia article over the last `days` days."""
-    if not article_url:
-        return 0
-    title = article_url.rsplit("/wiki/", 1)[-1]
-    end = date.today()
-    start = date.fromordinal(end.toordinal() - days)
-    url = ("https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/en.wikipedia/all-access/user/"
-           f"{title}/daily/{start:%Y%m%d}00/{end:%Y%m%d}00")
-    for attempt in range(3):
-        try:
-            r = requests.get(url, headers={"User-Agent": USER_AGENT}, timeout=30)
-            if r.status_code == 404:
-                return 0
-            r.raise_for_status()
-            return sum(i.get("views", 0) for i in r.json().get("items", []))
-        except requests.RequestException:
-            time.sleep(3 * (attempt + 1))
-    return 0
+def pageviews(article_urls):
+    """{article url: views of that English Wikipedia article over the last ~60 days}.
+    Uses Wikipedia's own API, 50 articles per request."""
+    titles = {u.rsplit("/wiki/", 1)[-1].replace("_", " "): u for u in article_urls if u}
+    titles = {requests.utils.unquote(t): u for t, u in titles.items()}
+    out = {}
+    names = sorted(titles)
+    for i in range(0, len(names), 50):
+        batch = names[i:i + 50]
+        params = {"action": "query", "prop": "pageviews", "titles": "|".join(batch),
+                  "format": "json", "formatversion": "2", "redirects": "1"}
+        for attempt in range(3):
+            try:
+                r = requests.get("https://en.wikipedia.org/w/api.php", params=params, timeout=60,
+                                 headers={"User-Agent": USER_AGENT})
+                r.raise_for_status()
+                data = r.json()
+                break
+            except (requests.RequestException, ValueError) as e:
+                print(f"  Page-view lookup failed ({e}); retrying")
+                time.sleep(5 * (attempt + 1))
+        else:
+            continue
+        q = data.get("query", {})
+        back = {}
+        for m in q.get("normalized", []) + q.get("redirects", []):
+            back[m["to"]] = back.get(m["from"], m["from"])
+        for page in q.get("pages", []):
+            views = sum(v or 0 for v in (page.get("pageviews") or {}).values())
+            t = page.get("title", "")
+            original = back.get(t, t)
+            original = back.get(original, original)
+            if original in titles:
+                out[titles[original]] = views
+        time.sleep(1)
+    return out
 
 
 def active_evidence(age, team_spells, event_list, this_year):
@@ -224,9 +241,9 @@ def main():
         })
 
     print(f"  Checking Wikipedia page views for {len(rows) + len(unconfirmed)} athletes...")
+    views = pageviews([r["_article"] for r in rows + unconfirmed])
     for r in rows + unconfirmed:
-        r["wikipedia_views_60d"] = pageviews(r.pop("_article"))
-        time.sleep(0.05)
+        r["wikipedia_views_60d"] = views.get(r.pop("_article"), 0)
     for out_rows, path in ((rows, OUT), (unconfirmed, OUT_UNCONFIRMED)):
         out_rows.sort(key=lambda r: (-r["wikipedia_views_60d"], -r["wikipedia_articles"]))
         del out_rows[TOP_N:]
