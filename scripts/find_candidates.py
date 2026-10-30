@@ -153,25 +153,40 @@ def pageviews(article_urls):
         batch = names[i:i + 50]
         params = {"action": "query", "prop": "pageviews", "titles": "|".join(batch),
                   "format": "json", "formatversion": "2", "redirects": "1"}
-        for attempt in range(3):
-            try:
-                r = requests.get("https://en.wikipedia.org/w/api.php", params=params, timeout=60,
-                                 headers={"User-Agent": USER_AGENT})
-                r.raise_for_status()
-                data = r.json()
+        cont = {}
+        q = {"normalized": [], "redirects": [], "pages": {}}
+        for _ in range(20):                      # Wikipedia returns views a few pages at a time
+            data = None
+            for attempt in range(3):
+                try:
+                    r = requests.get("https://en.wikipedia.org/w/api.php", params={**params, **cont},
+                                     timeout=60, headers={"User-Agent": USER_AGENT})
+                    r.raise_for_status()
+                    data = r.json()
+                    break
+                except (requests.RequestException, ValueError) as e:
+                    print(f"  Page-view lookup failed ({e}); retrying")
+                    time.sleep(5 * (attempt + 1))
+            if data is None:
                 break
-            except (requests.RequestException, ValueError) as e:
-                print(f"  Page-view lookup failed ({e}); retrying")
-                time.sleep(5 * (attempt + 1))
-        else:
-            continue
-        q = data.get("query", {})
+            part = data.get("query", {})
+            for k in ("normalized", "redirects"):
+                for m in part.get(k, []):
+                    if m not in q[k]:
+                        q[k].append(m)
+            for page in part.get("pages", []):
+                pv = page.get("pageviews")
+                if pv or page.get("title") not in q["pages"]:
+                    q["pages"][page.get("title", "")] = pv or q["pages"].get(page.get("title", ""))
+            if "continue" not in data:
+                break
+            cont = data["continue"]
+            time.sleep(0.5)
         back = {}
-        for m in q.get("normalized", []) + q.get("redirects", []):
+        for m in q["normalized"] + q["redirects"]:
             back[m["to"]] = back.get(m["from"], m["from"])
-        for page in q.get("pages", []):
-            views = sum(v or 0 for v in (page.get("pageviews") or {}).values())
-            t = page.get("title", "")
+        for t, pv in q["pages"].items():
+            views = sum(v or 0 for v in (pv or {}).values())
             original = back.get(t, t)
             original = back.get(original, original)
             if original in titles:
