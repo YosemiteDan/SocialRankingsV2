@@ -200,12 +200,13 @@ def token_expiry(token):
         return None
 
 
-RECENT_POSTS = 9   # latest posts fetched per athlete, for the video strip on their profile
+RECENT_POSTS = 10  # latest posts fetched per athlete: the video strip on their profile, and engagement
 
 # Whether Meta lets us fetch recent posts in the same lookup. None = not known yet.
 # If asking for posts ever causes errors, the run carries on without them.
 MEDIA_STATE = {"ok": None, "images": False}
-POST_FIELDS = "permalink,media_type,media_product_type,timestamp,caption"
+# like_count is left out by Meta when an athlete hides likes on a post.
+POST_FIELDS = "permalink,media_type,media_product_type,timestamp,caption,like_count,comments_count"
 IMAGE_FIELDS = ",media_url,thumbnail_url"
 HL_DIR = IMG_DIR / "hl"           # featured highlight thumbnails
 HL_WIDTH = 440                    # small enough to keep the site (and repository) light
@@ -242,7 +243,33 @@ def recent_media(items):
             else "carousel" if m.get("media_type") == "CAROUSEL_ALBUM" else "photo"
         out.append({"url": m["permalink"], "type": kind, "date": (m.get("timestamp") or "")[:10],
                     "caption": (m.get("caption") or "").strip()[:160],
+                    "likes": m.get("like_count"), "comments": m.get("comments_count"),
                     "_img": m.get("thumbnail_url") or (m.get("media_url") if kind != "reel" else None)})
+    return out
+
+
+def engagement(followers, recent, today=None):
+    """Engagement from the latest posts (phase 2; not shown on the site yet).
+
+    engagement_rate = average of (likes + comments) / followers x 100, over the
+    recent posts that show their like count. Swap in your own formula here.
+    """
+    out = {"avg_likes": None, "avg_comments": None, "engagement_rate": None, "posts_last_30d": None}
+    if not recent:
+        return out
+    liked = [m for m in recent if isinstance(m.get("likes"), int) and m["likes"] >= 0]
+    commented = [m for m in recent if isinstance(m.get("comments"), int) and m["comments"] >= 0]
+    if liked:
+        out["avg_likes"] = round(sum(m["likes"] for m in liked) / len(liked))
+    if commented:
+        out["avg_comments"] = round(sum(m["comments"] for m in commented) / len(commented), 1)
+    if liked and followers:
+        out["engagement_rate"] = round(sum((m["likes"] + (m.get("comments") or 0)) / followers * 100
+                                           for m in liked) / len(liked), 3)
+    today = today or datetime.now(timezone.utc).date()
+    dates = [m.get("date") for m in recent if m.get("date")]
+    if dates:
+        out["posts_last_30d"] = sum(1 for d in dates if (today - datetime.fromisoformat(d).date()).days <= 30)
     return out
 
 
@@ -253,13 +280,14 @@ def lookup_meta(handle, token, ig_id):
     body = graph_get(ig_id, token,
                      fields=f"business_discovery.username({handle}){{{fields}{media if MEDIA_STATE['ok'] else ''}}}")
     d = body["business_discovery"]
+    recent = recent_media((d.get("media") or {}).get("data")) if MEDIA_STATE["ok"] else None
     return {
         "followers": d.get("followers_count"), "following": d.get("follows_count"),
         "posts": d.get("media_count"), "source": "meta",
+        **engagement(d.get("followers_count"), recent),
         "_profile": {"username": d.get("username"), "full_name": d.get("name"),
                      "biography": d.get("biography"), "pic_url": d.get("profile_picture_url"),
-                     "recent": recent_media((d.get("media") or {}).get("data"))
-                               if MEDIA_STATE["ok"] else None},
+                     "recent": recent},
     }
 
 
@@ -275,19 +303,22 @@ def lookup_apify(handles, token):
     for item in r.json():
         h = clean_handle(item.get("username"))
         if h and item.get("followersCount") is not None:
+            recent = [{"url": p["url"],
+                       "type": "reel" if p.get("type") == "Video" else
+                               "carousel" if p.get("type") == "Sidecar" else "photo",
+                       "date": (p.get("timestamp") or "")[:10],
+                       "caption": (p.get("caption") or "").strip()[:160],
+                       "likes": p.get("likesCount"), "comments": p.get("commentsCount"),
+                       "_img": p.get("displayUrl")}
+                      for p in (item.get("latestPosts") or [])[:RECENT_POSTS] if p.get("url")]
             out[h] = {
                 "followers": item["followersCount"], "following": item.get("followsCount"),
                 "posts": item.get("postsCount"), "source": "apify",
+                **engagement(item["followersCount"], recent),
                 "_profile": {"username": h, "full_name": item.get("fullName"),
                              "biography": item.get("biography"), "is_verified": item.get("verified"),
                              "pic_url": item.get("profilePicUrlHD") or item.get("profilePicUrl"),
-                             "recent": [{"url": p["url"],
-                                         "type": "reel" if p.get("type") == "Video" else
-                                                 "carousel" if p.get("type") == "Sidecar" else "photo",
-                                         "date": (p.get("timestamp") or "")[:10],
-                                         "caption": (p.get("caption") or "").strip()[:160],
-                                         "_img": p.get("displayUrl")}
-                                        for p in (item.get("latestPosts") or [])[:RECENT_POSTS] if p.get("url")]},
+                             "recent": recent},
             }
     return out
 
