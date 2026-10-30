@@ -14,41 +14,42 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230E1430'/%3E%3Cpath d='M9 25 19 7h5L14 25z' fill='%23FF7A1A'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;1,700;1,800;1,900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;1,9..144,700&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
 <style>
   :root {
     --bg: #0E1430;
     --bg-2: #141B3D;
-    --card: #19224A;
+    --card: #18204A;
     --card-2: #222D5C;
-    --text: #F2F6F3;
-    --muted: #A3ABCF;
-    --line: rgba(255,255,255,.09);
+    --text: #F4F1EA;
+    --cream: #F4F1EA;
+    --ink: #121212;
+    --muted: #9AA3C7;
+    --line: #26305A;
     --accent: #FF7A1A;
-    --accent-2: #B07CFF;
-    --up: #3CE0A0;
+    --accent-2: #FF7A1A;
+    --up: #4BE38E;
     --down: #FF5C7A;
     --display: "Barlow Condensed", "Arial Narrow", sans-serif;
+    --serif: "Fraunces", Georgia, serif;
+    --hand: "Caveat", "Segoe Script", cursive;
   }
   * { box-sizing: border-box; }
   html { background: var(--bg); }
   body {
     margin: 0; color: var(--text); font: 16px/1.5 "Barlow", system-ui, sans-serif;
-    background:
-      radial-gradient(900px 500px at 85% -10%, rgba(255,122,26,.16), transparent 60%),
-      radial-gradient(700px 600px at -10% 20%, rgba(176,124,255,.22), transparent 60%),
-      var(--bg);
+    background: var(--bg);
     min-height: 100vh;
   }
   a { color: inherit; }
-  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 16px; }
+  .wrap { max-width: 1240px; margin: 0 auto; padding: 0 20px; }
   .up { color: var(--up); } .down { color: var(--down); }
   :focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
 
   /* ---------- top bar ---------- */
   .bar { position: sticky; top: 0; z-index: 10; backdrop-filter: blur(12px); background: rgba(14,20,48,.8); border-bottom: 1px solid var(--line); }
   .bar .wrap { display: flex; align-items: center; justify-content: space-between; height: 58px; }
-  .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; font: italic 800 22px/1 var(--display); letter-spacing: .01em; }
+  .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; font: 800 22px/1 var(--display); letter-spacing: .01em; }
   .logo i { width: 26px; height: 26px; border-radius: 7px; background: var(--accent); position: relative; overflow: hidden; }
   .logo i::after { content: ""; position: absolute; inset: -4px 9px; background: var(--bg); transform: skewX(-24deg); }
   .bar .updated { color: var(--muted); font-size: 14px; }
@@ -74,45 +75,45 @@
   .menu a { display: flex; justify-content: space-between; gap: 12px; padding: 10px 12px; border-radius: 9px; text-decoration: none; color: var(--text); font-weight: 600; }
   .menu a small { color: var(--muted); font-weight: 500; white-space: nowrap; }
   .menu a:hover { background: var(--card-2); }
-  .menu h4 { margin: 10px 12px 4px; font: italic 800 17px/1 var(--display); color: var(--accent); }
+  .menu h4 { margin: 10px 12px 4px; font: 800 17px/1 var(--display); color: var(--accent); }
   .menu .sub { margin-left: 12px; border-left: 1px solid var(--line); padding-left: 4px; }
   .menu hr { border: 0; border-top: 1px solid var(--line); margin: 6px 4px; }
 
   /* ---------- home ---------- */
   .home-hero { padding: 36px 0 26px; }
-  .home-hero h1 { font: italic 900 clamp(40px, 6vw, 72px)/.9 var(--display); margin: 0; letter-spacing: -.01em; max-width: 16ch; }
+  .home-hero h1 { font: 900 clamp(40px, 6vw, 72px)/.9 var(--display); margin: 0; letter-spacing: -.01em; max-width: 16ch; }
   .home-hero h1 em { font-style: inherit; color: var(--accent); }
   .home-hero .lede { color: var(--muted); max-width: 56ch; margin: 14px 0 0; font-size: 17px; }
   .lists { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
   .list { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 18px 16px 10px; display: flex; flex-direction: column; }
-  .list h2 { font: italic 800 28px/1 var(--display); margin: 0 4px 4px; }
+  .list h2 { font: 800 28px/1 var(--display); margin: 0 4px 4px; }
   .list .hint { color: var(--muted); font-size: 14px; margin: 0 4px 10px; }
   .list.rising { background: linear-gradient(160deg, rgba(255,122,26,.14), rgba(176,124,255,.12)), var(--card); }
   .row { display: grid; grid-template-columns: 26px 40px minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 8px 6px; border-radius: 12px; text-decoration: none; }
   .row:hover { background: var(--card-2); }
-  .row .n { font: italic 800 22px/1 var(--display); color: var(--muted); text-align: center; }
+  .row .n { font: 800 22px/1 var(--display); color: var(--muted); text-align: center; }
   .row:nth-child(-n+3) .n { color: var(--accent); }
   .row .av { width: 40px; height: 40px; border-radius: 11px; overflow: hidden; position: relative; background: var(--card-2); }
   .row .av img { width: 100%; height: 100%; object-fit: cover; display: block; }
   .row .av .ph { font-size: 17px; padding: 0; }
   .row .who { min-width: 0; }
-  .row .who b { display: block; font: italic 700 19px/1.1 var(--display); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .row .who b { display: block; font: 700 19px/1.1 var(--display); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .row .who span { display: block; color: var(--muted); font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .row .val { text-align: right; }
-  .row .val b { display: block; font: italic 800 20px/1 var(--display); }
+  .row .val b { display: block; font: 800 20px/1 var(--display); }
   .row .val small { color: var(--muted); font-size: 12px; }
   .list .all { margin: auto 4px 6px; padding-top: 10px; color: var(--accent); font-weight: 700; text-decoration: none; }
   .list .empty { color: var(--muted); margin: 8px 4px 16px; }
   .widget { margin-top: 16px; background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 18px; }
   .widget-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
-  .widget h2 { font: italic 800 28px/1 var(--display); margin: 0 0 4px; }
+  .widget h2 { font: 800 28px/1 var(--display); margin: 0 0 4px; }
   .widget .hint { color: var(--muted); font-size: 14px; margin: 0; }
   .wrows { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; }
   .wrow { background: var(--bg-2); border-radius: 14px; padding: 14px; border: 1px solid var(--line); text-decoration: none; }
-  .wrow .n { font: italic 900 30px/1 var(--display); color: var(--accent); }
-  .wrow b { display: block; font: italic 800 20px/1.1 var(--display); margin: 8px 0 2px; }
+  .wrow .n { font: 900 30px/1 var(--display); color: var(--accent); }
+  .wrow b { display: block; font: 800 20px/1.1 var(--display); margin: 8px 0 2px; }
   .wrow span { color: var(--muted); font-size: 13px; }
-  .wrow .pct { display: block; font: italic 800 26px/1 var(--display); margin-top: 10px; }
+  .wrow .pct { display: block; font: 800 26px/1 var(--display); margin-top: 10px; }
   .seg { display: flex; gap: 4px; background: var(--bg); padding: 4px; border-radius: 99px; }
   .seg button { font: 700 14px/1 "Barlow", sans-serif; border: 0; background: none; color: var(--muted); padding: 9px 13px; border-radius: 99px; cursor: pointer; }
   .seg button[aria-pressed="true"] { background: var(--card-2); color: var(--text); }
@@ -120,13 +121,13 @@
   /* ---------- hero ---------- */
   .hero { padding: 44px 0 28px; position: relative; }
   .hero h1 {
-    font: italic 900 clamp(48px, 9vw, 112px)/.86 var(--display);
+    font: 900 clamp(48px, 9vw, 112px)/.86 var(--display);
     margin: 0; letter-spacing: -.015em; max-width: 11ch; text-wrap: balance;
   }
   .hero h1 em { font-style: inherit; color: var(--accent); }
   .hero .lede { color: var(--muted); max-width: 46ch; margin: 18px 0 0; font-size: 18px; }
   .totals { display: flex; gap: 36px; margin-top: 26px; flex-wrap: wrap; }
-  .totals b { display: block; font: italic 800 44px/1 var(--display); }
+  .totals b { display: block; font: 800 44px/1 var(--display); }
   .totals span { color: var(--muted); font-size: 14px; }
 
   .notice { background: rgba(255,122,26,.12); border: 1px solid rgba(255,122,26,.4); color: #FFC9A3; border-radius: 12px; padding: 11px 15px; margin-bottom: 18px; font-size: 15px; }
@@ -142,7 +143,7 @@
   .tabs button[aria-selected="true"] { background: var(--accent); border-color: var(--accent); color: #1A0B00; }
   .tabs.leagues { margin-bottom: 0; }
   .tabs.sports { margin-bottom: 0; }
-  .tabs.sports button { font: italic 800 19px/1 var(--display); letter-spacing: .01em; border-radius: 10px; padding: 12px 16px; }
+  .tabs.sports button { font: 800 19px/1 var(--display); letter-spacing: .01em; border-radius: 10px; padding: 12px 16px; }
   .tabs.sports button[aria-selected="true"] { background: linear-gradient(120deg, var(--accent), var(--accent-2)); border-color: transparent; color: #fff; }
   .tabs.leagues button[aria-selected="true"] { background: var(--text); border-color: var(--text); color: var(--bg); }
 
@@ -160,19 +161,19 @@
   .ph {
     position: absolute; inset: 0; display: grid; place-items: center;
     background: repeating-linear-gradient(-62deg, transparent 0 22px, rgba(255,255,255,.035) 22px 44px), linear-gradient(155deg, #FF7A1A 0%, #C2459E 55%, #6B4DFF 100%);
-    font: italic 900 clamp(56px, 8vw, 92px)/1 var(--display); color: rgba(255,255,255,.9); padding-bottom: 18%;
+    font: 900 clamp(56px, 8vw, 92px)/1 var(--display); color: rgba(255,255,255,.9); padding-bottom: 18%;
   }
   .rank {
     position: absolute; z-index: 2; top: 8px; left: 14px;
-    font: italic 900 64px/1 var(--display); color: transparent; -webkit-text-stroke: 2px rgba(255,255,255,.75);
+    font: 900 64px/1 var(--display); color: transparent; -webkit-text-stroke: 2px rgba(255,255,255,.75);
   }
   .card.podium .rank { -webkit-text-stroke: 0; color: var(--accent); text-shadow: 0 4px 18px rgba(0,0,0,.35); }
   .shot-foot { position: absolute; z-index: 2; left: 16px; right: 16px; bottom: 14px; }
-  .name { font: italic 800 28px/.95 var(--display); display: block; }
+  .name { font: 800 28px/.95 var(--display); display: block; }
   .team { color: #C8CEE6; font-size: 14px; display: block; margin-top: 4px; }
   .tick { display: inline-block; width: .62em; height: .62em; margin-left: 6px; vertical-align: .08em; }
   .meta { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 14px 16px 4px; }
-  .meta b { font: italic 800 34px/1 var(--display); }
+  .meta b { font: 800 34px/1 var(--display); }
   .meta small { display: block; color: var(--muted); font-size: 13px; margin-top: 2px; }
   .chip { font: 700 13px/1 "Barlow", sans-serif; padding: 6px 9px; border-radius: 99px; white-space: nowrap; }
   .chip.up { background: rgba(60,224,160,.14); } .chip.down { background: rgba(255,92,122,.14); }
@@ -183,10 +184,10 @@
   .card.feature .shot { flex: 0 0 52%; aspect-ratio: auto; min-height: 100%; }
   .card.feature .side { flex: 1; display: flex; flex-direction: column; padding: 20px 20px 0; min-width: 0; }
   .card.feature .lead { color: var(--accent); font-weight: 700; font-size: 14px; }
-  .card.feature .big { font: italic 900 64px/.9 var(--display); margin: 8px 0 4px; }
+  .card.feature .big { font: 900 64px/.9 var(--display); margin: 8px 0 4px; }
   .card.feature .rows { display: grid; gap: 10px; margin: 14px 0 12px; }
   .card.feature .rows div { display: flex; justify-content: space-between; border-top: 1px solid var(--line); padding-top: 10px; color: var(--muted); font-size: 14px; }
-  .card.feature .rows b { color: var(--text); font: italic 700 20px/1 var(--display); }
+  .card.feature .rows b { color: var(--text); font: 700 20px/1 var(--display); }
   .card.feature .spark { height: 64px; margin: auto -20px 0; width: calc(100% + 40px); }
   .card.feature .name { font-size: 40px; }
 
@@ -211,7 +212,7 @@
   .pro .shot::after { background: linear-gradient(180deg, transparent 60%, rgba(10,14,36,.7)); }
   .pro .rank { font-size: 84px; top: 10px; left: 18px; }
   .pro .ph { font-size: 120px; padding-bottom: 0; }
-  .pro h1 { font: italic 900 clamp(52px, 8vw, 104px)/.86 var(--display); margin: 0; letter-spacing: -.015em; }
+  .pro h1 { font: 900 clamp(52px, 8vw, 104px)/.86 var(--display); margin: 0; letter-spacing: -.015em; }
   .pro .sub { color: var(--muted); margin-top: 10px; font-size: 17px; }
   .pro .bio { white-space: pre-line; margin: 14px 0 0; max-width: 56ch; }
   .actions { display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
@@ -224,13 +225,13 @@
 
   .tiles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-bottom: 16px; }
   .tile { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 18px; }
-  .tile b { display: block; font: italic 800 clamp(26px, 3.4vw, 40px)/1 var(--display); white-space: nowrap; }
+  .tile b { display: block; font: 800 clamp(26px, 3.4vw, 40px)/1 var(--display); white-space: nowrap; }
   .tile span { color: var(--muted); font-size: 14px; }
   .tile.hot { background: var(--accent); color: #1A0B00; border-color: var(--accent); }
   .tile.hot span { color: #5C2A00; }
 
   .panel { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 22px; margin-bottom: 16px; }
-  .panel h2 { font: italic 800 30px/1 var(--display); margin: 0 0 6px; }
+  .panel h2 { font: 800 30px/1 var(--display); margin: 0 0 6px; }
   .panel .hint { color: var(--muted); margin: 0 0 14px; font-size: 15px; }
   .chart-head { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; align-items: flex-start; }
   .range { display: flex; gap: 4px; background: var(--bg); padding: 4px; border-radius: 99px; }
@@ -240,7 +241,7 @@
   .chart svg { width: 100%; height: 100%; display: block; overflow: visible; }
   .chart .lbl { font: 12px "Barlow", sans-serif; fill: var(--muted); }
   .tip { position: absolute; top: 0; pointer-events: none; background: var(--accent); color: #1A0B00; border-radius: 8px; padding: 6px 10px; font-size: 13px; white-space: nowrap; transform: translateX(-50%); display: none; font-weight: 600; }
-  .tip b { font: italic 800 19px/1 var(--display); display: block; }
+  .tip b { font: 800 19px/1 var(--display); display: block; }
   .feature-hl {
     display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 24px; align-items: center;
     background: linear-gradient(120deg, rgba(255,122,26,.16), rgba(176,124,255,.14)), var(--card);
@@ -254,7 +255,7 @@
   .hl-play svg { width: 72px; height: 72px; filter: drop-shadow(0 6px 18px rgba(0,0,0,.4)); color: #fff; }
   .hl-embed .instagram-media { margin: 0 !important; min-width: 0 !important; width: 100% !important; border-radius: 14px !important; }
   .hl-kicker { color: var(--accent); font-weight: 700; font-size: 14px; }
-  .hl-cap { font: italic 700 clamp(22px, 2.6vw, 30px)/1.15 var(--display); margin: 8px 0 0; max-width: 40ch; }
+  .hl-cap { font: 700 clamp(22px, 2.6vw, 30px)/1.15 var(--display); margin: 8px 0 0; max-width: 40ch; }
   @media (max-width: 720px) { .feature-hl { grid-template-columns: 1fr; } .hl-thumb { max-height: 70vh; } }
   @media (prefers-reduced-motion: reduce) { .hl-thumb img { transition: none; } }
   .strip { display: flex; gap: 14px; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 8px; margin: 0 -4px; }
@@ -268,10 +269,10 @@
   }
   .post-ph svg { width: 44px; height: 44px; color: var(--text); }
   .facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px 20px; }
-  .facts b { display: block; font: italic 800 30px/1.05 var(--display); }
+  .facts b { display: block; font: 800 30px/1.05 var(--display); }
   .facts span { color: var(--muted); font-size: 14px; }
   .eng { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 16px; }
-  .eng b { display: block; font: italic 800 34px/1 var(--display); }
+  .eng b { display: block; font: 800 34px/1 var(--display); }
   .eng span { color: var(--muted); font-size: 14px; }
 
   .pager { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 6px 0 24px; }
@@ -282,7 +283,7 @@
   .pager .mini img { width: 100%; height: 100%; object-fit: cover; }
   .pager .mini .ph { font-size: 20px; padding: 0; }
   .pager small { display: block; color: var(--muted); }
-  .pager span b { font: italic 800 22px/1.05 var(--display); }
+  .pager span b { font: 800 22px/1.05 var(--display); }
 
   .toast { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); background: var(--accent); color: #1A0B00; font-weight: 700; padding: 11px 18px; border-radius: 99px; opacity: 0; transition: opacity .2s; pointer-events: none; z-index: 20; }
   .toast.show { opacity: 1; }
@@ -336,6 +337,160 @@
     .pager span b { font-size: 18px; }
   }
   @media (prefers-reduced-motion: reduce) { .card, .toast { transition: none; } .card:hover { transform: none; } }
+
+  /* ================================================================ Midnight Matchday theme */
+  .serif, .home-hero h1, .hero h1, .pro h1, .panel h2, .widget h2, .name, .pager span b, .hl-cap { font-family: var(--serif) !important; font-weight: 700; letter-spacing: -.02em; }
+  .hero h1, .pro h1 { line-height: .92; }
+  .hero h1 em, .pro h1 em { font-style: italic; }
+  .hand { font: 600 26px/1.1 var(--hand); color: var(--accent); }
+  .logo { font: 700 24px/1 var(--serif); letter-spacing: -.01em; }
+  .logo span::first-letter { }
+  .logo i { display: none; }
+  #siteName b { color: var(--accent); font-style: italic; font-weight: 700; }
+  .bar { background: rgba(14,20,48,.92); border-bottom: 2px solid var(--cream); }
+  .nav > a, .nav summary { font: 700 13px/1 var(--display); letter-spacing: .14em; text-transform: uppercase; color: var(--text); }
+  .tabs button[aria-selected="true"] { color: var(--bg); }
+  .tabs.sports button[aria-selected="true"] { background: var(--accent); color: var(--bg); }
+  .btn.primary, .tile.hot, .toast, .tip { color: var(--bg); }
+  .tile.hot span { color: rgba(14,20,48,.75); }
+  .panel, .tile, .list, .widget, .pager a { border-radius: 4px; border: 2px solid var(--line); }
+
+  /* trading cards on the rankings page */
+  .card { background: var(--cream); color: var(--ink); border: 0; border-radius: 3px; padding: 10px 10px 4px; box-shadow: 0 18px 34px -16px rgba(0,0,0,.9); }
+  .card:nth-child(4n+1) { transform: rotate(-1deg); } .card:nth-child(4n+2) { transform: rotate(.8deg); } .card:nth-child(4n+3) { transform: rotate(-.6deg); } .card:nth-child(4n) { transform: rotate(1.1deg); }
+  .card:hover { transform: translateY(-4px) rotate(0); border: 0; }
+  .card .shot { border-radius: 2px; }
+  .card .meta small, .card.feature .rows div, .card.feature .side > span[style] { color: #6F6C66 !important; }
+  .card.feature .rows b, .card .meta b { color: var(--ink); }
+  .card .up, .card .chip.up { color: #1F8A4C; } .card .down { color: #C2364F; }
+  .card.feature .rows div { border-color: #DAD5CA; }
+  .card .rank, .card.podium .rank { -webkit-text-stroke: 2px var(--cream); color: transparent; text-shadow: none; font-family: var(--serif); font-weight: 700; }
+  .card.podium .rank { -webkit-text-stroke: 0; color: var(--accent); }
+  .pro .shot { border: 10px solid var(--cream); border-bottom-width: 14px; border-radius: 3px; transform: rotate(-1.5deg); box-shadow: 0 22px 40px -16px rgba(0,0,0,.9); }
+  .pro .rank { font-family: var(--serif); font-weight: 700; }
+
+  /* story rings */
+  .ring { display: inline-block; flex: none; padding: 3px; border-radius: 50%; background: conic-gradient(from 200deg, var(--accent), #FFB15C, var(--accent), #FF4FA3, var(--accent)); }
+  .ring img, .ring .ph { display: block; position: static; width: 74px; height: 74px; border-radius: 50%; object-fit: cover; border: 3px solid var(--bg); font-size: 22px; padding: 0; }
+  .ring.sm img, .ring.sm .ph { width: 42px; height: 42px; border-width: 2px; font-size: 14px; }
+  .stories { display: flex; align-items: flex-start; gap: 16px; padding: 22px 0 4px; }
+  .stories-row { display: flex; gap: 14px; overflow-x: auto; scrollbar-width: none; padding-bottom: 4px; }
+  .stories-row::-webkit-scrollbar { display: none; }
+  .story { width: 86px; flex: none; text-align: center; text-decoration: none; }
+  .story b { display: block; font: 700 12px/1.2 var(--display); letter-spacing: .06em; text-transform: uppercase; margin-top: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .story small { font: 700 12px/1 var(--display); }
+  .stories-note { font-size: 22px; transform: rotate(-5deg); margin-top: 24px; white-space: nowrap; }
+
+  /* hero */
+  .mx-hero { display: grid; grid-template-columns: minmax(0, 1fr) 400px; gap: 36px; padding: 30px 0 44px; align-items: center; }
+  .kicker { font: 700 13px/1.3 var(--display); letter-spacing: .2em; text-transform: uppercase; color: var(--accent); }
+  .mx-hero h1 { font: 700 clamp(48px, 7.4vw, 104px)/.9 var(--serif); letter-spacing: -.035em; margin: 14px 0 20px; }
+  .mx-hero h1 em { color: var(--accent); }
+  .mx-hero .lede { font: 400 19px/1.5 var(--serif); color: #C3C9E3; max-width: 52ch; margin: 0; }
+  .stats { display: flex; gap: 10px; margin-top: 24px; flex-wrap: wrap; }
+  .stats div { background: var(--card); border: 2px solid var(--line); padding: 11px 16px; }
+  .stats small { display: block; font: 700 11px/1 var(--display); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+  .stats b { display: block; font: 700 28px/1 var(--display); margin-top: 6px; }
+  .hero-note { display: inline-block; margin-top: 20px; transform: rotate(-3deg); }
+  .cover-wrap { position: relative; justify-self: center; width: 100%; max-width: 380px; }
+  .cover-note { position: absolute; left: -180px; bottom: 70px; transform: rotate(-8deg); white-space: nowrap; }
+
+  /* taped trading cards */
+  .tcard { display: block; position: relative; background: var(--cream); color: var(--ink); padding: 10px 10px 12px; text-decoration: none; box-shadow: 0 22px 40px -16px rgba(0,0,0,.95); transform: rotate(var(--tilt, 2deg)); transition: transform .18s ease; }
+  .tcard:hover { transform: rotate(0) translateY(-4px); }
+  .tape { position: absolute; width: 92px; height: 26px; background: rgba(255,122,26,.6); top: -12px; left: 50%; transform: translateX(-50%) rotate(-4deg); z-index: 2; }
+  .tcard .pic { position: relative; display: block; aspect-ratio: 9 / 13; overflow: hidden; background: var(--card-2); }
+  .tcard .pic img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 18%; display: block; }
+  .tcard .pic::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(14,20,48,.75), transparent 40%); }
+  .tcard .handle { position: absolute; z-index: 1; left: 10px; top: 10px; max-width: calc(100% - 20px); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; background: var(--accent); color: var(--bg); font: 700 11px/1 var(--display); letter-spacing: .08em; padding: 5px 8px; border-radius: 20px; }
+  .tcard .big-n { position: absolute; z-index: 1; left: -4px; bottom: 6px; font: 700 120px/1 var(--serif); color: transparent; -webkit-text-stroke: 3px var(--cream); letter-spacing: -.05em; }
+  .tcard .nm { display: block; font: 700 21px/1.05 var(--serif); margin-top: 10px; }
+  .tcard .tm { display: block; font: 700 11px/1.3 var(--display); letter-spacing: .12em; text-transform: uppercase; color: #6F6C66; margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .tcard .foot { display: flex; justify-content: space-between; align-items: flex-end; gap: 8px; border-top: 1px dashed #C9C4B8; margin-top: 8px; padding-top: 7px; font: 700 11px/1.3 var(--display); letter-spacing: .1em; text-transform: uppercase; color: #6F6C66; }
+  .tcard .foot b { font: 700 26px/1 var(--display); color: var(--ink); letter-spacing: 0; }
+  .tcard .gr { color: #1F8A4C; font-size: 13px; } .tcard .dn { color: #C2364F; font-size: 13px; }
+  .tcard.cover { --tilt: 2.5deg; }
+  .tcard.cover .pic { aspect-ratio: 9 / 12; }
+  .tcard.cover .nm { font-size: 32px; }
+  .tcard.cover .foot { border: 0; padding-top: 4px; }
+  .stamp { position: absolute; right: -26px; top: 34px; width: 108px; height: 108px; border: 4px double var(--accent); border-radius: 50%; color: var(--accent); display: grid; place-items: center; text-align: center; font: 700 12px/1.1 var(--display); letter-spacing: .14em; text-transform: uppercase; transform: rotate(14deg); z-index: 3; background: rgba(14,20,48,.25); }
+  .stamp b { display: block; font: 700 36px/1 var(--serif); letter-spacing: 0; }
+
+  /* ticker */
+  .ticker { background: var(--accent); color: var(--bg); overflow: hidden; margin: 0 calc(50% - 50vw); }
+  html, body { overflow-x: clip; }
+  .ticker-in { display: flex; gap: 40px; width: max-content; padding: 13px 0; font: 700 14px/1 var(--display); letter-spacing: .12em; text-transform: uppercase; white-space: nowrap; animation: tick 60s linear infinite; }
+  .ticker b { background: var(--cream); padding: 3px 7px; margin-left: 6px; }
+  @keyframes tick { to { transform: translateX(-50%); } }
+
+  /* sections */
+  .mx-sec { padding: 54px 0 0; }
+  .sechead { display: flex; align-items: baseline; flex-wrap: wrap; gap: 6px 18px; border-bottom: 2px solid var(--cream); padding-bottom: 12px; margin-bottom: 30px; }
+  .sechead h2 { font: 700 clamp(32px, 4vw, 52px)/1 var(--serif); letter-spacing: -.03em; margin: 0; }
+  .sechead .hand { font-size: 26px; }
+  .sechint { color: var(--muted); font: 700 12px/1.4 var(--display); letter-spacing: .12em; text-transform: uppercase; margin-left: auto; }
+  .pills { margin-left: auto; display: flex; gap: 6px; align-self: center; }
+  .pills button { font: 700 12px/1 var(--display); letter-spacing: .12em; text-transform: uppercase; padding: 9px 14px; border: 2px solid var(--cream); border-radius: 30px; background: none; color: var(--text); cursor: pointer; }
+  .pills button[aria-pressed="true"] { background: var(--cream); color: var(--bg); }
+  .pills.sm button { padding: 7px 10px; font-size: 11px; border-color: var(--line); }
+  .pills.sm button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); }
+  .tp { display: grid; grid-template-columns: minmax(0, 1fr) 280px; gap: 30px; align-items: start; }
+  .tcards { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 18px; }
+  .tcards .tcard .big-n { font-size: 96px; }
+  .mini-h { font: 700 12px/1 var(--display); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+  .lrow { display: grid; grid-template-columns: 26px auto minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 9px 0; border-bottom: 1px dashed var(--line); text-decoration: none; }
+  .lrow .n { font: 700 22px/1 var(--serif); text-align: center; }
+  .lrow .who { min-width: 0; }
+  .lrow .who b { display: block; font: 700 17px/1.15 var(--serif); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .lrow .who small, .stub .who small { display: block; font: 700 10px/1.4 var(--display); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .lrow .val { text-align: right; } .lrow .val b { display: block; font: 700 20px/1 var(--display); } .lrow .val small { font: 700 12px/1.4 var(--display); }
+  .lrow:hover .who b { color: var(--accent); }
+  .mf { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+  .mf h3 { font: italic 700 30px/1 var(--serif); margin: 0 0 6px; color: var(--accent); }
+  .all { display: inline-block; margin-top: 14px; color: var(--accent); font: 700 13px/1 var(--display); letter-spacing: .12em; text-transform: uppercase; text-decoration: none; }
+  .empty { color: var(--muted); }
+  .mx-lower { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, .75fr); gap: 44px; padding: 54px 0 20px; }
+  .stubs { display: grid; gap: 12px; }
+  .stub { display: grid; grid-template-columns: 50px auto minmax(0, 1fr) auto; align-items: center; gap: 14px; background: var(--card); border: 2px solid var(--line); padding: 10px 18px 10px 0; text-decoration: none;
+    -webkit-mask: radial-gradient(circle 9px at 0 50%, transparent 98%, #000) left / 51% 100% no-repeat, radial-gradient(circle 9px at 100% 50%, transparent 98%, #000) right / 51% 100% no-repeat;
+            mask: radial-gradient(circle 9px at 0 50%, transparent 98%, #000) left / 51% 100% no-repeat, radial-gradient(circle 9px at 100% 50%, transparent 98%, #000) right / 51% 100% no-repeat; }
+  .stub .n { font: 700 24px/1 var(--serif); text-align: center; border-right: 2px dashed var(--line); align-self: stretch; display: grid; place-items: center; }
+  .stub .who { min-width: 0; } .stub .who b { display: block; font: 700 19px/1.15 var(--serif); }
+  .stub .pct { font: 700 28px/1 var(--display); color: var(--up); text-align: right; }
+  .stub .pct small { display: block; font-size: 11px; letter-spacing: .08em; color: var(--muted); margin-top: 4px; }
+  .stub:hover { border-color: var(--accent); }
+  .board { background: var(--card); border: 6px solid var(--accent); padding: 22px 24px 18px; }
+  .board-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .board h3 { font: 700 30px/1.1 var(--hand); margin: 0; }
+  .board-sub { font: 700 11px/1.4 var(--display); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin: 6px 0 8px; }
+  .brow { display: grid; grid-template-columns: 24px minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 11px 0; border-bottom: 1px dashed var(--line); font: 700 19px/1 var(--display); letter-spacing: .06em; text-transform: uppercase; }
+  .brow small { color: var(--muted); font-size: 11px; }
+  .brow .bar { height: 8px; background: var(--accent); margin-top: 7px; }
+  .board-note { margin: 14px 0 0 8px; transform: rotate(-3deg); }
+
+  @media (max-width: 1000px) {
+    .tp { grid-template-columns: 1fr; }
+    .tcards { grid-template-columns: repeat(5, 200px); overflow-x: auto; padding: 18px 6px 18px; margin: -18px -6px 0; scroll-snap-type: x mandatory; }
+    .tcards .tcard { scroll-snap-align: start; }
+  }
+  @media (max-width: 860px) {
+    .mx-hero, .mx-lower, .mf { grid-template-columns: 1fr; }
+    .cover-wrap { max-width: 340px; margin-top: 10px; }
+    .cover-note { left: auto; right: 0; top: -36px; }
+    .stories-note { display: none; }
+  }
+  @media (max-width: 460px) {
+    .stamp { width: 86px; height: 86px; right: -10px; font-size: 10px; } .stamp b { font-size: 28px; }
+    .sechint { margin-left: 0; }
+    .pills { margin-left: 0; }
+    .stub { grid-template-columns: 38px auto minmax(0, 1fr) auto; gap: 10px; }
+    .stub .pct { font-size: 22px; }
+  }
+  @media (prefers-reduced-motion: reduce) { .ticker-in { animation: none; } .tcard { transition: none; } }
+  .logo { white-space: nowrap; }
+  .feature-hl { background: var(--card); border: 2px solid var(--accent); border-radius: 4px; }
+  .hl-thumb { border-radius: 2px; border: 8px solid var(--cream); }
+  @media (max-width: 720px) { .logo { font-size: 19px; } }
 </style>
 </head>
 <body>
@@ -911,66 +1066,39 @@ function weekGrowth(p) {
   if (p.growth_pct != null) return { pct: p.growth_pct, n: p.growth, days: p.growth_days };
   return null;
 }
+const TOP_PROFILE_MIN = 10000;   // "Top profiles this week" only includes accounts with at least this many followers
+let topTab = "All";
 
-function rowHtml(p, i, value, sub) {
-  const t = teamIn(p, "All");
-  return `<a class="row" href="#/p/${encodeURIComponent(p.id)}">
-      <span class="n">${i + 1}</span>
-      <span class="av">${photo(p)}</span>
-      <span class="who"><b>${esc(p.name)}</b><span>${esc(shortTeam(t.team, p.sport))} · ${esc(t.league)}</span></span>
-      <span class="val">${value}${sub ? `<small>${sub}</small>` : ""}</span>
-    </a>`;
+// Top profiles this week: men and women together, ranked by growth %, so a
+// fast-growing 60K account can beat a huge account that barely moved.
+// Until there are two days of numbers it falls back to followers, alternating
+// men and women so the first look isn't one-sided.
+function topProfiles(g) {
+  const pool = DATA.players.filter(p => p.followers != null && p.followers >= TOP_PROFILE_MIN && (g === "All" || p.gender === g));
+  const grown = pool.map(p => ({ p, g: weekGrowth(p) })).filter(x => x.g && x.g.pct != null);
+  if (grown.filter(x => x.g.pct > 0).length >= 5) {
+    grown.sort((a, b) => b.g.pct - a.g.pct || b.p.followers - a.p.followers);
+    return { byGrowth: true, days: Math.max(...grown.map(x => x.g.days || 0)), list: grown.slice(0, 10) };
+  }
+  const byF = list => list.sort((a, b) => b.followers - a.followers).map(p => ({ p, g: weekGrowth(p) }));
+  let list;
+  if (g === "All") {
+    const m = byF(pool.filter(p => p.gender === "men")), w = byF(pool.filter(p => p.gender === "women"));
+    list = [];
+    for (let i = 0; list.length < 10 && (i < m.length || i < w.length); i++) { if (w[i]) list.push(w[i]); if (m[i]) list.push(m[i]); }
+    list = list.slice(0, 10);
+  } else list = byF(pool).slice(0, 10);
+  return { byGrowth: false, days: 0, list };
 }
-
-function showHome() {
-  current = null;
-  document.title = `${SITE_NAME} – Australia's athletes, ranked by Instagram`;
-  const withFollowers = DATA.players.filter(p => p.followers != null);
-  const top = g => withFollowers.filter(p => p.gender === g).sort((a, b) => b.followers - a.followers).slice(0, 10);
-  const rising = withFollowers
+// Up & coming skips anyone already in the Top profiles list, so the two don't repeat.
+function upAndComing(skip = new Set()) {
+  return DATA.players.filter(p => p.followers != null && !skip.has(p.id))
     .map(p => ({ p, g: weekGrowth(p) }))
     .filter(x => x.g && x.g.pct > 0 && x.p.followers < UP_AND_COMING_CAP)
-    .sort((a, b) => b.g.pct - a.g.pct).slice(0, 10);
-  const days = Math.max(0, ...rising.map(x => x.g.days));
-  const total = withFollowers.reduce((s, p) => s + p.followers, 0);
-
-  const topList = g => {
-    const list = top(g);
-    return `<section class="list">
-      <h2>Top 10 ${GENDER_LABEL[g].toLowerCase()}</h2>
-      <p class="hint">Most followed on Instagram${DATA.players.some(p => p.change_7d != null) ? " · change this week" : ""}</p>
-      ${list.length ? list.map((p, i) => rowHtml(p, i, `<b>${compact(p.followers)}</b>`,
-        p.change_7d != null ? `<span class="${p.change_7d >= 0 ? "up" : "down"}">${exactSigned(p.change_7d)}</span>` : "followers")).join("")
-        : `<p class="empty">No numbers yet.</p>`}
-      <a class="all" href="${link({ gender: g })}">See all ${GENDER_LABEL[g].toLowerCase()} →</a>
-    </section>`;
-  };
-
-  $("main").innerHTML = `
-    <section class="home-hero">
-      <h1>Australia's athletes, ranked by <em>Instagram</em></h1>
-      <p class="lede">Who's winning the feed. ${compact(total)} followers across ${DATA.players.length} athletes in basketball, soccer and the NFL, refreshed every morning.</p>
-    </section>
-    ${DATA.sample_data ? `<div class="notice">Preview mode: these are made-up sample numbers.</div>` : ""}
-    <div class="lists">
-      ${topList("men")}
-      ${topList("women")}
-      <section class="list rising">
-        <h2>Up &amp; coming</h2>
-        <p class="hint">Fastest growing ${days && days < 7 ? `over the last ${days} day${days > 1 ? "s" : ""}` : "this week"}, under ${compact(UP_AND_COMING_CAP)} followers</p>
-        ${rising.length ? rising.map((x, i) => rowHtml(x.p, i, `<b class="up">${signed(x.g.pct)}%</b>`,
-          `${exactSigned(x.g.n)} · ${compact(x.p.followers)}`)).join("")
-          : `<p class="empty">Growth rankings start once there are two days of numbers. Check back tomorrow.</p>`}
-        <a class="all" href="#/rankings?view=growth7">See who's hot →</a>
-      </section>
-    </div>
-    <section class="widget" id="widget"></section>`;
-  renderWidget("team");
-  window.scrollTo(0, 0);
+    .sort((a, b) => b.g.pct - a.g.pct).slice(0, 6);
 }
-
-// "Fastest growing this week": top 5 teams, leagues or sports by follower growth.
-function renderWidget(by) {
+// Combined growth of each team, league or sport.
+function growthGroups(by) {
   const groups = {};
   for (const p of DATA.players) {
     const g = weekGrowth(p);
@@ -980,28 +1108,156 @@ function renderWidget(by) {
       : (p.teams || []).map(t => [t[0] + "|" + t[1], t[1], t[0]]);
     for (const [k, name, sub] of keys) {
       const x = groups[k] ||= { name, sub, now: 0, before: 0, n: 0, days: 0 };
-      x.now += p.followers; x.before += p.followers - g.n; x.n += 1; x.days = Math.max(x.days, g.days);
+      x.now += p.followers; x.before += p.followers - (g.n || 0); x.n += 1; x.days = Math.max(x.days, g.days || 0);
     }
   }
   const minAthletes = by === "team" ? 3 : 1;
-  const ranked = Object.values(groups).filter(x => x.n >= minAthletes && x.before > 0)
+  return Object.values(groups).filter(x => x.n >= minAthletes && x.before > 0 && x.now !== x.before)
     .map(x => ({ ...x, pct: 100 * (x.now - x.before) / x.before, gain: x.now - x.before }))
     .sort((a, b) => b.pct - a.pct).slice(0, 5);
+}
+const href = p => `#/p/${encodeURIComponent(p.id)}`;
+const ring = (p, cls = "") => `<span class="ring ${cls}">${photo(p)}</span>`;
+const growthTxt = g => g && g.pct != null && g.n ? `${g.pct >= 0 ? "▲" : "▼"} ${Math.abs(g.pct) < 10 ? Math.abs(g.pct).toFixed(1) : Math.abs(g.pct).toFixed(0)}%` : "";
+function teamLine(p) { const t = teamIn(p, "All"); return `${esc(shortTeam(t.team, p.sport))} · ${esc(t.league)}`; }
+
+function showHome() {
+  current = null;
+  document.title = `${SITE_NAME} – Australia's athletes, ranked by Instagram`;
+  const withF = DATA.players.filter(p => p.followers != null);
+  const total = withF.reduce((s, p) => s + p.followers, 0);
+  const tp = topProfiles("All");
+  const cover = tp.list[0];
+  const rising = upAndComing(new Set(tp.byGrowth ? tp.list.map(x => x.p.id) : []));
+  const leagues = growthGroups("league");
+  const mostF = g => withF.filter(p => p.gender === g).sort((a, b) => b.followers - a.followers);
+  const hottest = [rising[0], tp.byGrowth ? tp.list[0] : null].filter(Boolean).sort((a, b) => b.g.pct - a.g.pct)[0];
+  const sportsCount = new Set(DATA.players.map(p => p.sport)).size;
+  const days = Math.max(0, ...rising.map(x => x.g.days || 0));
+  const window_ = days && days < 7 ? `last ${days} day${days > 1 ? "s" : ""}` : "this week";
+
+  const tick = [
+    tp.byGrowth && cover ? ["Top profile", `${cover.p.name} ${growthTxt(cover.g)}`] : null,
+    rising[0] ? ["Hot this week", `${rising[0].p.name} +${rising[0].g.pct.toFixed(1)}%`] : null,
+    leagues[0] ? ["Fastest league", `${leagues[0].name} ${signed(leagues[0].pct)}%`] : null,
+    mostF("women")[0] ? ["Most followed woman", `${mostF("women")[0].name} · ${compact(mostF("women")[0].followers)}`] : null,
+    mostF("men")[0] ? ["Most followed man", `${mostF("men")[0].name} · ${compact(mostF("men")[0].followers)}`] : null,
+    ["Tracking", `${DATA.players.length} athletes · ${sportsCount} sports`],
+  ].filter(Boolean).map(([k, v]) => `<span>${esc(k)} <b>${esc(v)}</b></span>`).join("");
+
+  const coverG = cover ? cover.g : null;
+  $("main").innerHTML = `
+    ${DATA.sample_data ? `<div class="notice" style="margin-top:20px">Preview mode: these are made-up sample numbers.</div>` : ""}
+    <section class="stories" aria-label="Top profiles this week">
+      <div class="stories-row">${tp.list.map(({ p, g }) => `
+        <a class="story" href="${href(p)}">${ring(p)}<b>${esc(p.name.split(" ").slice(-1)[0])}</b><small class="up">${growthTxt(g)}</small></a>`).join("")}
+      </div>
+      <span class="hand stories-note">← tap a ring to open their profile</span>
+    </section>
+
+    <section class="mx-hero">
+      <div>
+        <div class="kicker">The weekly programme · Australian athletes on Instagram</div>
+        <h1>Who's winning the <em>feed</em> this week</h1>
+        <p class="lede">Followers, growth and the hottest profiles from ${DATA.players.length} Australian athletes, from the NBA to the AFLW. Updated every morning; collected like a footy card set.</p>
+        <div class="stats">
+          <div><small>Athletes</small><b>${DATA.players.length}</b></div>
+          <div><small>Combined reach</small><b>${compact(total)}</b></div>
+          ${hottest ? `<div><small>Hottest</small><b class="up">+${hottest.g.pct.toFixed(1)}%</b></div>` : ""}
+        </div>
+        ${cover ? `<div class="hand hero-note">this week's top profile →</div>` : ""}
+      </div>
+      ${cover ? `<div class="cover-wrap">
+        <a class="tcard cover" href="${href(cover.p)}">
+          <span class="tape"></span>
+          <span class="pic">${photo(cover.p)}<span class="handle">@${esc(cover.p.instagram)}</span></span>
+          <span class="nm">${esc(cover.p.name)}${cover.p.verified ? TICK : ""}</span>
+          <span class="foot"><span>${teamLine(cover.p)}</span><span>${exact(cover.p.followers)} followers</span></span>
+        </a>
+        <span class="stamp"><span>${tp.byGrowth ? "Top" : "Most"}<b>#1</b>${tp.byGrowth ? "profile" : "followed"}</span></span>
+        ${coverG && coverG.n ? `<span class="hand cover-note">${exactSigned(coverG.n)} ${days && days < 7 ? "so far" : "this week"}!</span>` : ""}
+      </div>` : ""}
+    </section>
+
+    <div class="ticker" aria-label="This week"><div class="ticker-in">${tick}${tick}</div></div>
+
+    <section class="mx-sec" id="topProfiles"></section>
+
+    <section class="mx-sec">
+      <div class="sechead"><h2>Most followed</h2><span class="hand">the big names</span><span class="sechint">Instagram followers today</span></div>
+      <div class="mf">${["women", "men"].map(g => `
+        <div class="mf-col"><h3>${GENDER_LABEL[g]}</h3>
+          ${mostF(g).slice(0, 10).map((p, i) => `<a class="lrow" href="${href(p)}"><span class="n">${i + 1}</span>${ring(p, "sm")}
+            <span class="who"><b>${esc(p.name)}</b><small>${teamLine(p)}</small></span>
+            <span class="val"><b>${compact(p.followers)}</b>${p.change_7d != null ? `<small class="${p.change_7d >= 0 ? "up" : "down"}">${exactSigned(p.change_7d)}</small>` : ""}</span></a>`).join("") || `<p class="empty">No numbers yet.</p>`}
+          <a class="all" href="${link({ gender: g })}">See all ${GENDER_LABEL[g].toLowerCase()} →</a>
+        </div>`).join("")}
+      </div>
+    </section>
+
+    <section class="mx-lower">
+      <div>
+        <div class="sechead"><h2>Up &amp; coming</h2><span class="hand">admit one</span><span class="sechint">Under ${compact(UP_AND_COMING_CAP)} followers · growth ${window_}</span></div>
+        ${rising.length ? `<div class="stubs">${rising.map((x, i) => `<a class="stub" href="${href(x.p)}"><span class="n">${i + 1}</span>${ring(x.p, "sm")}
+          <span class="who"><b>${esc(x.p.name)}</b><small>${teamLine(x.p)}</small></span>
+          <span class="pct">+${x.g.pct.toFixed(1)}%<small>${compact(x.p.followers)} followers</small></span></a>`).join("")}</div>`
+          : `<p class="empty">Growth rankings start once there are two days of numbers. Check back tomorrow.</p>`}
+        <a class="all" href="#/rankings?view=growth7">See who's hot →</a>
+      </div>
+      <div><section class="board" id="widget"></section><div class="hand board-note">chalked up every morning ✎</div></div>
+    </section>`;
+  renderTopProfiles();
+  renderWidget("league");
+  window.scrollTo(0, 0);
+}
+
+function renderTopProfiles() {
+  const tp = topProfiles(topTab);
+  const tilt = [-2, 1.5, -1, 2, -1.5];
+  const cards = tp.list.slice(0, 5).map(({ p, g }, i) => `
+    <a class="tcard" href="${href(p)}" style="--tilt:${tilt[i]}deg">
+      <span class="tape"></span>
+      <span class="pic">${photo(p)}<span class="handle">@${esc(p.instagram)}</span><span class="big-n" aria-label="Rank ${i + 1}">${i + 1}</span></span>
+      <span class="nm">${esc(p.name)}${p.verified ? TICK : ""}</span>
+      <span class="tm">${teamLine(p)}</span>
+      <span class="foot"><b>${compact(p.followers)}</b>${g && g.n ? `<span class="${g.pct >= 0 ? "gr" : "dn"}">${growthTxt(g)}</span>` : ""}</span>
+    </a>`).join("");
+  const rest = tp.list.slice(5).map(({ p, g }, i) => `<a class="lrow" href="${href(p)}"><span class="n">${i + 6}</span>${ring(p, "sm")}
+      <span class="who"><b>${esc(p.name)}</b><small>${teamLine(p)}</small></span>
+      <span class="val"><b>${compact(p.followers)}</b>${g && g.n ? `<small class="up">${growthTxt(g)}</small>` : ""}</span></a>`).join("");
+  const how = tp.byGrowth
+    ? `Biggest follower growth ${tp.days && tp.days < 7 ? `over the last ${tp.days} day${tp.days > 1 ? "s" : ""}` : "this week"} · ${compact(TOP_PROFILE_MIN)}+ followers`
+    : "Ranked by followers until the growth numbers arrive";
+  $("topProfiles").innerHTML = `
+    <div class="sechead"><h2>Top profiles this week</h2><span class="hand">the collectables</span>
+      <div class="pills" role="group" aria-label="Show">${[["All", "All"], ["women", "Women"], ["men", "Men"]].map(([k, l]) =>
+        `<button data-g="${k}" aria-pressed="${k === topTab}">${l}</button>`).join("")}</div></div>
+    <p class="sechint" style="margin:-22px 0 26px">${how}</p>
+    ${tp.list.length ? `<div class="tp"><div class="tcards">${cards}</div>
+      ${rest ? `<div class="tp-rest"><div class="mini-h">Also in the top 10</div>${rest}</div>` : ""}</div>`
+      : `<p class="empty">No numbers yet.</p>`}`;
+  $("topProfiles").querySelector(".pills").addEventListener("click", e => {
+    const b = e.target.closest("button"); if (!b) return;
+    topTab = b.dataset.g; renderTopProfiles();
+  });
+}
+
+// "Fastest growing": top 5 teams, leagues or sports by combined follower growth.
+function renderWidget(by) {
+  const ranked = growthGroups(by);
   const days = Math.max(0, ...ranked.map(x => x.days));
-  const tabs = [["team", "Teams"], ["league", "Leagues"], ["sport", "Sports"]];
+  const max = Math.max(...ranked.map(x => Math.abs(x.pct)), 0.0001);
+  const tabs = [["league", "Leagues"], ["team", "Teams"], ["sport", "Sports"]];
+  const label = { league: "leagues", team: "teams", sport: "sports" }[by];
   $("widget").innerHTML = `
-    <div class="widget-head">
-      <div><h2>Fastest growing ${days && days < 7 ? `(last ${days} day${days > 1 ? "s" : ""})` : "this week"}</h2>
-      <p class="hint">Combined Instagram growth of their athletes${by === "team" ? " (teams with 3+ athletes tracked)" : ""}</p></div>
-      <div class="seg" role="group" aria-label="Group by">${tabs.map(([k, l]) => `<button data-by="${k}" aria-pressed="${k === by}">${l}</button>`).join("")}</div>
-    </div>
-    ${ranked.length ? `<div class="wrows">${ranked.map((x, i) => `
-      <div class="wrow"><span class="n">${i + 1}</span>
-        <div><b>${esc(x.name)}</b><span>${x.sub ? esc(x.sub) + " · " : ""}${x.n} athlete${x.n > 1 ? "s" : ""}</span></div>
-        <span class="pct ${x.pct >= 0 ? "up" : "down"}">${signed(x.pct)}%<br><span>${exactSigned(x.gain)}</span></span>
-      </div>`).join("")}</div>`
-      : `<p class="hint">This fills in once there are two days of numbers.</p>`}`;
-  $("widget").querySelector(".seg").addEventListener("click", e => {
+    <div class="board-head"><h3>Fastest growing ${label}</h3>
+      <div class="pills sm" role="group" aria-label="Group by">${tabs.map(([k, l]) => `<button data-by="${k}" aria-pressed="${k === by}">${l}</button>`).join("")}</div></div>
+    <div class="board-sub">Combined follower growth · ${days && days < 7 ? `last ${days} day${days > 1 ? "s" : ""}` : "this week"}${by === "team" ? " · teams with 3+ athletes" : ""}</div>
+    ${ranked.length ? ranked.map((x, i) => `<div class="brow"><span class="n">${i + 1}</span>
+        <div><span class="bn">${esc(x.name)}</span>${x.sub ? `<small> ${esc(x.sub)}</small>` : ""}<div class="bar" style="width:${Math.max(4, Math.abs(x.pct) / max * 100).toFixed(0)}%"></div></div>
+        <span class="${x.pct >= 0 ? "up" : "down"}">${signed(x.pct)}%</span></div>`).join("")
+      : `<p class="board-sub" style="margin-top:14px">This fills in once there are two days of numbers.</p>`}`;
+  $("widget").querySelector(".pills").addEventListener("click", e => {
     const b = e.target.closest("button"); if (b) renderWidget(b.dataset.by);
   });
 }
@@ -1012,7 +1268,8 @@ window.addEventListener("hashchange", route);
 fetch("data.json", { cache: "no-store" }).then(r => r.json()).then(d => {
   DATA = d;
   const asOf = d.players.map(p => p.as_of).filter(Boolean).sort().at(-1);
-  $("siteName").textContent = SITE_NAME;
+  const sp = SITE_NAME.lastIndexOf(" ");
+  $("siteName").innerHTML = sp > 0 ? `${esc(SITE_NAME.slice(0, sp))} <b>${esc(SITE_NAME.slice(sp + 1))}</b>` : esc(SITE_NAME);
   buildNav();
   if (asOf) $("updated").innerHTML = `<span class="live"></span>Updated ${niceDate(asOf, { day: "numeric", month: "short" })}`;
   route();
