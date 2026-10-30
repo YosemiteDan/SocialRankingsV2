@@ -249,7 +249,7 @@ def recent_media(items):
 
 
 # ---- Engagement formula (phase 2; not shown on the site yet). Change these to tune it.
-COMMENT_WEIGHT = 1.3    # a comment is worth 1.3 likes
+COMMENT_WEIGHT = 1.2    # a comment is worth 1.2 likes (kept modest: the athlete's own replies can't be left out)
 REEL_MULTIPLIER = 1.4   # a reel's likes + comments count 1.4x
 ATHLETE_UPLIFT = 1.2    # x1.2: athletes' posts get more saves and sends, which Meta doesn't share
 TOP_TIER_BIAS = 1.2     # x1.2 on the final total: athlete / top-of-pyramid bias (together with the above: x1.44)
