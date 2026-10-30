@@ -288,8 +288,23 @@
   .toast { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); background: var(--accent); color: #1A0B00; font-weight: 700; padding: 11px 18px; border-radius: 99px; opacity: 0; transition: opacity .2s; pointer-events: none; z-index: 20; }
   .toast.show { opacity: 1; }
 
-  footer { color: var(--muted); font-size: 14px; padding: 18px 0 44px; border-top: 1px solid var(--line); margin-top: 32px; }
-  footer p { margin: 4px 0; max-width: 72ch; }
+  .site-foot { margin-top: 60px; border-top: 2px solid var(--cream); background: #0A0F26; color: var(--muted); font-size: 14px; }
+  .foot-top { display: grid; grid-template-columns: minmax(0, 1.6fr) repeat(3, minmax(0, 1fr)); gap: 32px; padding: 44px 0 34px; }
+  .foot-brand .logo { display: inline-block; font-size: 30px; text-decoration: none; color: var(--text); }
+  .foot-brand .logo b { color: var(--accent); font-style: italic; }
+  .foot-brand p { margin: 12px 0 18px; max-width: 34ch; line-height: 1.5; }
+  .foot-social { display: flex; gap: 10px; }
+  .foot-social a { width: 40px; height: 40px; display: grid; place-items: center; border: 2px solid var(--line); border-radius: 8px; color: var(--text); }
+  .foot-social a:hover { border-color: var(--accent); color: var(--accent); }
+  .foot-social svg { width: 18px; height: 18px; }
+  .foot-col h4 { margin: 4px 0 14px; font: 700 13px/1 var(--display); letter-spacing: .16em; text-transform: uppercase; color: var(--accent); }
+  .foot-col a { display: block; color: var(--text); text-decoration: none; padding: 5px 0; }
+  .foot-col a:hover, .foot-legal a:hover { color: var(--accent); }
+  .foot-bottom { display: flex; justify-content: space-between; gap: 24px; align-items: flex-start; border-top: 1px solid var(--line); padding: 18px 0 40px; font-size: 13px; }
+  .foot-bottom p { margin: 0; max-width: 80ch; line-height: 1.5; }
+  .foot-legal { display: flex; gap: 18px; white-space: nowrap; }
+  .foot-legal a { color: var(--text); text-decoration: none; }
+  @media (max-width: 860px) { .foot-top { grid-template-columns: 1fr 1fr; } .foot-brand { grid-column: 1 / -1; } .foot-bottom { flex-direction: column; } }
 
   /* ---------- responsive ---------- */
   @media (max-width: 960px) {
@@ -523,9 +538,34 @@
   </div>
 </div>
 <main class="wrap" id="main"></main>
-<footer class="wrap">
-  <p>Follower numbers come from public Instagram accounts through Meta's official API. Heights and ages come from Wikidata, the open database behind Wikipedia.</p>
-  <p>Not affiliated with any league, team or governing body.</p>
+<footer class="site-foot">
+  <div class="wrap">
+    <div class="foot-top">
+      <div class="foot-brand">
+        <a class="logo" href="#/">Social<b>ete</b></a>
+        <p>Australia's athletes, ranked by Instagram. Followers, growth and engagement, updated every morning.</p>
+        <!-- Social links: replace href="#" with the real profile addresses when the accounts are ready. -->
+        <div class="foot-social">
+          <a class="soon" href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg></a>
+          <a class="soon" href="#" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.6 3c.4 2.2 1.8 3.7 4 3.9v3.2c-1.5 0-2.9-.4-4-1.2v6.3a6 6 0 1 1-6-6h.5v3.3a2.8 2.8 0 1 0 2.3 2.7V3h3.2z"/></svg></a>
+          <a class="soon" href="#" aria-label="X"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.8 3h3.3l-7.2 8.2L22.4 21h-6.6l-5.2-6.8L4.7 21H1.4l7.7-8.8L1 3h6.8l4.7 6.2L17.8 3zm-1.2 16h1.8L7.5 4.9H5.6L16.6 19z"/></svg></a>
+          <a class="soon" href="#" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M22.5 7.2a2.8 2.8 0 0 0-2-2C18.8 4.7 12 4.7 12 4.7s-6.8 0-8.5.5a2.8 2.8 0 0 0-2 2A29 29 0 0 0 1 12a29 29 0 0 0 .5 4.8 2.8 2.8 0 0 0 2 2c1.7.5 8.5.5 8.5.5s6.8 0 8.5-.5a2.8 2.8 0 0 0 2-2A29 29 0 0 0 23 12a29 29 0 0 0-.5-4.8zM9.8 15.1V8.9l5.7 3.1-5.7 3.1z"/></svg></a>
+          <a class="soon" href="#" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9.5h4V21H3V9.5zm6.5 0h3.8v1.6h.1c.5-1 1.8-2 3.8-2 4 0 4.8 2.6 4.8 6V21h-4v-5.2c0-1.2 0-2.8-1.7-2.8s-2 1.3-2 2.7V21h-4V9.5z"/></svg></a>
+        </div>
+      </div>
+      <nav class="foot-col" aria-label="Explore"><h4>Explore</h4>
+        <a href="#/">Home</a><a href="#/rankings?gender=women">Women</a><a href="#/rankings?gender=men">Men</a>
+        <a href="#/rankings?view=growth7">Hot this week</a><a href="#/rankings?all=1">All athletes</a></nav>
+      <nav class="foot-col" aria-label="Company"><h4>Socialete</h4>
+        <a class="soon" href="#">About</a><a class="soon" href="#">How the rankings work</a><a class="soon" href="#">Contact</a><a class="soon" href="#">Advertise &amp; partner</a><a class="soon" href="#">Media kit</a></nav>
+      <nav class="foot-col" aria-label="Athletes"><h4>Athletes</h4>
+        <a class="soon" href="#">Add or correct an athlete</a><a class="soon" href="#">Claim your profile</a><a class="soon" href="#">Newsletter</a></nav>
+    </div>
+    <div class="foot-bottom">
+      <p>© <span id="year">2026</span> Socialete. Follower numbers come from public Instagram accounts through Meta's official API. Heights and ages come from Wikidata. Not affiliated with any league, team or governing body, or with Instagram or Meta.</p>
+      <p class="foot-legal"><a class="soon" href="#">Privacy</a><a class="soon" href="#">Terms</a></p>
+    </div>
+  </div>
 </footer>
 <div class="toast" id="toast" role="status"></div>
 
@@ -1338,6 +1378,9 @@ function renderWidget(by) {
 let resizeTimer;
 window.addEventListener("resize", () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(drawChart, 150); });
 window.addEventListener("hashchange", route);
+// Footer links that aren't set up yet.
+document.addEventListener("click", e => { const a = e.target.closest("a.soon"); if (a) { e.preventDefault(); toast("Coming soon"); } });
+document.getElementById("year").textContent = new Date().getFullYear();
 
 fetch("data.json", { cache: "no-store" }).then(r => r.json()).then(d => {
   DATA = d;
