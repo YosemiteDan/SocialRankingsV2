@@ -3,7 +3,11 @@ Run from GitHub: Actions -> "Check a name". Results show as notes on the run."""
 import json, os, socket, sys
 import requests
 
-name = (sys.argv[1] if len(sys.argv) > 1 else "").strip().lower()
+raw = (sys.argv[1] if len(sys.argv) > 1 else "").strip().lower()
+# Several names separated by commas: quick check of just .com and the Instagram handle for each.
+names = [n.strip() for n in raw.split(",") if n.strip()]
+name = names[0] if names else ""
+QUICK = len(names) > 1
 UA = {"User-Agent": "Mozilla/5.0 (name check)"}
 def note(msg): print(f"::notice title=Name check::{msg}"); print(msg)
 
@@ -26,7 +30,7 @@ def rdap(domain):
         return f"TAKEN – registered {ev.get('registration','?')}, expires {ev.get('expiration','?')}{', registrar ' + regname if regname else ''}; status {', '.join(d.get('status', []))}"
     return f"couldn't check (HTTP {r.status_code})"
 
-for dom in [f"{name}.com", f"{name}.com.au", f"{name}.au", f"{name}.co", f"{name}.io", f"{name}.app"]:
+for dom in ([] if QUICK else [f"{name}.com", f"{name}.com.au", f"{name}.au", f"{name}.co", f"{name}.io", f"{name}.app"]):
     try:
         ip = socket.gethostbyname(dom)
     except OSError:
@@ -67,5 +71,11 @@ def ig(handle):
             out.append(f"Meta check failed ({e.__class__.__name__})")
     return "; ".join(out)
 
-for h in [name, f"{name}.au", f"{name}au", f"{name}_"]:
-    note(f"Instagram @{h}: {ig(h)}")
+if QUICK:
+    import time
+    for n in names:
+        note(f"{n}  |  {n}.com: {rdap(n + '.com')}  |  @{n}: {ig(n)}")
+        time.sleep(1)
+else:
+    for h in [name, f"{name}.au", f"{name}au", f"{name}_"]:
+        note(f"Instagram @{h}: {ig(h)}")
