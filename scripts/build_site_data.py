@@ -134,6 +134,14 @@ def main():
                     p[f"change_{key}_pct"] = round(100 * (followers - then) / then, 2)
                 else:
                     p[f"change_{key}"] = p[f"change_{key}_pct"] = None
+            # "Today": change since the previous collection (within 3 days), for the
+            # home page's top profile of the day.
+            prev = rows[-2] if len(rows) > 1 else None
+            gap = (last_day - date.fromisoformat(prev["date"])).days if prev else 0
+            prev_f = num(prev["followers"]) if prev else None
+            if prev_f and followers is not None and 0 < gap <= 3:
+                p["change_1d"] = followers - prev_f
+                p["change_1d_pct"] = round(100 * (followers - prev_f) / prev_f, 3)
             # "This week" growth for the home page. Until there's a week of history,
             # use growth since tracking began, and say how many days that covers.
             week_ago = (last_day - timedelta(days=7)).isoformat()

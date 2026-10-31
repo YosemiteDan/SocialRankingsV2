@@ -1226,7 +1226,13 @@ function showHome() {
   const withF = DATA.players.filter(p => p.followers != null);
   const total = withF.reduce((s, p) => s + p.followers, 0);
   const tp = topProfiles("All");
-  const cover = tp.list[0];
+  // Cover star: today's top profile, the biggest growth since yesterday's update
+  // among accounts collected today with 10K+ followers. Falls back to this week's #1.
+  const newest = DATA.players.map(p => p.as_of).filter(Boolean).sort().at(-1);
+  const daily = DATA.players.filter(p => p.followers >= TOP_PROFILE_MIN && p.as_of === newest && p.change_1d_pct != null && p.change_1d > 0)
+    .sort((a, b) => b.change_1d_pct - a.change_1d_pct || b.change_1d - a.change_1d);
+  const isDaily = daily.length > 0;
+  const cover = isDaily ? { p: daily[0], g: { pct: daily[0].change_1d_pct, n: daily[0].change_1d, days: 1 } } : tp.list[0];
   const rising = upAndComing(new Set(tp.byGrowth ? tp.list.map(x => x.p.id) : []));
   const leagues = growthGroups("league");
   const mostF = g => withF.filter(p => p.gender === g).sort((a, b) => b.followers - a.followers);
@@ -1236,7 +1242,7 @@ function showHome() {
   const window_ = days && days < 7 ? `last ${days} day${days > 1 ? "s" : ""}` : "this week";
 
   const tick = [
-    tp.byGrowth && cover ? ["Top profile", `${cover.p.name} ${growthTxt(cover.g)}`] : null,
+    isDaily ? ["Top profile today", `${cover.p.name} +${cover.g.pct.toFixed(2)}%`] : tp.byGrowth && cover ? ["Top profile this week", `${cover.p.name} ${growthTxt(cover.g)}`] : null,
     rising[0] ? ["Hot this week", `${rising[0].p.name} +${rising[0].g.pct.toFixed(1)}%`] : null,
     leagues[0] ? ["Fastest league", `${leagues[0].name} ${signed(leagues[0].pct)}%`] : null,
     mostF("women")[0] ? ["Most followed woman", `${mostF("women")[0].name} · ${compact(mostF("women")[0].followers)}`] : null,
@@ -1251,15 +1257,15 @@ function showHome() {
 
     <section class="mx-hero">
       <div>
-        <div class="kicker">The weekly programme · Australian athletes on Instagram</div>
-        <h1>Who's winning the <em>feed</em> this week</h1>
+        <div class="kicker">The daily programme · Australian athletes on Instagram</div>
+        <h1>Who's winning the <em>feed</em> today</h1>
         <p class="lede">Followers, growth and the hottest profiles from ${DATA.players.length} Australian athletes, from the NBA to the AFLW. Updated every morning; collected like a footy card set.</p>
         <div class="stats">
           <div><small>Athletes</small><b>${DATA.players.length}</b></div>
           <div><small>Combined reach</small><b>${compact(total)}</b></div>
           ${hottest ? `<div><small>Hottest</small><b class="up">+${hottest.g.pct.toFixed(1)}%</b></div>` : ""}
         </div>
-        ${cover ? `<div class="hand hero-note">this week's top profile →</div>` : ""}
+        ${cover ? `<div class="hand hero-note">${isDaily ? "today's" : tp.byGrowth ? "this week's" : "the"} top profile →</div>` : ""}
       </div>
       ${cover ? `<div class="cover-wrap">
         <a class="tcard cover" href="${href(cover.p)}">
@@ -1268,8 +1274,8 @@ function showHome() {
           <span class="nm">${esc(cover.p.name)}${cover.p.verified ? TICK : ""}</span>
           <span class="foot"><span>${teamLine(cover.p)}</span><span>${exact(cover.p.followers)} followers</span></span>
         </a>
-        <span class="stamp"><span>${tp.byGrowth ? "Top" : "Most"}<b>#1</b>${tp.byGrowth ? "profile" : "followed"}</span></span>
-        ${coverG && coverG.n ? `<span class="hand cover-note">${exactSigned(coverG.n)} ${days && days < 7 ? "so far" : "this week"}!</span>` : ""}
+        <span class="stamp"><span>${isDaily ? "Top" : tp.byGrowth ? "Top" : "Most"}<b>#1</b>${isDaily ? "today" : tp.byGrowth ? "this week" : "followed"}</span></span>
+        ${coverG && coverG.n ? `<span class="hand cover-note">${exactSigned(coverG.n)} ${isDaily ? "today" : days && days < 7 ? "so far" : "this week"}!</span>` : ""}
       </div>` : ""}
     </section>
 
