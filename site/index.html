@@ -404,6 +404,7 @@
   .aff-b { display: inline-flex; align-items: center; gap: 8px; border: 2px solid var(--cream); padding: 6px 12px 6px 6px; font: 700 15px/1 var(--display); letter-spacing: .04em; }
   .aff-b small { background: var(--cream); color: var(--bg); font: 700 10px/1 var(--display); letter-spacing: .14em; text-transform: uppercase; padding: 4px 6px; }
   .aff-b.nat { border-color: var(--accent); }
+  .aff-note { margin-top: 6px; font: 600 12px/1.3 var(--display); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
   .aff-b.nat small { background: var(--accent); }
   .tab-label { align-self: center; flex: none; margin: 0 2px 0 10px; font: 700 11px/1 var(--display); letter-spacing: .14em; text-transform: uppercase; color: var(--accent); white-space: nowrap; }
   .tabs button.nat { border-color: rgba(255,122,26,.5); }
@@ -845,6 +846,7 @@ async function showProfile(id) {
   p.photo = summary.photo;
   p.teams = p.teams || summary.teams;
   p.leagues = p.leagues || summary.leagues;
+  p.national = p.national || summary.national;
   current = p;
   document.title = `${p.name} on Instagram – ${SITE_NAME}`;
 
@@ -869,7 +871,8 @@ async function showProfile(id) {
       <div>
         <h1>${nameLines(p.name)}${p.verified ? TICK : ""}</h1>
         <div class="sub">${[...new Set((p.teams || [[p.league, p.team, p.position]]).map(t => t[1]).filter(t => t && t !== "Australia"))].map(esc).join(" · ")}${p.import ? `<span class="badge">Import</span>` : ""}</div>
-        <div class="aff">${clubLeagues(p).map(l => `<span class="aff-b"><small>League</small>${esc(l)}</span>`).join("")}${nationalTeams(p).map(l => `<span class="aff-b nat"><small>National team</small>${esc(groupName(l))}</span>`).join("")}</div>
+        <div class="aff">${clubLeagues(p).map(l => `<span class="aff-b"><small>League</small>${esc(l)}</span>`).join("")}${nationalTeams(p).map(l => `<span class="aff-b nat" title="${esc((p.national || {})[l] ? "Selected for the " + p.national[l] : "")}"><small>National team</small>${esc(groupName(l))}</span>`).join("")}</div>
+        ${Object.keys(p.national || {}).length ? `<div class="aff-note">${Object.entries(p.national).map(([t, c]) => `${esc(groupName(t))} squad: ${esc(c)}`).join(" · ")}</div>` : ""}
         ${handle ? `<div class="sub handle">@${esc(handle)}</div>` : ""}
         ${factsStrip(p)}
         ${p.bio ? `<p class="bio">${esc(p.bio)}</p>` : ""}
@@ -1022,6 +1025,8 @@ function engagementPanel(p) {
     </section>`;
 }
 
+// 182 cm -> 6′0″ (rounded to the nearest inch first, so it never shows 5′12″).
+function feetInches(cm) { if (!cm) return null; const t = Math.round(cm / 2.54); return `${Math.floor(t / 12)}′${t % 12}″`; }
 // Age in whole years, counted from the birthday (not shown: the birth date itself).
 function ageFrom(iso) {
   if (!iso) return null;
@@ -1037,7 +1042,7 @@ function factsStrip(p) {
   const age = ageFrom(d.birthdate);
   const pos = d.position || (p.teams || []).map(t => t[2]).find(Boolean) || p.position || "";
   const height = d.height_cm ? `${d.height_cm} cm` : d.height ? d.height.replace("-", "′") + "″" : null;
-  const heightSub = d.height_cm ? `${Math.floor(d.height_cm / 30.48)}′${Math.round(d.height_cm / 2.54 % 12)}″` : null;
+  const heightSub = feetInches(d.height_cm);
   const items = [
     ["Height", height, heightSub],
     ["Age", age != null ? `${age} yrs` : null, null],
@@ -1052,7 +1057,7 @@ function detailsPanel(d) {
   const age = d.birthdate ? Math.floor((Date.now() - new Date(d.birthdate + "T00:00:00")) / 31557600000) : null;
   const items = [
     [d.height_cm ? d.height_cm + " cm" : d.height, d.height ? `height · ${d.height.replace("-", "′")}″`
-      : d.height_cm ? `height · ${Math.floor(d.height_cm / 30.48)}′${Math.round(d.height_cm / 2.54 % 12)}″` : "height"],
+      : d.height_cm ? `height · ${feetInches(d.height_cm)}` : "height"],
     [age, d.birthdate ? `years old · born ${niceDate(d.birthdate, { day: "numeric", month: "short", year: "numeric" })}` : ""],
     [d.birthplace, "born in"],
     [d.jersey ? "#" + d.jersey : null, "jersey"],

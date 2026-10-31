@@ -51,6 +51,70 @@ def num(v, cast=int):
         return round(x) if cast is int else cast(x)
 
 
+# National teams count only for players in that team's most recent official
+# tournament squad, listed in data/national_squads.csv (team, competition, date,
+# name, club). Teams with no squad listed there fall back to data/athletes.csv.
+NATIONAL_TEAMS = {"Matildas", "Socceroos", "Australia men", "Australia women", "Boomers", "Opals",
+                  "Wallabies", "Wallaroos", "Kangaroos", "Jillaroos"}
+
+
+def plain_name(s):
+    s = unicodedata.normalize("NFKD", s or "").encode("ascii", "ignore").decode().lower()
+    return re.sub(r"[^a-z ]", "", s).strip()
+
+
+def load_squads():
+    """{team: {"competition": ..., "date": ..., "names": set of plain names}} for each team's latest squad."""
+    path = DATA / "national_squads.csv"
+    if not path.exists():
+        return {}
+    latest = {}
+    with path.open(newline="") as f:
+        rows = list(csv.DictReader(f))
+    for r in rows:
+        t = r["team"].strip()
+        if r["date"] > latest.get(t, ("", ""))[0]:
+            latest[t] = (r["date"], r["competition"].strip())
+    squads = {t: {"date": d, "competition": c, "names": set()} for t, (d, c) in latest.items()}
+    for r in rows:
+        t = r["team"].strip()
+        if r["date"] == squads[t]["date"]:
+            squads[t]["names"].add(plain_name(r["name"]))
+    return squads
+
+
+def in_squad(name, names):
+    """Exact name, or same surname with a shortened first name (Steph / Stephanie)."""
+    n = plain_name(name)
+    if n in names:
+        return True
+    if not n:
+        return False
+    first, last = n.split()[0], n.split()[-1]
+    return any(k.split()[-1] == last and (k.split()[0].startswith(first) or first.startswith(k.split()[0]))
+               for k in names if k)
+
+
+def memberships_for(name, memberships, squads):
+    """Leagues and teams, with national teams only while the player is in the latest squad."""
+    teams, leagues, national = [], [], {}
+    for m in memberships:
+        lg = m.get("league", "")
+        if lg in NATIONAL_TEAMS and lg in squads and not in_squad(name, squads[lg]["names"]):
+            teams.append(["", m["team"], m["position"]])     # keep their club; no national badge
+            continue
+        teams.append([lg, m["team"], m["position"]])
+        leagues.append(lg)
+        if lg in squads:
+            national[lg] = squads[lg]["competition"]
+    for team, sq in squads.items():
+        if team not in leagues and in_squad(name, sq["names"]):
+            teams.append([team, "", ""])
+            leagues.append(team)
+            national[team] = sq["competition"]
+    return {"teams": teams, "leagues": leagues, "national": national}
+
+
 def load_history():
     real = DATA / "history.csv"
     path, sample = (real, False) if real.exists() else (DATA / "sample_history.csv", True)
@@ -92,6 +156,7 @@ def main():
     for a in athletes:
         grouped.setdefault(a["name"], []).append(a)
 
+    squads = load_squads()
     summaries, pages = [], {}
     for name, memberships in grouped.items():
         a = memberships[0]                      # first row = main league and team
@@ -105,8 +170,7 @@ def main():
             "name": a["name"], "team": a["team"], "position": a["position"],
             "sport": a.get("sport", ""), "league": a.get("league", ""),
             # Every league and team they're in: [league, team, position]
-            "teams": [[m.get("league", ""), m["team"], m["position"]] for m in memberships],
-            "leagues": [m.get("league", "") for m in memberships],
+            **memberships_for(a["name"], memberships, squads),
             "import": any(m.get("import") == "yes" for m in memberships),
             "gender": (a.get("gender") or "").strip().lower() or LEAGUE_GENDER.get(a.get("league", "")),
             "id": slug(a["name"]),
