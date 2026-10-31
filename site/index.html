@@ -458,6 +458,31 @@
   @media (max-width: 860px) { .bd-list { grid-template-columns: 1fr; } .bd-controls { position: static; } }
   @media (max-width: 520px) { .hide-s { display: none; } }
   .hub-lede { margin: 0 0 18px; max-width: 64ch; color: #C3C9E3; font: 400 18px/1.5 var(--serif); }
+  .pill-sets { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+  .lg-note { font: 700 11px/1.3 var(--display); letter-spacing: .1em; text-transform: uppercase; color: var(--accent); margin-top: -6px; }
+  .kick-link { color: inherit; text-decoration: none; border-bottom: 1px solid currentColor; }
+  .sp-cta { display: inline-block; margin-top: 4px; }
+  .club-list { container-type: inline-size; }
+  .club-row { display: grid; grid-template-columns: 30px minmax(0, 1.4fr) 70px 90px 80px minmax(0, 1fr); gap: 0 14px; align-items: center; padding: 10px 0; border-bottom: 1px dashed var(--line); color: inherit; text-decoration: none; }
+  a.club-row:hover b { color: var(--accent); }
+  .club-head { font: 700 11px/1 var(--display); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); padding: 0 0 10px; border-bottom: 2px solid var(--line); }
+  .club-head .key { color: var(--cream); }
+  .club-row .n { font: 700 20px/1 var(--serif); }
+  .club-row .who b { display: block; font: 700 18px/1.15 var(--serif); }
+  .club-row .who small { display: block; font: 700 11px/1.3 var(--display); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-top: 2px; }
+  .club-row .c-n, .club-row .c-f, .club-row .c-c { font: 700 17px/1 var(--display); text-align: right; }
+  .club-head > span:nth-child(n+3):nth-child(-n+5) { text-align: right; }
+  .club-row .c-c.gr { color: var(--green, #4BE38E); } .club-row .c-c.dn { color: #FF6B81; }
+  .club-row .c-top { display: flex; align-items: center; gap: 10px; min-width: 0; padding-left: 14px; }
+  .club-row .c-top .sq { width: 30px; height: 30px; flex: none; }
+  .club-row .c-top em { font: 500 14px/1.2 "Barlow", sans-serif; font-style: normal; color: #C3C9E3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  @container (max-width: 640px) { .club-row { grid-template-columns: 24px minmax(0, 1fr) 62px 68px; gap: 0 8px; } .club-row .hide-s, .club-row > :nth-child(3) { display: none; } }
+  .cr-more { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 10px; margin-top: 26px; }
+  .cr-chip { display: grid; grid-template-columns: 26px 42px minmax(0, 1fr); gap: 10px; align-items: center; padding: 8px 10px; border: 1px solid var(--line); background: var(--card); color: inherit; text-decoration: none; }
+  .cr-chip .n { font: 700 16px/1 var(--serif); }
+  .cr-chip .sq { width: 42px; height: 42px; }
+  .cr-chip b { display: block; font: 700 15px/1.15 var(--serif); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .cr-chip small { display: block; font: 700 10px/1.3 var(--display); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
   .sp-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 16px; padding-top: 8px; }
   .sp-tile { display: flex; flex-direction: column; gap: 14px; background: var(--card); border: 2px solid var(--line); padding: 20px; text-decoration: none; transition: border-color .15s, transform .15s; }
   .sp-tile:hover { border-color: var(--accent); transform: translateY(-3px); }
@@ -1479,7 +1504,7 @@ function renderBoard() {
    Cards: three labelled boxes (Followers · Change · Eng), the one the list is ranked by emphasised.
    Lists: aligned columns under a header; on phones the non-ranked stats move under the name. */
 const ENG_INFO = "Engagement: Socialete's score from likes and comments on their last 10 posts";
-function pct1(x) { if (x == null) return "–"; const a = Math.abs(x); return (x >= 0 ? "+" : "−") + (a > 0 && a < 0.1 ? a.toFixed(2) : a.toFixed(1)) + "%"; }
+function pct1(x) { if (x == null) return "–"; const a = Math.abs(x); return (x >= 0 ? "+" : "−") + (a > 0 && a < 0.01 ? a.toFixed(3) : a > 0 && a < 0.1 ? a.toFixed(2) : a.toFixed(1)) + "%"; }
 const engVal = p => p.engagement_rate != null ? p.engagement_rate.toFixed(1) + "%" : "–";
 const chCls = ch => !ch || ch.pct == null ? "" : ch.pct >= 0 ? "gr" : "dn";
 function cardStats(p, ch, chLabel, key) {
@@ -1714,27 +1739,269 @@ function wireAdv(onChange, onReset) {
   document.querySelector(".bd-adv")?.addEventListener("toggle", e => { board.advOpen = e.target.open; });
 }
 
+
+/* ---------------------------------------------------------------- athletes (#/athletes)
+   One ladder for every athlete. Tabs: Most followed (default) · Trending up · Trending down.
+   Filters sit above the list: sport (and league), search, Everyone/Women/Men,
+   Today/This week/This month on the trending tabs, and advanced filters. Hero 10, then the list. */
+const ATH_TABS = { followed: "Most followed", up: "▲ Trending up", down: "▼ Trending down" };
+const ath = { tab: "followed", sport: "All", league: "All", gender: "All", win: "day", q: "", shown: 40 };
+function athLink(o = {}) {
+  const v = { tab: ath.tab, sport: ath.sport, league: ath.league, gender: ath.gender, win: ath.win, q: "", ...o };
+  if (o.sport !== undefined && o.league === undefined) v.league = "All";
+  const q = new URLSearchParams(Object.entries(v).filter(([k, x]) => x && x !== "All" && !(k === "tab" && x === "followed") && !(k === "win" && (x === "day" || v.tab === "followed"))));
+  return "#/athletes" + (q.toString() ? "?" + q : "");
+}
+function showAthletes(params) {
+  current = null;
+  Object.assign(ath, { tab: ATH_TABS[params.get("tab")] ? params.get("tab") : "followed", sport: params.get("sport") || "All",
+    league: params.get("league") || "All", gender: params.get("gender") || "All", win: params.get("win") || "day", q: params.get("q") || "", shown: 40 });
+  if (params.get("adv")) board.advOpen = true;
+  const sports = sportsList();
+  if (!sports.includes(ath.sport)) ath.sport = "All";
+  const groups = ath.sport === "All" ? [] : [...new Set(DATA.players.filter(p => p.sport === ath.sport && (ath.gender === "All" || p.gender === ath.gender)).flatMap(p => p.leagues || []).filter(Boolean))]
+    .sort((a, b) => ((LEAGUE_ORDER.indexOf(a) + 1) || 99) - ((LEAGUE_ORDER.indexOf(b) + 1) || 99));
+  if (!groups.includes(ath.league)) ath.league = "All";
+  const cnt = sp => DATA.players.filter(p => (sp === "All" || p.sport === sp) && (ath.gender === "All" || p.gender === ath.gender)).length;
+  const who = { All: "athletes", women: "women", men: "men" }[ath.gender];
+  const where = ath.league !== "All" ? groupName(ath.league) : ath.sport !== "All" ? (SPORT_LABEL[ath.sport] || ath.sport) : "";
+  const when = { day: "today", week: "this week", month: "this month" }[ath.win];
+  const title = ath.tab === "followed" ? (where ? `${esc(where)}'s most followed ${ath.gender === "All" ? "" : who}` : `Australia's most followed ${who}`)
+    : `${where ? esc(where) + " · " : ""}Trending ${ath.tab === "up" ? "up" : "down"} ${when}`;
+  document.title = `${ATH_TABS[ath.tab].replace(/^[▲▼] /, "")} athletes – ${SITE_NAME}`;
+  $("main").innerHTML = `
+    <section class="bd-hero">
+      <div class="kicker">Athletes · every sport, one ladder</div>
+      <h1>${title}</h1>
+      <div class="bd-modes">${Object.entries(ATH_TABS).map(([k, l]) => `<a href="${athLink({ tab: k })}" class="${k === ath.tab ? "on" : ""}">${l}</a>`).join("")}</div>
+    </section>
+    <div class="bd-controls">
+      <div class="bd-chips" role="tablist" aria-label="Sport">${["All", ...sports].map(sp => `<a role="tab" aria-selected="${sp === ath.sport}" href="${athLink({ sport: sp })}">${sp === "All" ? "All sports" : esc(SPORT_LABEL[sp] || sp)}<small>${cnt(sp)}</small></a>`).join("")}</div>
+      ${groups.length > 1 ? `<div class="bd-chips sub" role="tablist" aria-label="League">
+        <a role="tab" aria-selected="${ath.league === "All"}" href="${athLink({ league: "All" })}">All ${esc((SPORT_LABEL[ath.sport] || ath.sport).toLowerCase())}</a>
+        ${groups.filter(g => !isNational(g)).map(g => `<a role="tab" aria-selected="${g === ath.league}" href="${athLink({ league: g })}">${esc(g)}</a>`).join("")}
+        ${groups.some(isNational) ? `<span class="tab-label">National teams</span>${groups.filter(isNational).map(g => `<a role="tab" class="nat" aria-selected="${g === ath.league}" href="${athLink({ league: g })}">${esc(groupName(g))}</a>`).join("")}` : ""}
+      </div>` : ""}
+      <div class="bd-row">
+        <input id="athSearch" type="search" placeholder="Search athletes, teams or leagues" aria-label="Search athletes, teams or leagues">
+        <div class="pill-sets">
+          ${ath.tab !== "followed" ? `<div class="pills" role="group" aria-label="Time">${[["day", "Today"], ["week", "This week"], ["month", "This month"]].map(([k, l]) => `<a href="${athLink({ win: k })}" aria-pressed="${k === ath.win}" class="pill">${l}</a>`).join("")}</div>` : ""}
+          <div class="pills" role="group" aria-label="Men or women">${[["All", "Everyone"], ["women", "Women"], ["men", "Men"]].map(([g, l]) => `<a href="${athLink({ gender: g, league: "All" })}" aria-pressed="${g === ath.gender}" class="pill">${l}</a>`).join("")}</div>
+        </div>
+      </div>
+      ${advPanel()}
+    </div>
+    <section id="athBody"></section>`;
+  $("athSearch").value = ath.q;
+  $("athSearch").addEventListener("input", e => { ath.q = e.target.value; ath.shown = 40; renderAthletes(); });
+  wireAdv(() => { ath.shown = 40; renderAthletes(); const n = Object.keys(ADV).filter(advActive).length;
+    document.querySelector(".bd-adv summary").innerHTML = `Advanced filters${n ? ` <span class="adv-n">${n}</span>` : ""}`; },
+    () => { advReset(); board.advOpen = true; showAthletes(new URLSearchParams(location.hash.split("?")[1] || "")); });
+  renderAthletes();
+  window.scrollTo(0, 0);
+}
+function renderAthletes() {
+  const q = ath.q.trim().toLowerCase(), followed = ath.tab === "followed", up = ath.tab === "up";
+  const matches = p => !q || p.name.toLowerCase().includes(q) || (p.sport || "").toLowerCase().includes(q) ||
+    (p.teams || []).some(t => (t[1] || "").toLowerCase().includes(q) || (t[0] || "").toLowerCase().includes(q));
+  const base = DATA.players.filter(p => (ath.sport === "All" || p.sport === ath.sport) && (ath.league === "All" || inLeague(p, ath.league)) &&
+    (ath.gender === "All" || p.gender === ath.gender) && matches(p) && advPass(p));
+  let ranked, chLabel, hint;
+  if (followed) {
+    const days = Math.max(0, ...base.map(p => (weekGrowth(p) || {}).days || 0));
+    chLabel = days && days < 7 ? `${days} day${days > 1 ? "s" : ""}` : "Week";
+    ranked = base.filter(p => p.followers != null).sort((a, b) => b.followers - a.followers).map(p => ({ p, m: weekGrowth(p) }));
+    hint = `Ranked by Instagram followers today · ${ranked.length} athletes`;
+  } else {
+    const moves = base.filter(p => p.followers >= BOARD_MIN).map(p => ({ p, m: moveOf(p, ath.win) })).filter(x => x.m && x.m.n);
+    ranked = up ? moves.filter(x => x.m.pct > 0).sort((a, b) => b.m.pct - a.m.pct) : moves.filter(x => x.m.pct < 0).sort((a, b) => a.m.pct - b.m.pct);
+    const days = Math.max(0, ...moves.map(x => x.m.days || 0));
+    chLabel = { day: "Today", week: days && days < 7 ? `${days} day${days > 1 ? "s" : ""}` : "Week", month: moves.some(x => !x.m.days) ? "Month" : `${days} day${days > 1 ? "s" : ""}` }[ath.win];
+    hint = `Follower ${up ? "growth" : "drops"} ${{ day: "since yesterday", week: "this week", month: "this month" }[ath.win]} · ${compact(BOARD_MIN)}+ followers · ${ranked.length} athletes`;
+  }
+  const key = followed ? "f" : "c";
+  const hero = q ? [] : ranked.slice(0, 10), rest = q ? ranked : ranked.slice(10), page = rest.slice(0, ath.shown);
+  const tilt = [-2, 1.5, -1, 2, -1.5, 1.2, -1.6, 0.8, -1.2, 1.8];
+  const empty = q || Object.keys(ADV).some(advActive) ? "No athletes match these filters. Try widening them."
+    : followed ? "No numbers yet." : ath.win === "day" ? "Today's numbers arrive after the morning update." : up ? "Nobody's growing right now." : "Nobody's dropping. Good day for the feed.";
+  $("athBody").innerHTML = `
+    <p class="sechint" style="margin:6px 0 ${hero.length ? 26 : 14}px">${esc(hint)}</p>
+    ${!ranked.length ? `<p class="empty">${empty}</p>` : ""}
+    ${hero.length ? `<div class="tcards hero10">${hero.map((x, i) => `
+      <a class="tcard" href="${href(x.p)}" style="--tilt:${tilt[i]}deg">
+        <span class="tape"></span>
+        <span class="pic">${photo(x.p)}<span class="handle">@${esc(x.p.instagram || "")}</span><span class="big-n">${i + 1}</span></span>
+        <span class="nm">${esc(x.p.name)}${x.p.verified ? TICK : ""}</span>
+        <span class="tm">${teamLine(x.p)}</span>
+        ${cardStats(x.p, x.m, chLabel, key)}
+      </a>`).join("")}</div>` : ""}
+    ${page.length ? `<div class="bd-list">${[0, 1].map(c => `<div>${listHead(chLabel, key)}${page.filter((_, i) => i % 2 === c).map(x => listRow(x.p, ranked.indexOf(x) + 1, x.m, key)).join("")}</div>`).join("")}</div>` : ""}
+    ${rest.length > ath.shown ? `<div class="more"><button class="btn" id="athMore">Show more (${rest.length - ath.shown} to go)</button></div>` : ""}
+    ${followed ? "" : extrasHtml(base, base.filter(p => p.followers >= BOARD_MIN), up)}`;
+  $("athMore")?.addEventListener("click", () => { ath.shown += 40; renderAthletes(); });
+}
+
+/* ---------------------------------------------------------------- sports (#/sports, #/sport/<name>)
+   Sports are about the groups, not individual athletes: leagues, national teams and clubs,
+   each measured by the combined Instagram followers of its athletes, plus each sport's top creators. */
+function groupsOf(list, kind) {
+  const out = {};
+  for (const p of list) {
+    const keys = kind === "league" ? clubLeagues(p) : kind === "national" ? nationalTeams(p)
+      : (p.teams || []).filter(t => t[1] && t[1] !== "Australia" && !isNational(t[0])).map(t => t[1]);
+    for (const k of new Set(keys)) (out[k] ||= []).push(p);
+  }
+  return Object.entries(out).map(([k, ps]) => ({ key: k, name: kind === "national" ? groupName(k) : k, ps, st: groupStats(ps),
+    league: kind === "club" ? (ps[0].teams.find(t => t[1] === k) || [])[0] : "" }));
+}
+function groupCard(g, sport, kind) {
+  const st = g.st, lead = g.ps.filter(p => (weekGrowth(p) || {}).n > 0).sort((a, b) => weekGrowth(b).n - weekGrowth(a).n)[0];
+  const comp = kind === "national" ? (g.ps.find(p => p.national && p.national[g.key]) || {}).national?.[g.key] : "";
+  return `<a class="sp-tile lg-tile" href="${athLink({ tab: "followed", sport, league: g.key, gender: "All" })}">
+    <div class="sp-top"><h3>${esc(g.name)}</h3>${st.pct != null ? `<span class="${st.pct >= 0 ? "up" : "down"}">${pct1(st.pct)}</span>` : ""}</div>
+    ${comp ? `<div class="lg-note">Squad: ${esc(comp)}</div>` : ""}
+    <div class="sp-faces">${st.top.map(p => `<span class="sq">${photo(p)}</span>`).join("")}<span class="sp-names">${st.top.map(p => esc(surname(p.name))).join("<br>")}</span></div>
+    <div class="sp-stats"><div><b>${st.n}</b><small>athletes</small></div><div><b>${compact(st.followers)}</b><small>combined followers</small></div></div>
+    ${lead ? `<div class="sp-leagues">Driving it: ${esc(lead.name)} ${exactSigned(weekGrowth(lead).n)}</div>` : ""}
+    <span class="sp-go">See the athletes →</span>
+  </a>`;
+}
+const sportHref = sp => `#/sport/${encodeURIComponent(sp)}`;
+const club = { by: "followers" };
+function clubLadder(sport) {
+  // Clubs with at least 3 tracked athletes, so one star in an overseas club doesn't top the ladder.
+  const clubs = groupsOf(DATA.players.filter(p => p.sport === sport), "club").filter(g => g.st.tracked >= 3);
+  const byG = club.by === "growth";
+  clubs.sort(byG ? (a, b) => (b.st.pct ?? -1e9) - (a.st.pct ?? -1e9) : (a, b) => b.st.followers - a.st.followers);
+  if (!clubs.length) return `<p class="empty">No clubs yet.</p>`;
+  const top = clubs.slice(0, 20);
+  return `<div class="club-list">
+    <div class="club-row club-head"><span></span><span>Club</span><span>Athletes</span><span class="${byG ? "" : "key"}">Followers</span><span class="${byG ? "key" : ""}">Week</span><span class="hide-s">Biggest name</span></div>
+    ${top.map((g, i) => `<a class="club-row" href="${athLink({ tab: "followed", sport, league: "All", gender: "All", q: g.key })}">
+      <span class="n">${i + 1}</span>
+      <span class="who"><b>${esc(shortTeam(g.key, sport))}</b><small>${esc(groupName(g.league || ""))}</small></span>
+      <span class="c-n">${g.st.n}</span>
+      <span class="c-f">${compact(g.st.followers)}</span>
+      <span class="c-c ${g.st.pct == null ? "" : g.st.pct >= 0 ? "gr" : "dn"}">${g.st.pct == null ? "–" : pct1(g.st.pct)}</span>
+      <span class="c-top hide-s">${g.st.top[0] ? `${sq(g.st.top[0])}<em>${esc(g.st.top[0].name)}</em>` : ""}</span>
+    </a>`).join("")}
+  </div>`;
+}
+function creatorsFor(sport) {
+  return (DATA.creators || []).filter(c => sport === "All" || c.sport === sport).sort((a, b) => (b.followers || 0) - (a.followers || 0));
+}
+function creatorsHtml(sport) {
+  const list = creatorsFor(sport);
+  const tilt = [-2, 1.5, -1, 2, -1.5];
+  if (!list.length) return `<p class="empty">Creators for ${esc(sport === "All" ? "these sports" : (SPORT_LABEL[sport] || sport))} are being added.</p>`;
+  const card = (c, i) => `<a class="tcard" href="https://instagram.com/${esc(c.instagram)}" target="_blank" rel="noopener" style="--tilt:${tilt[i]}deg">
+      <span class="tape"></span>
+      <span class="pic">${photo(c)}<span class="handle">@${esc(c.instagram)}</span><span class="big-n">${i + 1}</span></span>
+      <span class="nm">${esc(c.name)}</span>
+      <span class="tm">${esc(c.kind || "Creator")}${sport === "All" ? " · " + esc(SPORT_LABEL[c.sport] || c.sport) : ""}</span>
+      ${cardStats(c, weekGrowth(c), "Week", "f")}
+    </a>`;
+  return `<div class="tcards">${list.slice(0, 5).map(card).join("")}</div>
+    ${list.length > 5 ? `<div class="cr-more">${list.slice(5, 15).map((c, i) => `<a class="cr-chip" href="https://instagram.com/${esc(c.instagram)}" target="_blank" rel="noopener"><span class="n">${i + 6}</span>${sq(c)}<span class="who"><b>${esc(c.name)}</b><small>${esc(c.kind || "Creator")} · ${compact(c.followers)}</small></span></a>`).join("")}</div>` : ""}`;
+}
+function showSportsHub() {
+  current = null;
+  document.title = `Sports – ${SITE_NAME}`;
+  const sports = sportsList(), all = groupStats(DATA.players);
+  const leagues = sports.flatMap(sp => [...groupsOf(DATA.players.filter(p => p.sport === sp), "league").map(g => ({ ...g, sp, kind: "league" })),
+    ...groupsOf(DATA.players.filter(p => p.sport === sp), "national").map(g => ({ ...g, sp, kind: "national" }))]);
+  leagues.sort((a, b) => b.st.followers - a.st.followers);
+  $("main").innerHTML = `
+    <section class="bd-hero">
+      <div class="kicker">Sports · leagues, national teams and clubs</div>
+      <h1>Every sport, every team</h1>
+      <p class="lede hub-lede">${sports.length} sports, ${leagues.filter(l => l.kind === "league").length} leagues and ${leagues.filter(l => l.kind === "national").length} national teams, measured by the Instagram followers of the athletes in them.</p>
+    </section>
+    <section class="mx-sec" style="margin-top:0">
+      <div class="sechead"><h2>Pick a sport</h2><span class="hand">pick your code</span><span class="sechint">Growth = combined change in its athletes' followers</span></div>
+      <div class="sp-grid">${sports.map(sp => {
+        const list = DATA.players.filter(p => p.sport === sp), st = groupStats(list);
+        const lg = [...new Set(list.flatMap(clubLeagues))], nats = [...new Set(list.flatMap(nationalTeams))];
+        return `<a class="sp-tile" href="${sportHref(sp)}">
+          <div class="sp-top"><h3>${esc(SPORT_LABEL[sp] || sp)}</h3>${st.pct != null ? `<span class="${st.pct >= 0 ? "up" : "down"}">${pct1(st.pct)}</span>` : ""}</div>
+          <div class="sp-stats"><div><b>${lg.length + nats.length}</b><small>leagues &amp; teams</small></div><div><b>${compact(st.followers)}</b><small>followers</small></div></div>
+          <div class="sp-leagues">${[...lg, ...nats.map(groupName)].map(esc).join(" · ") || "&nbsp;"}</div>
+          <span class="sp-go">Explore ${esc((SPORT_LABEL[sp] || sp).toLowerCase())} →</span></a>`;
+      }).join("")}</div>
+    </section>
+    <section class="mx-sec">
+      <div class="sechead"><h2>Biggest leagues &amp; teams</h2><span class="hand">all codes, one ladder</span><span class="sechint">Combined followers of their athletes</span></div>
+      <div class="club-list">
+        <div class="club-row club-head"><span></span><span>League or team</span><span>Athletes</span><span class="key">Followers</span><span>Week</span><span class="hide-s">Biggest name</span></div>
+        ${leagues.slice(0, 12).map((g, i) => `<a class="club-row" href="${athLink({ tab: "followed", sport: g.sp, league: g.key, gender: "All" })}">
+          <span class="n">${i + 1}</span><span class="who"><b>${esc(g.name)}</b><small>${esc(SPORT_LABEL[g.sp] || g.sp)}${g.kind === "national" ? " · national team" : ""}</small></span>
+          <span class="c-n">${g.st.n}</span><span class="c-f">${compact(g.st.followers)}</span>
+          <span class="c-c ${g.st.pct == null ? "" : g.st.pct >= 0 ? "gr" : "dn"}">${g.st.pct == null ? "–" : pct1(g.st.pct)}</span>
+          <span class="c-top hide-s">${g.st.top[0] ? `${sq(g.st.top[0])}<em>${esc(g.st.top[0].name)}</em>` : ""}</span></a>`).join("")}
+      </div>
+    </section>
+    <section class="mx-sec">
+      <div class="sechead"><h2>Top creators</h2><span class="hand">the voices around the game</span><span class="sechint">Most followed accounts making content about Australian sport</span></div>
+      ${creatorsHtml("All")}
+    </section>`;
+  window.scrollTo(0, 0);
+}
+function showSport(sport) {
+  current = null;
+  if (!sportsList().includes(sport)) return showSportsHub();
+  const label = SPORT_LABEL[sport] || sport;
+  document.title = `${label} – ${SITE_NAME}`;
+  const list = DATA.players.filter(p => p.sport === sport), st = groupStats(list);
+  const lg = groupsOf(list, "league").sort((a, b) => b.st.followers - a.st.followers);
+  const nat = groupsOf(list, "national").sort((a, b) => b.st.followers - a.st.followers);
+  const nClubs = groupsOf(list, "club").length;
+  $("main").innerHTML = `
+    <section class="bd-hero">
+      <div class="kicker"><a href="#/sports" class="kick-link">Sports</a> · ${esc(label)}</div>
+      <h1>${esc(label)}</h1>
+      <div class="stats sp-sum"><div><small>Leagues &amp; teams</small><b>${lg.length + nat.length}</b></div><div><small>Clubs</small><b>${nClubs}</b></div><div><small>Athletes</small><b>${st.n}</b></div><div><small>Combined followers</small><b>${compact(st.followers)}</b></div>${st.pct != null ? `<div><small>${st.days && st.days < 7 ? `Last ${st.days} day${st.days > 1 ? "s" : ""}` : "This week"}</small><b class="${st.pct >= 0 ? "up" : "down"}">${pct1(st.pct)}</b></div>` : ""}</div>
+      <a class="btn sp-cta" href="${athLink({ tab: "followed", sport, league: "All", gender: "All" })}">See all ${esc(label.toLowerCase())} athletes →</a>
+    </section>
+    <section class="mx-sec" style="margin-top:10px">
+      <div class="sechead"><h2>Leagues</h2><span class="hand">where they play</span><span class="sechint">Combined followers of each league's athletes</span></div>
+      <div class="sp-grid">${lg.map(g => groupCard(g, sport, "league")).join("") || `<p class="empty">No leagues yet.</p>`}</div>
+    </section>
+    ${nat.length ? `<section class="mx-sec">
+      <div class="sechead"><h2>National teams</h2><span class="hand">in the green and gold</span><span class="sechint">Latest official squad</span></div>
+      <div class="sp-grid">${nat.map(g => groupCard(g, sport, "national")).join("")}</div>
+    </section>` : ""}
+    <section class="mx-sec">
+      <div class="sechead"><h2>Clubs</h2><span class="hand">the club ladder</span><span class="sechint">Clubs with 3+ athletes</span>
+        <div class="pills sm" role="group" aria-label="Rank clubs by" id="clubBy">${[["followers", "Followers"], ["growth", "Growth"]].map(([k, l]) => `<button data-by="${k}" aria-pressed="${k === club.by}">${l}</button>`).join("")}</div></div>
+      <div id="clubLadder">${clubLadder(sport)}</div>
+    </section>
+    <section class="mx-sec">
+      <div class="sechead"><h2>Top creators</h2><span class="hand">the voices around the game</span><span class="sechint">Most followed ${esc(label)} content creators</span></div>
+      ${creatorsHtml(sport)}
+    </section>`;
+  $("clubBy").addEventListener("click", e => { const b = e.target.closest("button"); if (!b) return; club.by = b.dataset.by;
+    $("clubBy").querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", x === b)); $("clubLadder").innerHTML = clubLadder(sport); });
+  window.scrollTo(0, 0);
+}
+
 /* ---------------------------------------------------------------- routing */
 function route() {
   document.querySelectorAll(".nav details[open]").forEach(d => d.removeAttribute("open"));
   const h = location.hash;
   const m = h.match(/^#\/p\/(.+)$/);
   if (m) return showProfile(decodeURIComponent(m[1]));
-  const sm = h.match(/^#\/search(?:\?(.*))?$/);
-  if (sm) { board.advOpen = true; return showSportsMain(new URLSearchParams(sm[1] || "")); }
-  const tm = h.match(/^#\/trending(?:\?(.*))?$/);
-  if (tm) return showSportsMain(new URLSearchParams(tm[1] || ""));
-  const bm = h.match(/^#\/(sports|growth|drops|followed|rankings)(?:\?(.*))?$/);
-  if (bm) {
-    const q = new URLSearchParams(bm[2] || "");
-    if (["sports", "growth", "drops"].includes(bm[1]) && !q.get("sport")) {
-      if (bm[1] === "drops") q.set("dir", "down");
-      return showSportsMain(q);
-    }
-    // The Sports page opens on Trending up; most followed is #/followed.
-    const mode = { sports: "growth", growth: "growth", drops: "drops", followed: "sports",
-                   rankings: q.get("view") === "growth7" ? "growth" : "sports" }[bm[1]];
-    return showBoard(mode, q);
+  const sp = h.match(/^#\/sport\/([^?]+)/);
+  if (sp) return showSport(decodeURIComponent(sp[1]));
+  const am = h.match(/^#\/athletes(?:\?(.*))?$/);
+  if (am) return showAthletes(new URLSearchParams(am[1] || ""));
+  if (/^#\/sports\/?$/.test(h)) return showSportsHub();
+  // Older links: the boards and the old trending pages now live on the Athletes page.
+  const old = h.match(/^#\/(sports|growth|drops|followed|rankings|trending|search)(?:\?(.*))?$/);
+  if (old) {
+    const q = new URLSearchParams(old[2] || "");
+    const tab = old[1] === "followed" || old[1] === "rankings" ? "followed" : old[1] === "drops" || q.get("dir") === "down" ? "down" : old[1] === "search" ? "followed" : "up";
+    q.delete("dir"); q.set("tab", tab); if (old[1] === "search") q.set("adv", "1");
+    return showAthletes(q);
   }
   showHome();
 }
@@ -1745,22 +2012,15 @@ function link(params) {
   return "#/sports" + (q.toString() ? "?" + q : "");
 }
 function buildNav() {
-  const sports = [...new Set(DATA.players.map(p => p.sport).filter(Boolean))]
-    .sort((a, b) => ((SPORT_ORDER.indexOf(a) + 1) || 99) - ((SPORT_ORDER.indexOf(b) + 1) || 99));
   const count = f => DATA.players.filter(f).length;
-  // Just the sports; leagues and national teams are on each sport's page.
-  const sportMenu = sports.map(sp => `<a href="${link({ sport: sp })}">${esc(SPORT_LABEL[sp] || sp)} <small>${count(p => p.sport === sp)}</small></a>`).join("");
-  const nats = [...new Set(DATA.players.flatMap(nationalTeams))]
-    .sort((a, b) => ((LEAGUE_ORDER.indexOf(a) + 1) || 99) - ((LEAGUE_ORDER.indexOf(b) + 1) || 99));
-  const natMenu = nats.map(l => {
-    const sp = (DATA.players.find(p => inLeague(p, l)) || {}).sport;
-    return `<a href="${link({ sport: sp, league: l })}">${esc(groupName(l))} <small>${count(p => inLeague(p, l))}</small></a>`;
-  }).join("");
+  const sportMenu = sportsList().map(sp => `<a href="${sportHref(sp)}">${esc(SPORT_LABEL[sp] || sp)}</a>`).join("");
   $("nav").innerHTML = `
     <a href="#/">Home</a>
-    <details><summary>Athletes</summary><div class="menu"><a href="#/sports"><b>All athletes</b> <small>${DATA.players.length}</small></a>
-<hr>${sportMenu}</div></details>
-    ${natMenu ? `<details><summary>National<span class="hide-m"> teams</span></summary><div class="menu">${natMenu}</div></details>` : ""}
+    <details><summary>Athletes</summary><div class="menu">
+      <a href="#/athletes"><b>All athletes</b> <small>${DATA.players.length}</small></a>
+      <a href="#/athletes?gender=women">Women <small>${count(p => p.gender === "women")}</small></a>
+      <a href="#/athletes?gender=men">Men <small>${count(p => p.gender === "men")}</small></a></div></details>
+    <details><summary>Sports</summary><div class="menu"><a href="#/sports"><b>All sports</b></a><hr>${sportMenu}</div></details>
 `;
   // Only one menu open at a time; clicking elsewhere closes them.
   $("nav").querySelectorAll("details").forEach(d => d.addEventListener("toggle", () => {
