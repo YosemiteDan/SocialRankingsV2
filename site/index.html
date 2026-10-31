@@ -593,7 +593,7 @@
         </div>
       </div>
       <nav class="foot-col" aria-label="Explore"><h4>Explore</h4>
-        <a href="#/">Home</a><a href="#/sports">All sports</a><a href="#/sports?gender=women">Women</a><a href="#/sports?gender=men">Men</a>
+        <a href="#/">Home</a><a href="#/sports">All sports</a><a href="#/followed">Most followed</a><a href="#/followed?gender=women">Women</a><a href="#/followed?gender=men">Men</a>
         <a href="#/growth">Trending up</a><a href="#/drops">Trending down</a></nav>
       <nav class="foot-col" aria-label="Company"><h4>Socialete</h4>
         <a class="soon" href="#">About</a><a class="soon" href="#">How the rankings work</a><a class="soon" href="#">Contact</a><a class="soon" href="#">Advertise &amp; partner</a><a class="soon" href="#">Media kit</a></nav>
@@ -894,7 +894,7 @@ async function showProfile(id) {
   const mini = q => `<span class="mini">${photo(q)}</span>`;
 
   $("main").innerHTML = `
-    <a class="back" href="#/sports">← All athletes</a>
+    <a class="back" href="#/followed">← All athletes</a>
     ${DATA.sample_data ? `<div class="notice">Preview mode: sample numbers.</div>` : ""}
     <section class="pro">
       <div class="shot">${photo(p)}${lgRank ? `<span class="rank">${lgRank}</span>` : ""}</div>
@@ -1152,26 +1152,26 @@ function drawChart() {
 }
 
 /* ---------------------------------------------------------------- leaderboards
-   One page, three modes: #/sports (most followed), #/growth (fastest growing),
-   #/drops (biggest drops). Each has sport / league / men-women toggles, a search,
+   One page, three modes: #/growth (trending up, also what #/sports opens on),
+   #/drops (trending down) and #/followed (most followed). Each has sport / league / men-women toggles, a search,
    five hero cards, then a list of up to 50 with "Show more". */
 const BOARD_MIN = 5000;          // growth and drops only count accounts with at least this many followers
 const BOARD_PAGE = 50;
 const BOARDS = {
-  sports: { path: "#/sports", nav: "Sports", kicker: "The leaderboard · every sport, one ladder",
-            title: s => s === "All" ? "Australia's most followed athletes" : `${esc(SPORT_LABEL[s] || s)}'s most followed`,
-            hint: "Ranked by Instagram followers today",
-            rank: list => list.filter(p => p.followers != null).sort((a, b) => b.followers - a.followers) },
-  growth: { path: "#/growth", nav: "Trending up", kicker: "Changes · trending up",
+  growth: { path: "#/growth", nav: "Trending up", kicker: "Trending · up",
             title: s => s === "All" ? "Who's growing fastest" : `${esc(SPORT_LABEL[s] || s)}'s fastest growing`,
             hint: d => `Follower growth ${d && d < 7 ? `over the last ${d} day${d > 1 ? "s" : ""}` : "this week"} · ${compact(BOARD_MIN)}+ followers`,
             rank: list => list.filter(p => p.followers >= BOARD_MIN && (weekGrowth(p) || {}).pct > 0)
               .sort((a, b) => weekGrowth(b).pct - weekGrowth(a).pct) },
-  drops:  { path: "#/drops", nav: "Trending down", kicker: "Changes · trending down",
+  drops:  { path: "#/drops", nav: "Trending down", kicker: "Trending · down",
             title: s => s === "All" ? "Who's losing followers" : `${esc(SPORT_LABEL[s] || s)}'s biggest drops`,
             hint: d => `Follower change ${d && d < 7 ? `over the last ${d} day${d > 1 ? "s" : ""}` : "this week"} · ${compact(BOARD_MIN)}+ followers`,
             rank: list => list.filter(p => p.followers >= BOARD_MIN && (weekGrowth(p) || {}).pct < 0)
               .sort((a, b) => weekGrowth(a).pct - weekGrowth(b).pct) },
+  sports: { path: "#/followed", nav: "Most followed", kicker: "The leaderboard · every sport, one ladder",
+            title: s => s === "All" ? "Australia's most followed athletes" : `${esc(SPORT_LABEL[s] || s)}'s most followed`,
+            hint: "Ranked by Instagram followers today",
+            rank: list => list.filter(p => p.followers != null).sort((a, b) => b.followers - a.followers) },
 };
 const board = { mode: "sports", sport: "All", league: "All", gender: "All", q: "", shown: BOARD_PAGE };
 const sportsList = () => [...new Set(DATA.players.map(p => p.sport).filter(Boolean))]
@@ -1273,10 +1273,12 @@ function route() {
   const h = location.hash;
   const m = h.match(/^#\/p\/(.+)$/);
   if (m) return showProfile(decodeURIComponent(m[1]));
-  const bm = h.match(/^#\/(sports|growth|drops|rankings)(?:\?(.*))?$/);
+  const bm = h.match(/^#\/(sports|growth|drops|followed|rankings)(?:\?(.*))?$/);
   if (bm) {
     const q = new URLSearchParams(bm[2] || "");
-    const mode = bm[1] === "rankings" ? (q.get("view") === "growth7" ? "growth" : "sports") : bm[1];
+    // The Sports page opens on Trending up; most followed is #/followed.
+    const mode = { sports: "growth", growth: "growth", drops: "drops", followed: "sports",
+                   rankings: q.get("view") === "growth7" ? "growth" : "sports" }[bm[1]];
     return showBoard(mode, q);
   }
   showHome();
@@ -1315,9 +1317,9 @@ function buildNav() {
     <details><summary>Sports</summary><div class="menu"><a href="#/sports"><b>All sports</b> <small>${DATA.players.length}</small></a>
       <a href="#/sports?gender=women">Women <small>${count(p => p.gender === "women")}</small></a><a href="#/sports?gender=men">Men <small>${count(p => p.gender === "men")}</small></a><hr>${sportMenu}</div></details>
     ${natMenu ? `<details><summary>National<span class="hide-m"> teams</span></summary><div class="menu">${natMenu}</div></details>` : ""}
-    <details><summary>Changes</summary><div class="menu">
-      <a href="#/growth">▲ Trending up <small>fastest growing</small></a>
-      <a href="#/drops">▼ Trending down <small>biggest drops</small></a></div></details>`;
+    <details><summary>Trending</summary><div class="menu">
+      <a href="#/growth">▲ Up <small>fastest growing</small></a>
+      <a href="#/drops">▼ Down <small>biggest drops</small></a></div></details>`;
   // Only one menu open at a time; clicking elsewhere closes them.
   $("nav").querySelectorAll("details").forEach(d => d.addEventListener("toggle", () => {
     if (d.open) $("nav").querySelectorAll("details").forEach(o => o !== d && o.removeAttribute("open"));
@@ -1465,7 +1467,7 @@ function showHome() {
           ${mostF(g).slice(0, 10).map((p, i) => `<a class="lrow" href="${href(p)}"><span class="n">${i + 1}</span>${sq(p)}
             <span class="who"><b>${esc(p.name)}</b><small>${teamLine(p)}</small></span>
             <span class="val"><b>${compact(p.followers)}</b><small>${[p.change_7d != null ? `<span class="${p.change_7d >= 0 ? "up" : "down"}">${exactSigned(p.change_7d)}</span>` : "", engTxt(p) ? `<span class="engv">${engTxt(p)}</span>` : ""].filter(Boolean).join(" · ")}</small></span></a>`).join("") || `<p class="empty">No numbers yet.</p>`}
-          <a class="all" href="${link({ gender: g })}">See all ${GENDER_LABEL[g].toLowerCase()} →</a>
+          <a class="all" href="${boardLink("sports", { gender: g })}">See all ${GENDER_LABEL[g].toLowerCase()} →</a>
         </div>`).join("")}
       </div>
     </section>
