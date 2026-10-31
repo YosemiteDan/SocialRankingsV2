@@ -26,6 +26,8 @@ PERIODS = {"7d": 7, "30d": 30, "365d": 365}
 # Men's or women's competition. An optional "gender" column in athletes.csv
 # (men / women) overrides this for any athlete.
 LEAGUE_GENDER = {"NBA": "men", "NBL": "men", "Socceroos": "men", "NFL": "men",
+                 "Boomers": "men", "Wallabies": "men", "Kangaroos": "men",
+                 "Opals": "women", "Wallaroos": "women", "Jillaroos": "women",
                  "ATP": "men", "AFL": "men", "NRL": "men", "Australia men": "men",
                  "WNBA": "women", "WNBL": "women", "Matildas": "women",
                  "WTA": "women", "AFLW": "women", "NRLW": "women", "Australia women": "women"}
