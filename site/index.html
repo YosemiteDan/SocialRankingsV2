@@ -432,6 +432,24 @@
   .pills a.pill { font: 700 12px/1 var(--display); letter-spacing: .12em; text-transform: uppercase; padding: 9px 14px; border: 2px solid var(--cream); border-radius: 30px; text-decoration: none; }
   .pills a.pill[aria-pressed="true"] { background: var(--cream); color: var(--bg); }
   .bd-hero-cards { margin-bottom: 34px; }
+  .spot-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0 48px; margin-bottom: 40px; align-items: start; }
+  .spot-col { min-width: 0; container-type: inline-size; }
+  .spot-col .sechead { margin-bottom: 22px; }
+  .tcard.spot { display: grid; grid-template-columns: minmax(0, 46%) 1fr; gap: 16px; align-items: end; }
+  .tcard.spot .pic { aspect-ratio: 4 / 5; }
+  .tcard.spot .big-n { font-size: 96px; }
+  .tcard.spot .body { display: block; min-width: 0; padding-bottom: 2px; }
+  .tcard.spot .nm { font-size: 30px; margin-top: 0; }
+  @container (max-width: 400px) { .tcard.spot { grid-template-columns: 1fr; } .tcard.spot .pic { aspect-ratio: 5 / 4; } .tcard.spot .nm { margin-top: 10px; font-size: 24px; } }
+  .spot-more { margin-top: 18px; }
+  .spot-more summary { list-style: none; cursor: pointer; display: inline-block; font: 700 13px/1 var(--display); letter-spacing: .14em; text-transform: uppercase; color: var(--accent); border: 2px solid var(--accent); padding: 10px 16px; }
+  .spot-more summary::-webkit-details-marker { display: none; }
+  .spot-more summary small { color: var(--muted, #9AA0BC); font-size: 11px; margin-left: 4px; }
+  .spot-more summary .c, .spot-more[open] summary .o { display: none; }
+  .spot-more[open] summary .c { display: inline; }
+  .spot-list { margin-top: 14px; container-type: inline-size; }
+  .spot-all { display: inline-block; margin-top: 12px; color: var(--accent); font: 700 13px/1 var(--display); letter-spacing: .12em; text-transform: uppercase; text-decoration: none; }
+  @media (max-width: 760px) { .spot-row { grid-template-columns: 1fr; } .spot-row .spot-col + .spot-col { margin-top: 30px; } }
   .bd-list { display: grid; grid-template-columns: 1fr 1fr; column-gap: 40px; }
   .engv { color: var(--accent); white-space: nowrap; }
   .tcard .foot > span { text-align: right; line-height: 1.4; }
@@ -1350,26 +1368,40 @@ function showBoard(mode, params) {
   window.scrollTo(0, 0);
 }
 
-// Two hero rows for a sport page: its biggest names and its fastest-rising smaller accounts.
+// Sport page heroes, side by side: the biggest name and the fastest riser,
+// each with "View more" opening the full ranked list underneath.
 function sportSpotlight(pool) {
   const label = (() => { const d = Math.max(0, ...pool.map(p => (weekGrowth(p) || {}).days || 0)); return d && d < 7 ? `${d} day${d > 1 ? "s" : ""}` : "Week"; })();
-  const stars = pool.filter(p => p.followers != null).sort((a, b) => b.followers - a.followers).slice(0, 5);
+  const stars = pool.filter(p => p.followers != null).sort((a, b) => b.followers - a.followers);
   const emerging = pool.filter(p => p.followers >= 1000 && p.followers < UP_AND_COMING_CAP && (weekGrowth(p) || {}).pct > 0)
-    .sort((a, b) => weekGrowth(b).pct - weekGrowth(a).pct).slice(0, 5);
-  const tilt = [-2, 1.5, -1, 2, -1.5];
-  const cards = (list, key) => `<div class="tcards bd-hero-cards">${list.map((p, i) => `
-    <a class="tcard" href="${href(p)}" style="--tilt:${tilt[i]}deg">
-      <span class="tape"></span>
-      <span class="pic">${photo(p)}<span class="handle">@${esc(p.instagram || "")}</span><span class="big-n">${i + 1}</span></span>
-      <span class="nm">${esc(p.name)}${p.verified ? TICK : ""}</span>
-      <span class="tm">${teamLine(p)}</span>
-      ${cardStats(p, weekGrowth(p), label, key)}
-    </a>`).join("")}</div>`;
-  return `
-    <div class="sechead"><h2>Stars</h2><span class="hand">the biggest names</span><span class="sechint">Most followed</span></div>
-    ${stars.length ? cards(stars, "f") : `<p class="empty">No numbers yet.</p>`}
-    <div class="sechead"><h2>Emerging</h2><span class="hand">ones to watch</span><span class="sechint">Fastest growing under ${compact(UP_AND_COMING_CAP)} followers</span></div>
-    ${emerging.length ? cards(emerging, "c") : `<p class="empty" style="margin-bottom:30px">Emerging athletes show once there are two days of numbers.</p>`}`;
+    .sort((a, b) => weekGrowth(b).pct - weekGrowth(a).pct);
+  const MAX = 50;
+  const col = (title, hand, hint, list, key, tilt, empty, allLink) => {
+    const p = list[0];
+    const more = list.slice(1, MAX);
+    return `<div class="spot-col">
+      <div class="sechead"><h2>${title}</h2><span class="hand">${hand}</span><span class="sechint">${hint}</span></div>
+      ${p ? `<a class="tcard spot" href="${href(p)}" style="--tilt:${tilt}deg">
+        <span class="tape"></span>
+        <span class="pic">${photo(p)}<span class="handle">@${esc(p.instagram || "")}</span><span class="big-n">1</span></span>
+        <span class="body">
+          <span class="nm">${esc(p.name)}${p.verified ? TICK : ""}</span>
+          <span class="tm">${teamLine(p)}</span>
+          ${cardStats(p, weekGrowth(p), label, key)}
+        </span>
+      </a>
+      ${more.length ? `<details class="spot-more"><summary><span class="o">View more</span><span class="c">Show less</span> <small>${list.length - 1 > more.length ? `top ${MAX}` : list.length}</small></summary>
+        <div class="spot-list">${listHead(label, key)}${more.map((x, i) => listRow(x, i + 2, weekGrowth(x), key)).join("")}
+        ${allLink ? `<a class="spot-all" href="${allLink}">Full list →</a>` : ""}</div>
+      </details>` : ""}` : `<p class="empty">${empty}</p>`}
+    </div>`;
+  };
+  return `<div class="spot-row">
+    ${col("Stars", "the biggest name", "Most followed", stars, "f", -1.5, "No numbers yet.",
+      stars.length > MAX ? boardLink("sports", { sport: board.sport, gender: board.gender }) : "")}
+    ${col("Emerging", "one to watch", `Under ${compact(UP_AND_COMING_CAP)} followers`, emerging, "c", 1.5,
+      "Emerging athletes show once there are two days of numbers.", "")}
+  </div>`;
 }
 
 function renderBoard() {
