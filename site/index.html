@@ -678,6 +678,20 @@
   .board-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
   .board h3 { font: 700 30px/1.1 var(--hand); margin: 0; }
   .board-sub { font: 700 11px/1.4 var(--display); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin: 6px 0 8px; }
+  .wtabs { margin-top: 12px; flex-wrap: wrap; }
+  .wexplain { font: 400 14px/1.45 var(--serif); color: #C3C9E3; margin: 12px 0 6px; }
+  .grow { display: grid; grid-template-columns: 24px minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 12px 0; border-bottom: 1px dashed var(--line); color: inherit; text-decoration: none; }
+
+  .grow .n { font: 700 19px/1 var(--display); }
+  .grow .wmain { min-width: 0; display: block; }
+  .grow .bn { display: block; font: 700 19px/1.1 var(--display); letter-spacing: .06em; text-transform: uppercase; }
+  .grow small { display: block; font: 700 11px/1.35 var(--display); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-top: 3px; }
+  .grow small.lead { white-space: normal; color: #C3C9E3; letter-spacing: .02em; text-transform: none; font: 500 12px/1.35 "Barlow", sans-serif; }
+  .grow .wnum { text-align: right; }
+  .grow .bn, .grow .n { color: var(--cream); }
+  a.grow:hover .bn { color: var(--accent); }
+  .grow .wnum b { display: block; font: 700 20px/1 var(--display); color: var(--green, #4BE38E); }
+  .grow .wnum small { margin-top: 4px; }
   .brow { display: grid; grid-template-columns: 24px minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 11px 0; border-bottom: 1px dashed var(--line); font: 700 19px/1 var(--display); letter-spacing: .06em; text-transform: uppercase; }
   .brow small { color: var(--muted); font-size: 11px; }
   .brow .bar { height: 8px; background: var(--accent); margin-top: 7px; }
@@ -1802,17 +1816,19 @@ function growthGroups(by) {
   for (const p of DATA.players) {
     const g = weekGrowth(p);
     if (!g || p.followers == null) continue;
-    const keys = by === "sport" ? [[p.sport, SPORT_LABEL[p.sport] || p.sport, ""]]
-      : by === "league" ? clubLeagues(p).map(l => [l, l, SPORT_LABEL[p.sport] || p.sport])
-      : by === "national" ? nationalTeams(p).map(l => [l, groupName(l), SPORT_LABEL[p.sport] || p.sport])
+    const keys = by === "sport" ? [[p.sport, SPORT_LABEL[p.sport] || p.sport, "", { sport: p.sport }]]
+      : by === "league" ? clubLeagues(p).map(l => [l, l, SPORT_LABEL[p.sport] || p.sport, { sport: p.sport, league: l }])
+      : by === "national" ? nationalTeams(p).map(l => [l, groupName(l), SPORT_LABEL[p.sport] || p.sport, { sport: p.sport, league: l }])
       : (p.teams || []).filter(t => t[1] && t[1] !== "Australia").map(t => [t[1], t[1], isNational(t[0]) ? "" : t[0]]);
-    for (const [k, name, sub] of keys) {
-      const x = groups[k] ||= { name, sub, now: 0, before: 0, n: 0, days: 0 };
+    for (const [k, name, sub, link] of keys) {
+      const x = groups[k] ||= { name, sub, link, now: 0, before: 0, n: 0, days: 0, lead: null };
       x.now += p.followers; x.before += p.followers - (g.n || 0); x.n += 1; x.days = Math.max(x.days, g.days || 0);
+      if ((g.n || 0) > 0 && (!x.lead || g.n > x.lead.n)) x.lead = { p, n: g.n };
     }
   }
   const minAthletes = by === "team" ? 3 : 1;
-  return Object.values(groups).filter(x => x.n >= minAthletes && x.before > 0 && x.now !== x.before)
+  // Only groups whose athletes gained followers overall: a "fastest growing" list shouldn't show drops.
+  return Object.values(groups).filter(x => x.n >= minAthletes && x.before > 0 && x.now > x.before)
     .map(x => ({ ...x, pct: 100 * (x.now - x.before) / x.before, gain: x.now - x.before }))
     .sort((a, b) => b.pct - a.pct).slice(0, 5);
 }
@@ -1974,17 +1990,23 @@ function renderTopProfiles() {
 function renderWidget(by) {
   const ranked = growthGroups(by);
   const days = Math.max(0, ...ranked.map(x => x.days));
-  const max = Math.max(...ranked.map(x => Math.abs(x.pct)), 0.0001);
-  const tabs = [["league", "Leagues"], ["national", "National"], ["team", "Clubs"], ["sport", "Sports"]];
+  const when = days && days < 7 ? `the last ${days} day${days > 1 ? "s" : ""}` : "this week";
+  const tabs = [["league", "Leagues"], ["national", "National teams"], ["team", "Clubs"], ["sport", "Sports"]];
   const label = { league: "leagues", national: "national teams", team: "clubs", sport: "sports" }[by];
+  const unit = { league: "league", national: "squad", team: "club", sport: "sport" }[by];
   $("widget").innerHTML = `
-    <div class="board-head"><h3>Fastest growing ${label}</h3>
-      <div class="pills sm" role="group" aria-label="Group by">${tabs.map(([k, l]) => `<button data-by="${k}" aria-pressed="${k === by}">${l}</button>`).join("")}</div></div>
-    <div class="board-sub">Combined follower growth · ${days && days < 7 ? `last ${days} day${days > 1 ? "s" : ""}` : "this week"}${by === "team" ? " · teams with 3+ athletes" : ""}</div>
-    ${ranked.length ? ranked.map((x, i) => `<div class="brow"><span class="n">${i + 1}</span>
-        <div><span class="bn">${esc(x.name)}</span>${x.sub ? `<small> ${esc(x.sub)}</small>` : ""}<div class="bar" style="width:${Math.max(4, Math.abs(x.pct) / max * 100).toFixed(0)}%"></div></div>
-        <span class="${x.pct >= 0 ? "up" : "down"}">${signed(x.pct)}%</span></div>`).join("")
-      : `<p class="board-sub" style="margin-top:14px">This fills in once there are two days of numbers.</p>`}`;
+    <div class="board-head"><h3>Fastest growing ${label}</h3></div>
+    <div class="pills sm wtabs" role="group" aria-label="Group by">${tabs.map(([k, l]) => `<button data-by="${k}" aria-pressed="${k === by}">${l}</button>`).join("")}</div>
+    <p class="wexplain">Every athlete's Instagram followers in the ${unit} added together, and how much that total grew ${when}. Not the ${unit}'s own account.</p>
+    ${ranked.length ? ranked.map((x, i) => {
+      const tag = x.link ? "a" : "div", at = x.link ? ` href="${boardLink("growth", x.link)}"` : "";
+      return `<${tag} class="grow"${at}><span class="n">${i + 1}</span>
+        <span class="wmain"><span class="bn">${esc(x.name)}</span>
+          <small>${x.n} athlete${x.n > 1 ? "s" : ""} · ${compact(x.now)} followers</small>
+          ${x.lead ? `<small class="lead">Led by ${esc(x.lead.p.name)} ${exactSigned(x.lead.n)}</small>` : ""}</span>
+        <span class="wnum"><b>${x.pct < 0.01 ? "+" + x.pct.toFixed(3) + "%" : pct1(x.pct)}</b><small>${exactSigned(x.gain)}</small></span></${tag}>`;
+    }).join("")
+      : `<p class="board-sub" style="margin-top:14px">No ${label} have grown ${when} yet. This fills in as the daily numbers come in.</p>`}`;
   $("widget").querySelector(".pills").addEventListener("click", e => {
     const b = e.target.closest("button"); if (b) renderWidget(b.dataset.by);
   });
