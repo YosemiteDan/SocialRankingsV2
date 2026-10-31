@@ -1391,7 +1391,8 @@ function renderBoard() {
     <p class="sechint" style="margin:6px 0 ${hero.length ? 30 : 16}px">${esc(hint)}${q ? ` · ${rows.length} match${rows.length > 1 ? "es" : ""}` : ` · ${ranked.length} athletes`}</p>
     ${hero.length ? `<div class="tcards bd-hero-cards">${cards}</div>` : ""}
     ${page.length ? `<div class="bd-list">${[0, 1].map(c => `<div>${listHead(bdChLabel, board.mode === "sports" ? "f" : "c")}${page.filter((_, i) => i % 2 === c).map(p => listRow(p, p._brank, weekGrowth(p), board.mode === "sports" ? "f" : "c")).join("")}</div>`).join("")}</div>` : ""}
-    ${rest.length > board.shown ? `<div class="more"><button class="btn" id="bdMore">Show more (${rest.length - board.shown} to go)</button></div>` : ""}`;
+    ${rest.length > board.shown ? `<div class="more"><button class="btn" id="bdMore">Show more (${rest.length - board.shown} to go)</button></div>` : ""}
+    ${board.sport !== "All" ? extrasHtml(pool.filter(matches), pool.filter(p => matches(p) && p.followers >= BOARD_MIN), board.mode !== "drops") : ""}`;
   $("bdMore")?.addEventListener("click", () => { board.shown += BOARD_PAGE; renderBoard(); });
 }
 
@@ -1462,6 +1463,41 @@ function sportTiles() {
     </a>`;
   }).join("");
 }
+// Breakouts and Milestones (trending up only) and New on Socialete, for whatever athletes are passed in.
+function extrasHtml(base, pool, up) {
+  const breakouts = pool.filter(p => p.breakout_x >= 3).sort((a, b) => b.breakout_x - a.breakout_x).slice(0, 6);
+  const miles = [];
+  for (const p of base.filter(p => p.followers != null)) {
+    const g = weekGrowth(p); if (!g || !g.n) continue;
+    const hit = MILESTONES.filter(t => p.followers - g.n < t && p.followers >= t).at(-1);
+    if (hit) miles.push({ p, t: hit });
+  }
+  miles.sort((a, b) => b.t - a.t || b.p.followers - a.p.followers);
+  const first = DATA.players.map(p => p.tracked_since).filter(Boolean).sort()[0];
+  const newest = DATA.players.map(p => p.as_of).filter(Boolean).sort().at(-1);
+  const cutoff = newest ? new Date(new Date(newest + "T12:00:00") - 14 * 864e5).toISOString().slice(0, 10) : "";
+  const fresh = base.filter(p => p.tracked_since && p.tracked_since > first && p.tracked_since >= cutoff)
+    .sort((a, b) => b.followers - a.followers).slice(0, 24);
+  return `
+    ${up ? `<section class="mx-sec">
+      <div class="sechead"><h2>Breakouts</h2><span class="hand">way above their usual pace</span><span class="sechint">Today vs their typical day</span></div>
+      ${breakouts.length ? `<div class="tr-break">${breakouts.map(p => `<a class="tr-bk" href="${href(p)}">${sq(p)}<span class="who"><b>${esc(p.name)}</b><small>${teamLine(p)}</small></span>
+          <span class="x">${p.breakout_x}×<small>usual pace</small></span><span class="d">+${p.change_1d_pct.toFixed(2)}% today · usually +${p.typical_daily_pct.toFixed(2)}%</span></a>`).join("")}</div>`
+        : `<p class="empty">Breakouts need about a week of daily numbers to know each athlete's usual pace. They'll start appearing soon.</p>`}
+    </section>
+    <section class="mx-sec">
+      <div class="sechead"><h2>Milestones</h2><span class="hand">round numbers</span><span class="sechint">Crossed this week</span></div>
+      ${miles.length ? `<div class="stubs tr-miles">${miles.slice(0, 8).map(x => `<a class="stub" href="${href(x.p)}"><span class="n">★</span>${sq(x.p)}
+        <span class="who"><b>${esc(x.p.name)}</b><small>${teamLine(x.p)}</small></span><span class="pct">${compact(x.t)}<small>now ${exact(x.p.followers)}</small></span></a>`).join("")}</div>`
+        : `<p class="empty">No one has crossed 10K, 25K, 50K, 100K, 250K, 500K or 1M this week yet.</p>`}
+    </section>` : ""}
+    <section class="mx-sec">
+      <div class="sechead"><h2>New on ${esc(SITE_NAME)}</h2><span class="hand">fresh faces</span><span class="sechint">Added in the last two weeks</span></div>
+      ${fresh.length ? `<div class="stories-row tr-new">${fresh.map(p => `<a class="story" href="${href(p)}">${ring(p)}<b>${esc(surname(p.name))}</b><small>${esc(clubLeagues(p)[0] || (SPORT_LABEL[p.sport] || p.sport))}${p.followers != null ? " · " + compact(p.followers) : ""}</small></a>`).join("")}</div>`
+        : `<p class="empty">Newly added athletes show here for their first two weeks.</p>`}
+    </section>`;
+}
+
 function showSportsMain(params) {
   current = null;
   document.title = `Athletes – ${SITE_NAME}`;
@@ -1531,40 +1567,10 @@ function renderSportsMain() {
         <span class="tm">${teamLine(x.p)}</span>
         ${cardStats(x.p, x.m, trLabel, "c")}
       </a>`).join("")}</div>` : `<p class="empty" style="margin:0 0 20px">${emptyMsg}</p>`;
-  // Breakouts, milestones and new athletes, with the same filters applied.
-  const breakouts = pool.filter(p => p.breakout_x >= 3).sort((a, b) => b.breakout_x - a.breakout_x).slice(0, 6);
-  const miles = [];
-  for (const p of base.filter(p => p.followers != null)) {
-    const g = weekGrowth(p); if (!g || !g.n) continue;
-    const hit = MILESTONES.filter(t => p.followers - g.n < t && p.followers >= t).at(-1);
-    if (hit) miles.push({ p, t: hit });
-  }
-  miles.sort((a, b) => b.t - a.t || b.p.followers - a.p.followers);
-  const first = DATA.players.map(p => p.tracked_since).filter(Boolean).sort()[0];
-  const newest = DATA.players.map(p => p.as_of).filter(Boolean).sort().at(-1);
-  const cutoff = newest ? new Date(new Date(newest + "T12:00:00") - 14 * 864e5).toISOString().slice(0, 10) : "";
-  const fresh = base.filter(p => p.tracked_since && p.tracked_since > first && p.tracked_since >= cutoff)
-    .sort((a, b) => b.followers - a.followers).slice(0, 24);
   $("smBody").innerHTML = `
     ${more.length ? `<div class="bd-list">${[0, 1].map(c => `<div>${listHead(trLabel, "c")}${more.filter((_, i) => i % 2 === c).map(x => listRow(x.p, ranked.indexOf(x) + 1, x.m, "c")).join("")}</div>`).join("")}</div>
       ${ranked.length > 10 + trend.shown ? `<div class="more"><button class="btn" id="smMore">Show more (${ranked.length - 10 - trend.shown} to go)</button></div>` : ""}` : ""}
-    ${up ? `<section class="mx-sec">
-      <div class="sechead"><h2>Breakouts</h2><span class="hand">way above their usual pace</span><span class="sechint">Today vs their typical day</span></div>
-      ${breakouts.length ? `<div class="tr-break">${breakouts.map(p => `<a class="tr-bk" href="${href(p)}">${sq(p)}<span class="who"><b>${esc(p.name)}</b><small>${teamLine(p)}</small></span>
-          <span class="x">${p.breakout_x}×<small>usual pace</small></span><span class="d">+${p.change_1d_pct.toFixed(2)}% today · usually +${p.typical_daily_pct.toFixed(2)}%</span></a>`).join("")}</div>`
-        : `<p class="empty">Breakouts need about a week of daily numbers to know each athlete's usual pace. They'll start appearing soon.</p>`}
-    </section>
-    <section class="mx-sec">
-      <div class="sechead"><h2>Milestones</h2><span class="hand">round numbers</span><span class="sechint">Crossed this week</span></div>
-      ${miles.length ? `<div class="stubs tr-miles">${miles.slice(0, 8).map(x => `<a class="stub" href="${href(x.p)}"><span class="n">★</span>${sq(x.p)}
-        <span class="who"><b>${esc(x.p.name)}</b><small>${teamLine(x.p)}</small></span><span class="pct">${compact(x.t)}<small>now ${exact(x.p.followers)}</small></span></a>`).join("")}</div>`
-        : `<p class="empty">No one has crossed 10K, 25K, 50K, 100K, 250K, 500K or 1M this week yet.</p>`}
-    </section>` : ""}
-    <section class="mx-sec">
-      <div class="sechead"><h2>New on ${esc(SITE_NAME)}</h2><span class="hand">fresh faces</span><span class="sechint">Added in the last two weeks</span></div>
-      ${fresh.length ? `<div class="stories-row tr-new">${fresh.map(p => `<a class="story" href="${href(p)}">${ring(p)}<b>${esc(surname(p.name))}</b><small>${esc(clubLeagues(p)[0] || (SPORT_LABEL[p.sport] || p.sport))}${p.followers != null ? " · " + compact(p.followers) : ""}</small></a>`).join("")}</div>`
-        : `<p class="empty">Newly added athletes show here for their first two weeks.</p>`}
-    </section>`;
+    ${extrasHtml(base, pool, up)}`;
   $("smMore")?.addEventListener("click", () => { trend.shown += 40; renderSportsMain(); });
 }
 
