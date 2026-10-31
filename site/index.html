@@ -1295,6 +1295,12 @@ const BOARDS = {
 const board = { mode: "sports", sport: "All", league: "All", gender: "All", q: "", shown: BOARD_PAGE };
 const sportsList = () => [...new Set(DATA.players.map(p => p.sport).filter(Boolean))]
   .sort((a, b) => ((SPORT_ORDER.indexOf(a) + 1) || 99) - ((SPORT_ORDER.indexOf(b) + 1) || 99));
+// All sports always means the Sports page for trending up / down; most followed keeps its own list.
+function allSportsLink(mode, gender) {
+  if (mode === "sports") return boardLink("sports", { gender });
+  const q = new URLSearchParams(Object.entries({ dir: mode === "drops" ? "down" : "", gender }).filter(([, v]) => v && v !== "All"));
+  return "#/sports" + (q.toString() ? "?" + q : "");
+}
 function boardLink(mode, o = {}) {
   const q = new URLSearchParams(Object.entries({ sport: o.sport, league: o.league, gender: o.gender }).filter(([, v]) => v && v !== "All"));
   return BOARDS[mode].path + (q.toString() ? "?" + q : "");
@@ -1321,10 +1327,10 @@ function showBoard(mode, params) {
       <h1>${B.title(board.sport)}</h1>
       ${board.sport !== "All" ? (() => { const st = groupStats(DATA.players.filter(p => p.sport === board.sport && (board.league === "All" || inLeague(p, board.league))));
         return `<div class="stats sp-sum"><div><small>Athletes</small><b>${st.n}</b></div><div><small>Combined followers</small><b>${compact(st.followers)}</b></div>${st.pct != null ? `<div><small>${st.days && st.days < 7 ? `Last ${st.days} day${st.days > 1 ? "s" : ""}` : "This week"}</small><b class="${st.pct >= 0 ? "up" : "down"}">${signed(st.pct)}%</b></div>` : ""}<a class="sp-back" href="#/sports">← All sports</a></div>`; })() : ""}
-      <div class="bd-modes">${Object.entries(BOARDS).map(([k, v]) => `<a href="${boardLink(k, { sport: board.sport, gender: board.gender })}" class="${k === mode ? "on" : ""}">${{ sports: "Most followed", growth: "Trending up", drops: "Trending down" }[k]}</a>`).join("")}</div>
+      <div class="bd-modes">${Object.entries(BOARDS).map(([k, v]) => `<a href="${board.sport === "All" ? allSportsLink(k, board.gender) : boardLink(k, { sport: board.sport, gender: board.gender })}" class="${k === mode ? "on" : ""}">${{ sports: "Most followed", growth: "Trending up", drops: "Trending down" }[k]}</a>`).join("")}</div>
     </section>
     <div class="bd-controls">
-      <div class="bd-chips" role="tablist" aria-label="Sport">${["All", ...sports].map(sp => `<a role="tab" aria-selected="${sp === board.sport}" href="${L({ sport: sp, league: "All" })}">${sp === "All" ? "All sports" : esc(SPORT_LABEL[sp] || sp)}<small>${cnt(sp)}</small></a>`).join("")}</div>
+      <div class="bd-chips" role="tablist" aria-label="Sport">${["All", ...sports].map(sp => `<a role="tab" aria-selected="${sp === board.sport}" href="${sp === "All" ? allSportsLink(mode, board.gender) : L({ sport: sp, league: "All" })}">${sp === "All" ? "All sports" : esc(SPORT_LABEL[sp] || sp)}<small>${cnt(sp)}</small></a>`).join("")}</div>
       ${board.sport !== "All" && groups.length > 1 ? `<div class="bd-chips sub" role="tablist" aria-label="League">
         <a role="tab" aria-selected="${board.league === "All"}" href="${L({ league: "All" })}">All ${esc((SPORT_LABEL[board.sport] || board.sport).toLowerCase())}</a>
         ${groups.filter(g => !isNational(g)).map(g => `<a role="tab" aria-selected="${g === board.league}" href="${L({ league: g })}">${esc(g)}</a>`).join("")}
@@ -1462,7 +1468,7 @@ function showSportsMain(params) {
   trend.gender = params.get("gender") || "All";
   if (params.get("win")) trend.win = params.get("win");
   trend.dir = params.get("dir") === "down" ? "down" : "up";
-  trend.q = "";
+  trend.q = ""; trend.shown = 20;
   if (params.get("adv")) board.advOpen = true;
   const sports = sportsList(), all = groupStats(DATA.players);
   const L = o => { const q = new URLSearchParams(Object.entries({ dir: trend.dir, win: trend.win, gender: trend.gender, ...o }).filter(([k, v]) => v && v !== "All" && !(k === "win" && v === "day") && !(k === "dir" && v === "up"))); return "#/sports" + (q.toString() ? "?" + q : ""); };
@@ -1491,7 +1497,7 @@ function showSportsMain(params) {
       <div class="sechead"><h2>Browse by sport</h2><span class="hand">pick your code</span><span class="sechint">Growth is the combined change in each sport's players' followers</span></div>
       <div class="sp-grid">${sportTiles()}</div>
     </section>`;
-  $("smSearch").addEventListener("input", e => { trend.q = e.target.value; renderSportsMain(); });
+  $("smSearch").addEventListener("input", e => { trend.q = e.target.value; trend.shown = 20; renderSportsMain(); });
   wireAdv(() => { renderSportsMain(); const n = Object.keys(ADV).filter(advActive).length;
     document.querySelector(".bd-adv summary").innerHTML = `Advanced filters${n ? ` <span class="adv-n">${n}</span>` : ""}`; },
     () => { advReset(); board.advOpen = true; showSportsMain(new URLSearchParams(location.hash.split("?")[1] || "")); });
@@ -1511,7 +1517,7 @@ function renderSportsMain() {
   const winLabel = { day: "today", week: days && days < 7 ? `over the last ${days} day${days > 1 ? "s" : ""}` : "this week",
                      month: moves.some(x => !x.m.days) ? "this month" : `over the last ${days} day${days > 1 ? "s" : ""}` }[trend.win];
   const trLabel = { day: "Today", week: days && days < 7 ? `${days} day${days > 1 ? "s" : ""}` : "Week", month: moves.some(x => !x.m.days) ? "Month" : `${days} day${days > 1 ? "s" : ""}` }[trend.win];
-  const hero = ranked.slice(0, 10), more = ranked.slice(10, 30);
+  const hero = ranked.slice(0, 10), more = ranked.slice(10, 10 + trend.shown);
   const emptyMsg = q || Object.keys(ADV).some(advActive) ? "No athletes match these filters. Try widening them."
     : !moves.length ? (trend.win === "day" ? "Today's numbers arrive after the morning update." : "Building up: this fills in as the daily numbers come in.")
     : up ? "Nobody's growing right now." : "Nobody's dropping. Good day for the feed.";
@@ -1541,7 +1547,7 @@ function renderSportsMain() {
     .sort((a, b) => b.followers - a.followers).slice(0, 24);
   $("smBody").innerHTML = `
     ${more.length ? `<div class="bd-list">${[0, 1].map(c => `<div>${listHead(trLabel, "c")}${more.filter((_, i) => i % 2 === c).map(x => listRow(x.p, ranked.indexOf(x) + 1, x.m, "c")).join("")}</div>`).join("")}</div>
-      <div class="more"><a class="btn" href="${boardLink(up ? "growth" : "drops", { gender: trend.gender })}">Full ${up ? "trending up" : "trending down"} list →</a></div>` : ""}
+      ${ranked.length > 10 + trend.shown ? `<div class="more"><button class="btn" id="smMore">Show more (${ranked.length - 10 - trend.shown} to go)</button></div>` : ""}` : ""}
     ${up ? `<section class="mx-sec">
       <div class="sechead"><h2>Breakouts</h2><span class="hand">way above their usual pace</span><span class="sechint">Today vs their typical day</span></div>
       ${breakouts.length ? `<div class="tr-break">${breakouts.map(p => `<a class="tr-bk" href="${href(p)}">${sq(p)}<span class="who"><b>${esc(p.name)}</b><small>${teamLine(p)}</small></span>
@@ -1559,6 +1565,7 @@ function renderSportsMain() {
       ${fresh.length ? `<div class="stories-row tr-new">${fresh.map(p => `<a class="story" href="${href(p)}">${ring(p)}<b>${esc(surname(p.name))}</b><small>${esc(clubLeagues(p)[0] || (SPORT_LABEL[p.sport] || p.sport))}${p.followers != null ? " · " + compact(p.followers) : ""}</small></a>`).join("")}</div>`
         : `<p class="empty">Newly added athletes show here for their first two weeks.</p>`}
     </section>`;
+  $("smMore")?.addEventListener("click", () => { trend.shown += 40; renderSportsMain(); });
 }
 
 /* ---------------------------------------------------------------- advanced search (#/search) */
@@ -1637,7 +1644,10 @@ function route() {
   const bm = h.match(/^#\/(sports|growth|drops|followed|rankings)(?:\?(.*))?$/);
   if (bm) {
     const q = new URLSearchParams(bm[2] || "");
-    if (bm[1] === "sports" && !q.get("sport")) return showSportsMain(q);
+    if (["sports", "growth", "drops"].includes(bm[1]) && !q.get("sport")) {
+      if (bm[1] === "drops") q.set("dir", "down");
+      return showSportsMain(q);
+    }
     // The Sports page opens on Trending up; most followed is #/followed.
     const mode = { sports: "growth", growth: "growth", drops: "drops", followed: "sports",
                    rankings: q.get("view") === "growth7" ? "growth" : "sports" }[bm[1]];
