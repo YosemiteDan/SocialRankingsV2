@@ -604,8 +604,11 @@
   .stats small { display: block; font: 700 11px/1 var(--display); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
   .stats b { display: block; font: 700 28px/1 var(--display); margin-top: 6px; }
   .hero-note { display: inline-block; margin-top: 20px; transform: rotate(-3deg); }
-  .cover-wrap { position: relative; justify-self: center; width: 100%; max-width: 380px; }
-  .cover-note { position: absolute; left: -180px; bottom: 70px; transform: rotate(-8deg); white-space: nowrap; }
+  .cover-wrap { position: relative; justify-self: end; width: 100%; max-width: 380px; }
+  .hero-note .arr-d { display: none; }
+  .hero-note { display: block; width: fit-content; margin-left: auto; margin-right: -8px; }
+  .cover-note { position: absolute; z-index: 3; left: -26px; bottom: 112px; transform: rotate(-6deg); white-space: nowrap; background: var(--green, #4BE38E); color: var(--bg); font: 700 22px/1 var(--display); letter-spacing: .02em; padding: 9px 13px 8px; box-shadow: 0 10px 22px -8px rgba(0,0,0,.8); }
+  .cover-note small { display: block; font: 700 11px/1.2 var(--display); letter-spacing: .14em; text-transform: uppercase; opacity: .8; margin-top: 3px; }
 
   /* taped trading cards */
   .tcard { display: block; position: relative; background: var(--cream); color: var(--ink); padding: 10px 10px 12px; text-decoration: none; box-shadow: 0 22px 40px -16px rgba(0,0,0,.95); transform: rotate(var(--tilt, 2deg)); transition: transform .18s ease; }
@@ -688,7 +691,9 @@
   @media (max-width: 860px) {
     .mx-hero, .mx-lower, .mf { grid-template-columns: 1fr; }
     .cover-wrap { max-width: 340px; margin-top: 10px; }
-    .cover-note { left: auto; right: 0; top: -36px; }
+    .cover-note { left: -8px; bottom: 96px; font-size: 19px; }
+    .hero-note { margin-left: 0; }
+    .hero-note .arr-r { display: none; } .hero-note .arr-d { display: inline; }
   }
   @media (max-width: 460px) {
     .stamp { width: 86px; height: 86px; right: -10px; font-size: 10px; } .stamp b { font-size: 28px; }
@@ -1829,7 +1834,9 @@ function showHome() {
   // Cover star: today's top profile, the biggest growth since yesterday's update
   // among accounts collected today with 10K+ followers. Falls back to this week's #1.
   const newest = DATA.players.map(p => p.as_of).filter(Boolean).sort().at(-1);
-  const daily = DATA.players.filter(p => p.followers >= TOP_PROFILE_MIN && p.as_of === newest && p.change_1d_pct != null && p.change_1d > 0)
+  // A quiet day (nobody up by at least DAILY_MIN_GAIN followers) shows this week's top profile instead.
+  const DAILY_MIN_GAIN = 50;
+  const daily = DATA.players.filter(p => p.followers >= TOP_PROFILE_MIN && p.as_of === newest && p.change_1d_pct != null && p.change_1d >= DAILY_MIN_GAIN)
     .sort((a, b) => b.change_1d_pct - a.change_1d_pct || b.change_1d - a.change_1d);
   const isDaily = daily.length > 0;
   const cover = isDaily ? { p: daily[0], g: { pct: daily[0].change_1d_pct, n: daily[0].change_1d, days: 1 } } : tp.list[0];
@@ -1866,7 +1873,7 @@ function showHome() {
           <div><small>Combined reach</small><b>${compact(total)}</b></div>
           ${hottest ? `<div><small>Hottest</small><b class="up">+${hottest.g.pct.toFixed(1)}%</b></div>` : ""}
         </div>
-        ${cover ? `<div class="hand hero-note">${isDaily ? "today's" : tp.byGrowth ? "this week's" : "the"} top profile →</div>` : ""}
+        ${cover ? `<div class="hand hero-note">${isDaily ? "today's" : tp.byGrowth ? "this week's" : "the"} top profile <span class="arr-r">→</span><span class="arr-d">↓</span></div>` : ""}
       </div>
       ${cover ? `<div class="cover-wrap">
         <a class="tcard cover" href="${href(cover.p)}">
@@ -1876,7 +1883,7 @@ function showHome() {
           <span class="foot"><span>${teamLine(cover.p)}</span><span>${exact(cover.p.followers)} followers</span></span>
         </a>
         <span class="stamp"><span>${isDaily ? "Top" : tp.byGrowth ? "Top" : "Most"}<b>#1</b>${isDaily ? "today" : tp.byGrowth ? "this week" : "followed"}</span></span>
-        ${coverG && coverG.n ? `<span class="hand cover-note">${exactSigned(coverG.n)} ${isDaily ? "today" : days && days < 7 ? "so far" : "this week"}!</span>` : ""}
+        ${coverG && coverG.n ? `<span class="cover-note">${exactSigned(coverG.n)} followers<small>${pct1(coverG.pct)} ${isDaily ? "since yesterday" : days && days < 7 ? `in ${days} day${days > 1 ? "s" : ""}` : "this week"}</small></span>` : ""}
       </div>` : ""}
     </section>
 
