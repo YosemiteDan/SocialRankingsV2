@@ -408,6 +408,36 @@
   .aff-b.nat small { background: var(--accent); }
   .tab-label { align-self: center; flex: none; margin: 0 2px 0 10px; font: 700 11px/1 var(--display); letter-spacing: .14em; text-transform: uppercase; color: var(--accent); white-space: nowrap; }
   .tabs button.nat { border-color: rgba(255,122,26,.5); }
+  .bd-hero { padding: 40px 0 18px; }
+  .bd-hero h1 { font: 700 clamp(40px, 6vw, 80px)/.95 var(--serif); letter-spacing: -.035em; margin: 12px 0 18px; }
+  .bd-modes { display: flex; gap: 0; border: 2px solid var(--cream); width: max-content; max-width: 100%; overflow-x: auto; }
+  .bd-modes a { padding: 10px 16px; font: 700 13px/1 var(--display); letter-spacing: .12em; text-transform: uppercase; text-decoration: none; white-space: nowrap; }
+  .bd-modes a.on { background: var(--cream); color: var(--bg); }
+  .bd-controls { position: sticky; top: 58px; z-index: 5; background: var(--bg); padding: 14px 0 12px; border-bottom: 2px solid var(--line); margin-bottom: 26px; }
+  .bd-chips { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; }
+  .bd-chips::-webkit-scrollbar { display: none; }
+  .bd-chips a { flex: none; display: inline-flex; align-items: center; gap: 8px; padding: 10px 15px; border: 2px solid var(--line); background: var(--card); font: 700 15px/1 var(--display); letter-spacing: .06em; text-transform: uppercase; text-decoration: none; }
+  .bd-chips a small { font-size: 11px; color: var(--muted); }
+  .bd-chips a[aria-selected="true"] { background: var(--accent); border-color: var(--accent); color: var(--bg); }
+  .bd-chips a[aria-selected="true"] small { color: rgba(14,20,48,.7); }
+  .bd-chips.sub { margin-top: 10px; }
+  .bd-chips.sub a { padding: 8px 12px; font-size: 13px; background: none; }
+  .bd-chips.sub a[aria-selected="true"] { background: var(--cream); border-color: var(--cream); }
+  .bd-chips a.nat { border-color: rgba(255,122,26,.5); }
+  .bd-row { display: flex; gap: 12px; align-items: center; margin-top: 12px; flex-wrap: wrap; }
+  .bd-row input { flex: 1 1 260px; max-width: 460px; font: 500 16px/1 "Barlow", sans-serif; color: var(--text); background: var(--card); border: 2px solid var(--line); padding: 12px 16px; }
+  .bd-row input::placeholder { color: var(--muted); }
+  .bd-row .pills { margin-left: auto; }
+  .pills a.pill { font: 700 12px/1 var(--display); letter-spacing: .12em; text-transform: uppercase; padding: 9px 14px; border: 2px solid var(--cream); border-radius: 30px; text-decoration: none; }
+  .pills a.pill[aria-pressed="true"] { background: var(--cream); color: var(--bg); }
+  .bd-hero-cards { margin-bottom: 34px; }
+  .bd-list { display: grid; grid-template-columns: 1fr 1fr; column-gap: 40px; }
+  .engv { color: var(--accent); white-space: nowrap; }
+  .tcard .foot > span { text-align: right; line-height: 1.4; }
+  .lrow b.gr { color: var(--up); } .lrow b.dn { color: var(--down); }
+  .tcard b.gr { color: #1F8A4C !important; } .tcard b.dn { color: #C2364F !important; }
+  @media (max-width: 860px) { .bd-list { grid-template-columns: 1fr; } .bd-controls { position: static; } }
+  @media (max-width: 520px) { .hide-s { display: none; } }
   .ring.sm img, .ring.sm .ph { width: 42px; height: 42px; border-width: 2px; font-size: 14px; }
   .stories { padding: 20px 0 4px; }
   .disc-head { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
@@ -563,8 +593,8 @@
         </div>
       </div>
       <nav class="foot-col" aria-label="Explore"><h4>Explore</h4>
-        <a href="#/">Home</a><a href="#/rankings?gender=women">Women</a><a href="#/rankings?gender=men">Men</a>
-        <a href="#/rankings?view=growth7">Hot this week</a><a href="#/rankings?all=1">All athletes</a></nav>
+        <a href="#/">Home</a><a href="#/sports">All sports</a><a href="#/sports?gender=women">Women</a><a href="#/sports?gender=men">Men</a>
+        <a href="#/growth">Fastest growing</a><a href="#/drops">Biggest drops</a></nav>
       <nav class="foot-col" aria-label="Company"><h4>Socialete</h4>
         <a class="soon" href="#">About</a><a class="soon" href="#">How the rankings work</a><a class="soon" href="#">Contact</a><a class="soon" href="#">Advertise &amp; partner</a><a class="soon" href="#">Media kit</a></nav>
       <nav class="foot-col" aria-label="Athletes"><h4>Athletes</h4>
@@ -864,7 +894,7 @@ async function showProfile(id) {
   const mini = q => `<span class="mini">${photo(q)}</span>`;
 
   $("main").innerHTML = `
-    <a class="back" href="#/rankings">← All players</a>
+    <a class="back" href="#/sports">← All athletes</a>
     ${DATA.sample_data ? `<div class="notice">Preview mode: sample numbers.</div>` : ""}
     <section class="pro">
       <div class="shot">${photo(p)}${lgRank ? `<span class="rank">${lgRank}</span>` : ""}</div>
@@ -1121,22 +1151,133 @@ function drawChart() {
   svg.addEventListener("pointerleave", () => { hl.setAttribute("visibility", "hidden"); hd.setAttribute("visibility", "hidden"); tip.style.display = "none"; });
 }
 
+/* ---------------------------------------------------------------- leaderboards
+   One page, three modes: #/sports (most followed), #/growth (fastest growing),
+   #/drops (biggest drops). Each has sport / league / men-women toggles, a search,
+   five hero cards, then a list of up to 50 with "Show more". */
+const BOARD_MIN = 5000;          // growth and drops only count accounts with at least this many followers
+const BOARD_PAGE = 50;
+const BOARDS = {
+  sports: { path: "#/sports", nav: "Sports", kicker: "The leaderboard · every sport, one ladder",
+            title: s => s === "All" ? "Australia's most followed athletes" : `${esc(SPORT_LABEL[s] || s)}'s most followed`,
+            hint: "Ranked by Instagram followers today",
+            rank: list => list.filter(p => p.followers != null).sort((a, b) => b.followers - a.followers) },
+  growth: { path: "#/growth", nav: "Growth", kicker: "On the rise · fastest growing profiles",
+            title: s => s === "All" ? "Who's growing fastest" : `${esc(SPORT_LABEL[s] || s)}'s fastest growing`,
+            hint: d => `Follower growth ${d && d < 7 ? `over the last ${d} day${d > 1 ? "s" : ""}` : "this week"} · ${compact(BOARD_MIN)}+ followers`,
+            rank: list => list.filter(p => p.followers >= BOARD_MIN && (weekGrowth(p) || {}).pct > 0)
+              .sort((a, b) => weekGrowth(b).pct - weekGrowth(a).pct) },
+  drops:  { path: "#/drops", nav: "Drops", kicker: "Cooling off · biggest drops",
+            title: s => s === "All" ? "Who's losing followers" : `${esc(SPORT_LABEL[s] || s)}'s biggest drops`,
+            hint: d => `Follower change ${d && d < 7 ? `over the last ${d} day${d > 1 ? "s" : ""}` : "this week"} · ${compact(BOARD_MIN)}+ followers`,
+            rank: list => list.filter(p => p.followers >= BOARD_MIN && (weekGrowth(p) || {}).pct < 0)
+              .sort((a, b) => weekGrowth(a).pct - weekGrowth(b).pct) },
+};
+const board = { mode: "sports", sport: "All", league: "All", gender: "All", q: "", shown: BOARD_PAGE };
+const sportsList = () => [...new Set(DATA.players.map(p => p.sport).filter(Boolean))]
+  .sort((a, b) => ((SPORT_ORDER.indexOf(a) + 1) || 99) - ((SPORT_ORDER.indexOf(b) + 1) || 99));
+function boardLink(mode, o = {}) {
+  const q = new URLSearchParams(Object.entries({ sport: o.sport, league: o.league, gender: o.gender }).filter(([, v]) => v && v !== "All"));
+  return BOARDS[mode].path + (q.toString() ? "?" + q : "");
+}
+const engTxt = p => p.engagement_rate != null ? `${p.engagement_rate.toFixed(1)}% eng` : "";
+
+function showBoard(mode, params) {
+  current = null;
+  Object.assign(board, { mode, sport: params.get("sport") || "All", league: params.get("league") || "All",
+    gender: params.get("gender") || "All", q: "", shown: BOARD_PAGE });
+  const B = BOARDS[mode];
+  document.title = `${B.nav} – ${SITE_NAME}`;
+  const sports = sportsList();
+  if (!sports.includes(board.sport)) board.sport = "All";
+  const inSport = DATA.players.filter(p => board.sport === "All" || p.sport === board.sport);
+  const groups = [...new Set(inSport.filter(p => board.gender === "All" || p.gender === board.gender).flatMap(p => p.leagues || []).filter(Boolean))]
+    .sort((a, b) => ((LEAGUE_ORDER.indexOf(a) + 1) || 99) - ((LEAGUE_ORDER.indexOf(b) + 1) || 99));
+  if (!groups.includes(board.league)) board.league = "All";
+  const cnt = sp => DATA.players.filter(p => (sp === "All" || p.sport === sp) && (board.gender === "All" || p.gender === board.gender)).length;
+  const L = o => boardLink(mode, { sport: board.sport, league: board.league, gender: board.gender, ...o });
+  $("main").innerHTML = `
+    <section class="bd-hero">
+      <div class="kicker">${B.kicker}</div>
+      <h1>${B.title(board.sport)}</h1>
+      <div class="bd-modes">${Object.entries(BOARDS).map(([k, v]) => `<a href="${boardLink(k, { sport: board.sport, gender: board.gender })}" class="${k === mode ? "on" : ""}">${{ sports: "Most followed", growth: "Fastest growing", drops: "Biggest drops" }[k]}</a>`).join("")}</div>
+    </section>
+    <div class="bd-controls">
+      <div class="bd-chips" role="tablist" aria-label="Sport">${["All", ...sports].map(sp => `<a role="tab" aria-selected="${sp === board.sport}" href="${L({ sport: sp, league: "All" })}">${sp === "All" ? "All sports" : esc(SPORT_LABEL[sp] || sp)}<small>${cnt(sp)}</small></a>`).join("")}</div>
+      ${board.sport !== "All" && groups.length > 1 ? `<div class="bd-chips sub" role="tablist" aria-label="League">
+        <a role="tab" aria-selected="${board.league === "All"}" href="${L({ league: "All" })}">All ${esc((SPORT_LABEL[board.sport] || board.sport).toLowerCase())}</a>
+        ${groups.filter(g => !isNational(g)).map(g => `<a role="tab" aria-selected="${g === board.league}" href="${L({ league: g })}">${esc(g)}</a>`).join("")}
+        ${groups.some(isNational) ? `<span class="tab-label">National teams</span>${groups.filter(isNational).map(g => `<a role="tab" class="nat" aria-selected="${g === board.league}" href="${L({ league: g })}">${esc(groupName(g))}</a>`).join("")}` : ""}
+      </div>` : ""}
+      <div class="bd-row">
+        <input id="bdSearch" type="search" placeholder="Search athletes, teams or leagues" aria-label="Search athletes, teams or leagues">
+        <div class="pills" role="group" aria-label="Men or women">${[["All", "Everyone"], ["women", "Women"], ["men", "Men"]].map(([g, l]) => `<a href="${L({ gender: g, league: "All" })}" aria-pressed="${g === board.gender}" class="pill">${l}</a>`).join("")}</div>
+      </div>
+    </div>
+    <section id="bdBody"></section>`;
+  $("bdSearch").addEventListener("input", e => { board.q = e.target.value; board.shown = BOARD_PAGE; renderBoard(); });
+  renderBoard();
+  window.scrollTo(0, 0);
+}
+
+function renderBoard() {
+  const B = BOARDS[board.mode];
+  const q = board.q.trim().toLowerCase();
+  const pool = DATA.players.filter(p => (board.sport === "All" || p.sport === board.sport) &&
+    (board.gender === "All" || p.gender === board.gender) && (board.league === "All" || inLeague(p, board.league)));
+  const ranked = B.rank(pool);
+  ranked.forEach((p, i) => p._brank = i + 1);
+  const matches = p => !q || p.name.toLowerCase().includes(q) || (p.teams || []).some(t => (t[1] || "").toLowerCase().includes(q) || (t[0] || "").toLowerCase().includes(q)) || (p.sport || "").toLowerCase().includes(q);
+  const rows = ranked.filter(matches);
+  const days = Math.max(0, ...ranked.slice(0, 50).map(p => (weekGrowth(p) || {}).days || 0));
+  const hint = typeof B.hint === "function" ? B.hint(days) : B.hint;
+  const value = p => board.mode === "sports" ? `<b>${compact(p.followers)}</b>` : `<b class="${board.mode === "growth" ? "gr" : "dn"}">${signed(weekGrowth(p).pct)}%</b>`;
+  const sub = p => {
+    const g = weekGrowth(p);
+    const bits = board.mode === "sports" ? [g && g.n ? `<span class="${g.pct >= 0 ? "up" : "down"}">${growthTxt(g)}</span>` : ""]
+      : [`${compact(p.followers)}`, g ? `<span class="${g.n >= 0 ? "up" : "down"}">${exactSigned(g.n)}</span>` : ""];
+    if (engTxt(p)) bits.push(`<span class="engv">${engTxt(p)}</span>`);
+    return bits.filter(Boolean).join(" · ");
+  };
+  if (!rows.length) {
+    $("bdBody").innerHTML = `<p class="sechint" style="margin:6px 0 0">${esc(hint)}</p><p class="empty" style="margin-top:24px">${q ? `No athletes match "${esc(board.q)}".`
+      : board.mode === "sports" ? "No numbers yet." : "Nothing here yet. This fills in once there are two days of numbers."}</p>`;
+    return;
+  }
+  const hero = q ? [] : rows.slice(0, 5);
+  const rest = q ? rows : rows.slice(5);
+  const tilt = [-2, 1.5, -1, 2, -1.5];
+  const cards = hero.map((p, i) => `
+    <a class="tcard" href="${href(p)}" style="--tilt:${tilt[i]}deg">
+      <span class="tape"></span>
+      <span class="pic">${photo(p)}<span class="handle">@${esc(p.instagram || "")}</span><span class="big-n">${p._brank}</span></span>
+      <span class="nm">${esc(p.name)}${p.verified ? TICK : ""}</span>
+      <span class="tm">${teamLine(p)}</span>
+      <span class="foot">${board.mode === "sports" ? `<b>${compact(p.followers)}</b>` : `<b class="${board.mode === "growth" ? "gr" : "dn"}">${signed(weekGrowth(p).pct)}%</b>`}
+        <span>${board.mode === "sports" ? (weekGrowth(p) && weekGrowth(p).n ? `<span class="${weekGrowth(p).pct >= 0 ? "gr" : "dn"}">${growthTxt(weekGrowth(p))}</span>` : "") : compact(p.followers)}${engTxt(p) ? `<br><span class="engv">${engTxt(p)}</span>` : ""}</span></span>
+    </a>`).join("");
+  const page = rest.slice(0, board.shown);
+  $("bdBody").innerHTML = `
+    <p class="sechint" style="margin:6px 0 ${hero.length ? 30 : 16}px">${esc(hint)}${q ? ` · ${rows.length} match${rows.length > 1 ? "es" : ""}` : ` · ${ranked.length} athletes`}</p>
+    ${hero.length ? `<div class="tcards bd-hero-cards">${cards}</div>` : ""}
+    ${page.length ? `<div class="bd-list">${page.map(p => `<a class="lrow" href="${href(p)}"><span class="n">${p._brank}</span>${sq(p)}
+        <span class="who"><b>${esc(p.name)}</b><small>${teamLine(p)}</small></span>
+        <span class="val">${value(p)}<small>${sub(p)}</small></span></a>`).join("")}</div>` : ""}
+    ${rest.length > board.shown ? `<div class="more"><button class="btn" id="bdMore">Show more (${rest.length - board.shown} to go)</button></div>` : ""}`;
+  $("bdMore")?.addEventListener("click", () => { board.shown += BOARD_PAGE; renderBoard(); });
+}
+
 /* ---------------------------------------------------------------- routing */
 function route() {
   document.querySelectorAll(".nav details[open]").forEach(d => d.removeAttribute("open"));
   const h = location.hash;
   const m = h.match(/^#\/p\/(.+)$/);
   if (m) return showProfile(decodeURIComponent(m[1]));
-  if (h.startsWith("#/rankings")) {
-    const q = new URLSearchParams(h.split("?")[1] || "");
-    if (q.toString()) {            // a menu link: start from its filters
-      sport = q.get("sport") || "All"; league = q.get("league") || "All";
-      gender = q.get("gender") || "All"; query = ""; shown = PAGE_SIZE;
-      if (q.get("view") && VIEWS[q.get("view")]) view = q.get("view");
-    }
-    showRankings();
-    window.scrollTo(0, 0);
-    return;
+  const bm = h.match(/^#\/(sports|growth|drops|rankings)(?:\?(.*))?$/);
+  if (bm) {
+    const q = new URLSearchParams(bm[2] || "");
+    const mode = bm[1] === "rankings" ? (q.get("view") === "growth7" ? "growth" : "sports") : bm[1];
+    return showBoard(mode, q);
   }
   showHome();
 }
@@ -1144,7 +1285,7 @@ function route() {
 /* ---------------------------------------------------------------- menu */
 function link(params) {
   const q = new URLSearchParams(Object.entries(params).filter(([, v]) => v && v !== "All"));
-  return "#/rankings" + (q.toString() ? "?" + q : "");
+  return "#/sports" + (q.toString() ? "?" + q : "");
 }
 function buildNav() {
   const sports = [...new Set(DATA.players.map(p => p.sport).filter(Boolean))]
@@ -1171,13 +1312,10 @@ function buildNav() {
   }).join("");
   $("nav").innerHTML = `
     <a href="#/">Home</a>
-    <details><summary>Athletes</summary><div class="menu">
-      <a href="${link({ gender: "men" })}">Men <small>${count(p => p.gender === "men")}</small></a>
-      <a href="${link({ gender: "women" })}">Women <small>${count(p => p.gender === "women")}</small></a>
-      <hr><a href="#/rankings?all=1">All athletes <small>${DATA.players.length}</small></a>
-    </div></details>
-    <details><summary>Sports</summary><div class="menu">${sportMenu}</div></details>
-    ${natMenu ? `<details><summary>National<span class="hide-m"> teams</span></summary><div class="menu">${natMenu}</div></details>` : ""}`;
+    <details><summary>Sports</summary><div class="menu"><a href="#/sports"><b>All sports</b> <small>${DATA.players.length}</small></a>
+      <a href="#/sports?gender=women">Women <small>${count(p => p.gender === "women")}</small></a><a href="#/sports?gender=men">Men <small>${count(p => p.gender === "men")}</small></a><hr>${sportMenu}</div></details>
+    ${natMenu ? `<details><summary>National<span class="hide-m"> teams</span></summary><div class="menu">${natMenu}</div></details>` : ""}
+    <a href="#/growth">Growth</a><a href="#/drops" class="hide-s">Drops</a>`;
   // Only one menu open at a time; clicking elsewhere closes them.
   $("nav").querySelectorAll("details").forEach(d => d.addEventListener("toggle", () => {
     if (d.open) $("nav").querySelectorAll("details").forEach(o => o !== d && o.removeAttribute("open"));
@@ -1324,7 +1462,7 @@ function showHome() {
         <div class="mf-col"><h3>${GENDER_LABEL[g]}</h3>
           ${mostF(g).slice(0, 10).map((p, i) => `<a class="lrow" href="${href(p)}"><span class="n">${i + 1}</span>${sq(p)}
             <span class="who"><b>${esc(p.name)}</b><small>${teamLine(p)}</small></span>
-            <span class="val"><b>${compact(p.followers)}</b>${p.change_7d != null ? `<small class="${p.change_7d >= 0 ? "up" : "down"}">${exactSigned(p.change_7d)}</small>` : ""}</span></a>`).join("") || `<p class="empty">No numbers yet.</p>`}
+            <span class="val"><b>${compact(p.followers)}</b><small>${[p.change_7d != null ? `<span class="${p.change_7d >= 0 ? "up" : "down"}">${exactSigned(p.change_7d)}</span>` : "", engTxt(p) ? `<span class="engv">${engTxt(p)}</span>` : ""].filter(Boolean).join(" · ")}</small></span></a>`).join("") || `<p class="empty">No numbers yet.</p>`}
           <a class="all" href="${link({ gender: g })}">See all ${GENDER_LABEL[g].toLowerCase()} →</a>
         </div>`).join("")}
       </div>
@@ -1337,7 +1475,7 @@ function showHome() {
           <span class="who"><b>${esc(x.p.name)}</b><small>${teamLine(x.p)}</small></span>
           <span class="pct">+${x.g.pct.toFixed(1)}%<small>${compact(x.p.followers)} followers</small></span></a>`).join("")}</div>`
           : `<p class="empty">Growth rankings start once there are two days of numbers. Check back tomorrow.</p>`}
-        <a class="all" href="#/rankings?view=growth7">See who's hot →</a>
+        <a class="all" href="#/growth">See who's growing fastest →</a>
       </div>
       <div><section class="board" id="widget"></section><div class="hand board-note">chalked up every morning ✎</div></div>
     </section>`;
@@ -1375,11 +1513,11 @@ function renderTopProfiles() {
       <span class="pic">${photo(p)}<span class="handle">@${esc(p.instagram)}</span><span class="big-n" aria-label="Rank ${i + 1}">${i + 1}</span></span>
       <span class="nm">${esc(p.name)}${p.verified ? TICK : ""}</span>
       <span class="tm">${teamLine(p)}</span>
-      <span class="foot"><b>${compact(p.followers)}</b>${g && g.n ? `<span class="${g.pct >= 0 ? "gr" : "dn"}">${growthTxt(g)}</span>` : ""}</span>
+      <span class="foot"><b>${compact(p.followers)}</b><span>${g && g.n ? `<span class="${g.pct >= 0 ? "gr" : "dn"}">${growthTxt(g)}</span>` : ""}${engTxt(p) ? `<br><span class="engv">${engTxt(p)}</span>` : ""}</span></span>
     </a>`).join("");
   const rest = tp.list.slice(5).map(({ p, g }, i) => `<a class="lrow" href="${href(p)}"><span class="n">${i + 6}</span>${sq(p)}
       <span class="who"><b>${esc(p.name)}</b><small>${teamLine(p)}</small></span>
-      <span class="val"><b>${compact(p.followers)}</b>${g && g.n ? `<small class="up">${growthTxt(g)}</small>` : ""}</span></a>`).join("");
+      <span class="val"><b>${compact(p.followers)}</b><small>${[g && g.n ? `<span class="up">${growthTxt(g)}</span>` : "", engTxt(p) ? `<span class="engv">${engTxt(p)}</span>` : ""].filter(Boolean).join(" · ")}</small></span></a>`).join("");
   const how = tp.byGrowth
     ? `Biggest follower growth ${tp.days && tp.days < 7 ? `over the last ${tp.days} day${tp.days > 1 ? "s" : ""}` : "this week"} · ${compact(TOP_PROFILE_MIN)}+ followers`
     : "Ranked by followers until the growth numbers arrive";
