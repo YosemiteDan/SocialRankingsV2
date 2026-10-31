@@ -468,7 +468,10 @@
   .tr-bk .who b { display: block; font: 700 18px/1.15 var(--serif); } .tr-bk .who small { font: 700 10px/1.3 var(--display); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
   .tr-bk .x { font: 700 30px/1 var(--display); color: var(--accent); text-align: right; } .tr-bk .x small { display: block; font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
   .tr-bk .d { grid-column: 1 / -1; font: 600 12px/1.3 var(--display); letter-spacing: .06em; color: var(--muted); }
-  .tr-new { display: grid; grid-template-columns: repeat(auto-fill, minmax(86px, 1fr)); gap: 14px; }
+  .tr-new { display: flex !important; gap: 14px; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 10px; scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
+  .tr-new .story { flex: 0 0 96px; scroll-snap-align: start; }
+  .tr-miles { grid-template-columns: 1fr 1fr; column-gap: 24px; }
+  @media (max-width: 860px) { .tr-miles { grid-template-columns: 1fr; } }
   @media (max-width: 860px) { .tr-cols { grid-template-columns: 1fr; } }
   .tcard { container-type: inline-size; }
   .cstats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px dashed #C9C4B8; margin-top: 8px; padding-top: 7px; }
@@ -1451,7 +1454,7 @@ function showTrending(params) {
   const cutoff = newest ? new Date(new Date(newest + "T12:00:00") - 14 * 864e5).toISOString().slice(0, 10) : "";
   const fresh = DATA.players.filter(p => p.tracked_since && p.tracked_since > first && p.tracked_since >= cutoff &&
     (trend.sport === "All" || p.sport === trend.sport) && (trend.gender === "All" || p.gender === trend.gender))
-    .sort((a, b) => b.followers - a.followers).slice(0, 12);
+    .sort((a, b) => b.followers - a.followers).slice(0, 24);
   const building = "Building up: this fills in as the daily numbers come in.";
   $("main").innerHTML = `
     <section class="bd-hero">
@@ -1476,20 +1479,22 @@ function showTrending(params) {
         </a>`).join("")}</div>` : `<p class="empty">${emptyMsg}</p>`}
     ${more.length ? `<div class="bd-list">${[0, 1].map(c => `<div>${listHead(trLabel, "c")}${more.filter((_, i) => i % 2 === c).map(x => listRow(x.p, ranked.indexOf(x) + 1, x.m, "c")).join("")}</div>`).join("")}</div>
       <div class="more"><a class="btn" href="${boardLink(up ? "growth" : "drops", { sport: trend.sport, gender: trend.gender })}">Full ${up ? "trending up" : "trending down"} list →</a></div>` : ""}
-    <section class="mx-sec">
+    ${up ? `<section class="mx-sec">
       <div class="sechead"><h2>Breakouts</h2><span class="hand">way above their usual pace</span><span class="sechint">Today vs their typical day</span></div>
       ${breakouts.length ? `<div class="tr-break">${breakouts.map(p => `<a class="tr-bk" href="${href(p)}">${sq(p)}<span class="who"><b>${esc(p.name)}</b><small>${teamLine(p)}</small></span>
           <span class="x">${p.breakout_x}×<small>usual pace</small></span><span class="d">+${p.change_1d_pct.toFixed(2)}% today · usually +${p.typical_daily_pct.toFixed(2)}%</span></a>`).join("")}</div>`
         : `<p class="empty">Breakouts need about a week of daily numbers to know each athlete's usual pace. They'll start appearing soon.</p>`}
     </section>
-    <section class="mx-lower" style="padding-top:44px">
-      <div><div class="sechead"><h2>Milestones</h2><span class="hand">round numbers</span><span class="sechint">Crossed this week</span></div>
-        ${miles.length ? `<div class="stubs">${miles.slice(0, 8).map(x => `<a class="stub" href="${href(x.p)}"><span class="n">★</span>${sq(x.p)}
-          <span class="who"><b>${esc(x.p.name)}</b><small>${teamLine(x.p)}</small></span><span class="pct">${compact(x.t)}<small>now ${exact(x.p.followers)}</small></span></a>`).join("")}</div>`
-          : `<p class="empty">No one has crossed 10K, 25K, 50K, 100K, 250K, 500K or 1M this week yet.</p>`}</div>
-      <div><div class="sechead"><h2>New on ${esc(SITE_NAME)}</h2><span class="sechint">Added recently</span></div>
-        ${fresh.length ? `<div class="tr-new">${fresh.map(p => `<a class="story" href="${href(p)}">${ring(p)}<b>${esc(surname(p.name))}</b><small>${esc(clubLeagues(p)[0] || (SPORT_LABEL[p.sport] || p.sport))}${p.followers != null ? " · " + compact(p.followers) : ""}</small></a>`).join("")}</div>`
-          : `<p class="empty">Newly added athletes show here for their first two weeks.</p>`}</div>
+    <section class="mx-sec">
+      <div class="sechead"><h2>Milestones</h2><span class="hand">round numbers</span><span class="sechint">Crossed this week</span></div>
+      ${miles.length ? `<div class="stubs tr-miles">${miles.slice(0, 8).map(x => `<a class="stub" href="${href(x.p)}"><span class="n">★</span>${sq(x.p)}
+        <span class="who"><b>${esc(x.p.name)}</b><small>${teamLine(x.p)}</small></span><span class="pct">${compact(x.t)}<small>now ${exact(x.p.followers)}</small></span></a>`).join("")}</div>`
+        : `<p class="empty">No one has crossed 10K, 25K, 50K, 100K, 250K, 500K or 1M this week yet.</p>`}
+    </section>` : ""}
+    <section class="mx-sec">
+      <div class="sechead"><h2>New on ${esc(SITE_NAME)}</h2><span class="hand">fresh faces</span><span class="sechint">Added in the last two weeks</span></div>
+      ${fresh.length ? `<div class="stories-row tr-new">${fresh.map(p => `<a class="story" href="${href(p)}">${ring(p)}<b>${esc(surname(p.name))}</b><small>${esc(clubLeagues(p)[0] || (SPORT_LABEL[p.sport] || p.sport))}${p.followers != null ? " · " + compact(p.followers) : ""}</small></a>`).join("")}</div>`
+        : `<p class="empty">Newly added athletes show here for their first two weeks.</p>`}
     </section>`;
   window.scrollTo(0, 0);
 }
