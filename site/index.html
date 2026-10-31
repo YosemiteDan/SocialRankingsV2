@@ -1350,6 +1350,28 @@ function showBoard(mode, params) {
   window.scrollTo(0, 0);
 }
 
+// Two hero rows for a sport page: its biggest names and its fastest-rising smaller accounts.
+function sportSpotlight(pool) {
+  const label = (() => { const d = Math.max(0, ...pool.map(p => (weekGrowth(p) || {}).days || 0)); return d && d < 7 ? `${d} day${d > 1 ? "s" : ""}` : "Week"; })();
+  const stars = pool.filter(p => p.followers != null).sort((a, b) => b.followers - a.followers).slice(0, 5);
+  const emerging = pool.filter(p => p.followers >= 1000 && p.followers < UP_AND_COMING_CAP && (weekGrowth(p) || {}).pct > 0)
+    .sort((a, b) => weekGrowth(b).pct - weekGrowth(a).pct).slice(0, 5);
+  const tilt = [-2, 1.5, -1, 2, -1.5];
+  const cards = (list, key) => `<div class="tcards bd-hero-cards">${list.map((p, i) => `
+    <a class="tcard" href="${href(p)}" style="--tilt:${tilt[i]}deg">
+      <span class="tape"></span>
+      <span class="pic">${photo(p)}<span class="handle">@${esc(p.instagram || "")}</span><span class="big-n">${i + 1}</span></span>
+      <span class="nm">${esc(p.name)}${p.verified ? TICK : ""}</span>
+      <span class="tm">${teamLine(p)}</span>
+      ${cardStats(p, weekGrowth(p), label, key)}
+    </a>`).join("")}</div>`;
+  return `
+    <div class="sechead"><h2>Stars</h2><span class="hand">the biggest names</span><span class="sechint">Most followed</span></div>
+    ${stars.length ? cards(stars, "f") : `<p class="empty">No numbers yet.</p>`}
+    <div class="sechead"><h2>Emerging</h2><span class="hand">ones to watch</span><span class="sechint">Fastest growing under ${compact(UP_AND_COMING_CAP)} followers</span></div>
+    ${emerging.length ? cards(emerging, "c") : `<p class="empty" style="margin-bottom:30px">Emerging athletes show once there are two days of numbers.</p>`}`;
+}
+
 function renderBoard() {
   const B = BOARDS[board.mode];
   const q = board.q.trim().toLowerCase();
@@ -1374,8 +1396,10 @@ function renderBoard() {
       : board.mode === "sports" ? "No numbers yet." : "Nothing here yet. This fills in once there are two days of numbers."}</p>`;
     return;
   }
-  const hero = q ? [] : rows.slice(0, 5);
-  const rest = q ? rows : rows.slice(5);
+  // Sport pages lead with two hero rows, Stars and Emerging; the ranking below then starts at #1.
+  const spotlight = board.sport !== "All" && !q;
+  const hero = q || spotlight ? [] : rows.slice(0, 5);
+  const rest = q || spotlight ? rows : rows.slice(5);
   const tilt = [-2, 1.5, -1, 2, -1.5];
   const bdChLabel = days && days < 7 ? `${days} day${days > 1 ? "s" : ""}` : "Week";
   const cards = hero.map((p, i) => `
@@ -1389,7 +1413,9 @@ function renderBoard() {
   const page = rest.slice(0, board.shown);
   $("bdBody").innerHTML = `
     <p class="sechint" style="margin:6px 0 ${hero.length ? 30 : 16}px">${esc(hint)}${q ? ` · ${rows.length} match${rows.length > 1 ? "es" : ""}` : ` · ${ranked.length} athletes`}</p>
+    ${spotlight ? sportSpotlight(pool) : ""}
     ${hero.length ? `<div class="tcards bd-hero-cards">${cards}</div>` : ""}
+    ${spotlight && rest.length ? `<div class="sechead" style="margin-top:10px"><h2>${{ sports: "Most followed", growth: "Trending up", drops: "Trending down" }[board.mode]}</h2><span class="sechint">${esc(hint)}</span></div>` : ""}
     ${page.length ? `<div class="bd-list">${[0, 1].map(c => `<div>${listHead(bdChLabel, board.mode === "sports" ? "f" : "c")}${page.filter((_, i) => i % 2 === c).map(p => listRow(p, p._brank, weekGrowth(p), board.mode === "sports" ? "f" : "c")).join("")}</div>`).join("")}</div>` : ""}
     ${rest.length > board.shown ? `<div class="more"><button class="btn" id="bdMore">Show more (${rest.length - board.shown} to go)</button></div>` : ""}
     ${board.sport !== "All" ? extrasHtml(pool.filter(matches), pool.filter(p => matches(p) && p.followers >= BOARD_MIN), board.mode !== "drops") : ""}`;
