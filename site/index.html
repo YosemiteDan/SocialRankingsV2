@@ -1522,19 +1522,8 @@ function buildNav() {
   const sports = [...new Set(DATA.players.map(p => p.sport).filter(Boolean))]
     .sort((a, b) => ((SPORT_ORDER.indexOf(a) + 1) || 99) - ((SPORT_ORDER.indexOf(b) + 1) || 99));
   const count = f => DATA.players.filter(f).length;
-  const sportMenu = sports.map(sp => {
-    const label = SPORT_LABEL[sp] || sp;
-    const leagues = [...new Set(DATA.players.filter(p => p.sport === sp).flatMap(clubLeagues))]
-      .sort((a, b) => ((LEAGUE_ORDER.indexOf(a) + 1) || 99) - ((LEAGUE_ORDER.indexOf(b) + 1) || 99));
-    const genderOf = lg => (DATA.players.find(p => inLeague(p, lg)) || {}).gender;
-    if (leagues.length <= 1) return `<a href="${link({ sport: sp })}">${esc(label)} <small>${count(p => p.sport === sp)}</small></a>`;
-    const group = g => {
-      const ls = leagues.filter(l => genderOf(l) === g);
-      return ls.length ? `<a href="${link({ sport: sp, gender: g })}">${GENDER_LABEL[g]}'s ${esc(label.toLowerCase())} <small>${ls.join(", ")}</small></a>
-        <div class="sub">${ls.map(l => `<a href="${link({ sport: sp, league: l })}">${esc(l)} <small>${count(p => inLeague(p, l))}</small></a>`).join("")}</div>` : "";
-    };
-    return `<h4>${esc(label)}</h4><a href="${link({ sport: sp })}">All ${esc(label.toLowerCase())} <small>${count(p => p.sport === sp)}</small></a>${group("men")}${group("women")}`;
-  }).join(sports.length > 1 ? "<hr>" : "");
+  // Just the sports; leagues and national teams are on each sport's page.
+  const sportMenu = sports.map(sp => `<a href="${link({ sport: sp })}">${esc(SPORT_LABEL[sp] || sp)} <small>${count(p => p.sport === sp)}</small></a>`).join("");
   const nats = [...new Set(DATA.players.flatMap(nationalTeams))]
     .sort((a, b) => ((LEAGUE_ORDER.indexOf(a) + 1) || 99) - ((LEAGUE_ORDER.indexOf(b) + 1) || 99));
   const natMenu = nats.map(l => {
@@ -1544,7 +1533,7 @@ function buildNav() {
   $("nav").innerHTML = `
     <a href="#/">Home</a>
     <details><summary>Sports</summary><div class="menu"><a href="#/sports"><b>All sports</b> <small>${sportsList().length} sports</small></a>
-      <a href="#/sports?gender=women">Women <small>${count(p => p.gender === "women")}</small></a><a href="#/sports?gender=men">Men <small>${count(p => p.gender === "men")}</small></a><hr>${sportMenu}</div></details>
+<hr>${sportMenu}</div></details>
     ${natMenu ? `<details><summary>National<span class="hide-m"> teams</span></summary><div class="menu">${natMenu}</div></details>` : ""}
     <a href="#/trending">Trending</a>`;
   // Only one menu open at a time; clicking elsewhere closes them.
