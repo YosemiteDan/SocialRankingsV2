@@ -456,6 +456,7 @@
   .sp-go { margin-top: auto; font: 700 12px/1 var(--display); letter-spacing: .14em; text-transform: uppercase; color: var(--accent); }
   .sp-sum { margin: 0 0 18px; align-items: center; }
   .sp-back { margin-left: 8px; font: 700 12px/1 var(--display); letter-spacing: .12em; text-transform: uppercase; color: var(--accent); text-decoration: none; }
+  .tr-hero { margin-bottom: 44px; }
   .tr-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
   .tr-h { display: flex; justify-content: space-between; align-items: baseline; border-bottom: 2px solid var(--cream); padding-bottom: 10px; margin-bottom: 6px; }
   .tr-h h2 { margin: 0; font: 700 34px/1 var(--serif); }
@@ -1363,12 +1364,14 @@ function showTrending(params) {
   const L = o => { const q = new URLSearchParams(Object.entries({ win: trend.win, sport: trend.sport, gender: trend.gender, ...o }).filter(([k, v]) => v && v !== "All" && !(k === "win" && v === "day"))); return "#/trending" + (q.toString() ? "?" + q : ""); };
   const pool = DATA.players.filter(p => (trend.sport === "All" || p.sport === trend.sport) && (trend.gender === "All" || p.gender === trend.gender) && p.followers >= BOARD_MIN);
   const moves = pool.map(p => ({ p, m: moveOf(p, trend.win) })).filter(x => x.m && x.m.n);
-  const rising = moves.filter(x => x.m.pct > 0).sort((a, b) => b.m.pct - a.m.pct).slice(0, 10);
+  const risingAll = moves.filter(x => x.m.pct > 0).sort((a, b) => b.m.pct - a.m.pct);
+  const hero5 = risingAll.slice(0, 5);
+  const rising = risingAll.slice(5, 15);
   const falling = moves.filter(x => x.m.pct < 0).sort((a, b) => a.m.pct - b.m.pct).slice(0, 10);
   const days = Math.max(0, ...moves.map(x => x.m.days || 0));
   const winLabel = { day: "today", week: days && days < 7 ? `over the last ${days} day${days > 1 ? "s" : ""}` : "this week",
                      month: moves.some(x => !x.m.days) ? "this month" : `over the last ${days} day${days > 1 ? "s" : ""}` }[trend.win];
-  const row = (x, i, cls) => `<a class="lrow" href="${href(x.p)}"><span class="n">${i + 1}</span>${sq(x.p)}
+  const row = (x, i, cls) => `<a class="lrow" href="${href(x.p)}"><span class="n">${i + 1 + (cls === "gr" ? 5 : 0)}</span>${sq(x.p)}
       <span class="who"><b>${esc(x.p.name)}</b><small>${teamLine(x.p)}</small></span>
       <span class="val"><b class="${cls}">${signed(x.m.pct)}%</b><small>${compact(x.p.followers)} · <span class="${x.m.n >= 0 ? "up" : "down"}">${exactSigned(x.m.n)}</span>${engTxt(x.p) ? ` · <span class="engv">${engTxt(x.p)}</span>` : ""}</small></span></a>`;
   const col = (title, list, cls, mode, empty) => `<section class="tr-col"><div class="tr-h"><h2 class="${cls}">${title}</h2><a href="${boardLink(mode, { sport: trend.sport, gender: trend.gender })}">Full list →</a></div>
@@ -1403,8 +1406,17 @@ function showTrending(params) {
       <div class="bd-row"><span class="sechint" style="margin:0">Follower change ${winLabel} · ${compact(BOARD_MIN)}+ followers</span>
         <div class="pills" role="group" aria-label="Men or women">${[["All", "Everyone"], ["women", "Women"], ["men", "Men"]].map(([g, l]) => `<a href="${L({ gender: g })}" aria-pressed="${g === trend.gender}" class="pill">${l}</a>`).join("")}</div></div>
     </div>
+    ${hero5.length ? `<section class="tr-hero"><div class="sechead"><h2>Top 5 ${trend.win === "day" ? "today" : trend.win === "week" ? "this week" : "this month"}</h2><span class="hand">the hot hand</span><span class="sechint">Biggest follower growth</span></div>
+      <div class="tcards">${hero5.map((x, i) => `
+        <a class="tcard" href="${href(x.p)}" style="--tilt:${[-2, 1.5, -1, 2, -1.5][i]}deg">
+          <span class="tape"></span>
+          <span class="pic">${photo(x.p)}<span class="handle">@${esc(x.p.instagram || "")}</span><span class="big-n">${i + 1}</span></span>
+          <span class="nm">${esc(x.p.name)}${x.p.verified ? TICK : ""}</span>
+          <span class="tm">${teamLine(x.p)}</span>
+          <span class="foot"><b class="gr">${signed(x.m.pct)}%</b><span>${compact(x.p.followers)} · <span class="gr">${exactSigned(x.m.n)}</span>${engTxt(x.p) ? `<br><span class="engv">${engTxt(x.p)}</span>` : ""}</span></span>
+        </a>`).join("")}</div></section>` : ""}
     <div class="tr-cols">
-      ${col("▲ Rising", rising, "gr", "growth", trend.win === "day" ? "Today's numbers arrive after the morning update." : building)}
+      ${col(hero5.length ? "▲ Also rising" : "▲ Rising", rising, "gr", "growth", hero5.length ? "That's everyone rising right now." : trend.win === "day" ? "Today's numbers arrive after the morning update." : building)}
       ${col("▼ Falling", falling, "dn", "drops", moves.length ? "Nobody's dropping. Good day for the feed." : building)}
     </div>
     <section class="mx-sec">
