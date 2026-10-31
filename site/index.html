@@ -712,7 +712,7 @@
         </div>
       </div>
       <nav class="foot-col" aria-label="Explore"><h4>Explore</h4>
-        <a href="#/">Home</a><a href="#/sports">Sports &amp; trending</a><a href="#/followed">Most followed</a><a href="#/followed?gender=women">Women</a><a href="#/followed?gender=men">Men</a>
+        <a href="#/">Home</a><a href="#/sports">All athletes</a><a href="#/followed">Most followed</a><a href="#/followed?gender=women">Women</a><a href="#/followed?gender=men">Men</a>
         <a href="#/sports?dir=down">Trending down</a></nav>
       <nav class="foot-col" aria-label="Company"><h4>Socialete</h4>
         <a class="soon" href="#">About</a><a class="soon" href="#">How the rankings work</a><a class="soon" href="#">Contact</a><a class="soon" href="#">Advertise &amp; partner</a><a class="soon" href="#">Media kit</a></nav>
@@ -1464,7 +1464,7 @@ function sportTiles() {
 }
 function showSportsMain(params) {
   current = null;
-  document.title = `Sports – ${SITE_NAME}`;
+  document.title = `Athletes – ${SITE_NAME}`;
   trend.gender = params.get("gender") || "All";
   if (params.get("win")) trend.win = params.get("win");
   trend.dir = params.get("dir") === "down" ? "down" : "up";
@@ -1475,7 +1475,7 @@ function showSportsMain(params) {
   const up = trend.dir === "up";
   $("main").innerHTML = `
     <section class="bd-hero">
-      <div class="kicker">Sports · every code, one feed</div>
+      <div class="kicker">Athletes · every sport, one feed</div>
       <h1>${up ? "Trending up" : "Trending down"} ${trend.win === "day" ? "today" : trend.win === "week" ? "this week" : "this month"}</h1>
       <p class="lede hub-lede">${all.n} athletes across ${sports.length} sports, ${compact(all.followers)} Instagram followers between them.</p>
       <div class="bd-modes"><a href="${L({ dir: "up" })}" class="${up ? "on" : ""}">▲ Trending up</a><a href="${L({ dir: "down" })}" class="${up ? "" : "on"}">▼ Trending down</a><a href="${boardLink("sports")}">Most followed</a></div>
@@ -1675,7 +1675,7 @@ function buildNav() {
   }).join("");
   $("nav").innerHTML = `
     <a href="#/">Home</a>
-    <details><summary>Sports</summary><div class="menu"><a href="#/sports"><b>All sports</b> <small>${sportsList().length} sports</small></a>
+    <details><summary>Athletes</summary><div class="menu"><a href="#/sports"><b>All athletes</b> <small>${DATA.players.length}</small></a>
 <hr>${sportMenu}</div></details>
     ${natMenu ? `<details><summary>National<span class="hide-m"> teams</span></summary><div class="menu">${natMenu}</div></details>` : ""}
 `;
