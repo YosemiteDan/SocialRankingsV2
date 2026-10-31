@@ -428,6 +428,7 @@
   .bd-row input { flex: 1 1 260px; max-width: 460px; font: 500 16px/1 "Barlow", sans-serif; color: var(--text); background: var(--card); border: 2px solid var(--line); padding: 12px 16px; }
   .bd-row input::placeholder { color: var(--muted); }
   .bd-row .pills { margin-left: auto; }
+  .bd-row .pills:first-child { margin-left: 0; }
   .pills a.pill { font: 700 12px/1 var(--display); letter-spacing: .12em; text-transform: uppercase; padding: 9px 14px; border: 2px solid var(--cream); border-radius: 30px; text-decoration: none; }
   .pills a.pill[aria-pressed="true"] { background: var(--cream); color: var(--bg); }
   .bd-hero-cards { margin-bottom: 34px; }
@@ -1401,7 +1402,7 @@ function showSportsHub() {
 
 /* ---------------------------------------------------------------- trending (#/trending) */
 const MILESTONES = [10000, 25000, 50000, 100000, 250000, 500000, 1000000, 2000000, 5000000, 10000000];
-const trend = { win: "day", sport: "All", gender: "All" };
+const trend = { win: "day", dir: "up", sport: "All", gender: "All" };
 function moveOf(p, win) {
   if (win === "day") {
     const newest = DATA.players.map(x => x.as_of).filter(Boolean).sort().at(-1);
@@ -1416,22 +1417,23 @@ function showTrending(params) {
   document.title = `Trending – ${SITE_NAME}`;
   trend.sport = params.get("sport") || "All"; trend.gender = params.get("gender") || "All";
   if (params.get("win")) trend.win = params.get("win");
+  trend.dir = params.get("dir") === "down" ? "down" : "up";
   const sports = sportsList();
   if (!sports.includes(trend.sport)) trend.sport = "All";
-  const L = o => { const q = new URLSearchParams(Object.entries({ win: trend.win, sport: trend.sport, gender: trend.gender, ...o }).filter(([k, v]) => v && v !== "All" && !(k === "win" && v === "day"))); return "#/trending" + (q.toString() ? "?" + q : ""); };
+  const L = o => { const q = new URLSearchParams(Object.entries({ dir: trend.dir, win: trend.win, sport: trend.sport, gender: trend.gender, ...o }).filter(([k, v]) => v && v !== "All" && !(k === "win" && v === "day") && !(k === "dir" && v === "up"))); return "#/trending" + (q.toString() ? "?" + q : ""); };
   const pool = DATA.players.filter(p => (trend.sport === "All" || p.sport === trend.sport) && (trend.gender === "All" || p.gender === trend.gender) && p.followers >= BOARD_MIN);
   const moves = pool.map(p => ({ p, m: moveOf(p, trend.win) })).filter(x => x.m && x.m.n);
-  const risingAll = moves.filter(x => x.m.pct > 0).sort((a, b) => b.m.pct - a.m.pct);
-  const hero5 = risingAll.slice(0, 5);
-  const rising = risingAll.slice(5, 15);
-  const falling = moves.filter(x => x.m.pct < 0).sort((a, b) => a.m.pct - b.m.pct).slice(0, 10);
+  const up = trend.dir === "up";
+  const ranked = up ? moves.filter(x => x.m.pct > 0).sort((a, b) => b.m.pct - a.m.pct)
+                    : moves.filter(x => x.m.pct < 0).sort((a, b) => a.m.pct - b.m.pct);
+  const hero5 = ranked.slice(0, 5);
+  const more = ranked.slice(5, 25);
   const days = Math.max(0, ...moves.map(x => x.m.days || 0));
   const winLabel = { day: "today", week: days && days < 7 ? `over the last ${days} day${days > 1 ? "s" : ""}` : "this week",
                      month: moves.some(x => !x.m.days) ? "this month" : `over the last ${days} day${days > 1 ? "s" : ""}` }[trend.win];
   const trLabel = { day: "Today", week: days && days < 7 ? `${days} day${days > 1 ? "s" : ""}` : "Week", month: moves.some(x => !x.m.days) ? "Month" : `${days} day${days > 1 ? "s" : ""}` }[trend.win];
-  const row = (x, i, cls) => listRow(x.p, i + 1 + (cls === "gr" ? 5 : 0), x.m, "c");
-  const col = (title, list, cls, mode, empty) => `<section class="tr-col"><div class="tr-h"><h2 class="${cls}">${title}</h2><a href="${boardLink(mode, { sport: trend.sport, gender: trend.gender })}">Full list →</a></div>
-      ${list.length ? listHead(trLabel, "c") + list.map((x, i) => row(x, i, cls)).join("") : `<p class="empty">${empty}</p>`}</section>`;
+  const emptyMsg = !moves.length ? (trend.win === "day" ? "Today's numbers arrive after the morning update." : "Building up: this fills in as the daily numbers come in.")
+    : up ? "Nobody's growing right now." : "Nobody's dropping. Good day for the feed.";
   // Breakouts: growing much faster than their usual pace today.
   const breakouts = pool.filter(p => p.breakout_x >= 3).sort((a, b) => b.breakout_x - a.breakout_x).slice(0, 6);
   // Milestones: crossed a round number this week.
@@ -1454,27 +1456,26 @@ function showTrending(params) {
   $("main").innerHTML = `
     <section class="bd-hero">
       <div class="kicker">Trending · who's moving right now</div>
-      <h1>${trend.win === "day" ? "Today's movers" : trend.win === "week" ? "This week's movers" : "This month's movers"}</h1>
-      <div class="bd-modes">${[["day", "Today"], ["week", "This week"], ["month", "This month"]].map(([k, l]) => `<a href="${L({ win: k })}" class="${k === trend.win ? "on" : ""}">${l}</a>`).join("")}</div>
+      <h1>${up ? "Trending up" : "Trending down"} ${trend.win === "day" ? "today" : trend.win === "week" ? "this week" : "this month"}</h1>
+      <div class="bd-modes"><a href="${L({ dir: "up" })}" class="${up ? "on" : ""}">▲ Trending up</a><a href="${L({ dir: "down" })}" class="${up ? "" : "on"}">▼ Trending down</a></div>
     </section>
     <div class="bd-controls">
       <div class="bd-chips" role="tablist" aria-label="Sport">${["All", ...sports].map(sp => `<a role="tab" aria-selected="${sp === trend.sport}" href="${L({ sport: sp })}">${sp === "All" ? "All sports" : esc(SPORT_LABEL[sp] || sp)}</a>`).join("")}</div>
-      <div class="bd-row"><span class="sechint" style="margin:0">Follower change ${winLabel} · ${compact(BOARD_MIN)}+ followers</span>
+      <div class="bd-row">
+        <div class="pills" role="group" aria-label="Time">${[["day", "Today"], ["week", "This week"], ["month", "This month"]].map(([k, l]) => `<a href="${L({ win: k })}" aria-pressed="${k === trend.win}" class="pill">${l}</a>`).join("")}</div>
         <div class="pills" role="group" aria-label="Men or women">${[["All", "Everyone"], ["women", "Women"], ["men", "Men"]].map(([g, l]) => `<a href="${L({ gender: g })}" aria-pressed="${g === trend.gender}" class="pill">${l}</a>`).join("")}</div></div>
     </div>
-    ${hero5.length ? `<section class="tr-hero"><div class="sechead"><h2>Top 5 ${trend.win === "day" ? "today" : trend.win === "week" ? "this week" : "this month"}</h2><span class="hand">the hot hand</span><span class="sechint">Biggest follower growth</span></div>
-      <div class="tcards">${hero5.map((x, i) => `
+    <p class="sechint" style="margin:0 0 26px">Follower ${up ? "growth" : "drops"} ${winLabel} · ${compact(BOARD_MIN)}+ followers</p>
+    ${hero5.length ? `<div class="tcards bd-hero-cards">${hero5.map((x, i) => `
         <a class="tcard" href="${href(x.p)}" style="--tilt:${[-2, 1.5, -1, 2, -1.5][i]}deg">
           <span class="tape"></span>
           <span class="pic">${photo(x.p)}<span class="handle">@${esc(x.p.instagram || "")}</span><span class="big-n">${i + 1}</span></span>
           <span class="nm">${esc(x.p.name)}${x.p.verified ? TICK : ""}</span>
           <span class="tm">${teamLine(x.p)}</span>
           ${cardStats(x.p, x.m, trLabel, "c")}
-        </a>`).join("")}</div></section>` : ""}
-    <div class="tr-cols">
-      ${col(hero5.length ? "▲ Also rising" : "▲ Rising", rising, "gr", "growth", hero5.length ? "That's everyone rising right now." : trend.win === "day" ? "Today's numbers arrive after the morning update." : building)}
-      ${col("▼ Falling", falling, "dn", "drops", moves.length ? "Nobody's dropping. Good day for the feed." : building)}
-    </div>
+        </a>`).join("")}</div>` : `<p class="empty">${emptyMsg}</p>`}
+    ${more.length ? `<div class="bd-list">${[0, 1].map(c => `<div>${listHead(trLabel, "c")}${more.filter((_, i) => i % 2 === c).map(x => listRow(x.p, ranked.indexOf(x) + 1, x.m, "c")).join("")}</div>`).join("")}</div>
+      <div class="more"><a class="btn" href="${boardLink(up ? "growth" : "drops", { sport: trend.sport, gender: trend.gender })}">Full ${up ? "trending up" : "trending down"} list →</a></div>` : ""}
     <section class="mx-sec">
       <div class="sechead"><h2>Breakouts</h2><span class="hand">way above their usual pace</span><span class="sechint">Today vs their typical day</span></div>
       ${breakouts.length ? `<div class="tr-break">${breakouts.map(p => `<a class="tr-bk" href="${href(p)}">${sq(p)}<span class="who"><b>${esc(p.name)}</b><small>${teamLine(p)}</small></span>
