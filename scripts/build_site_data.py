@@ -208,6 +208,21 @@ def main():
             if prev_f and followers is not None and 0 < gap <= 3:
                 p["change_1d"] = followers - prev_f
                 p["change_1d_pct"] = round(100 * (followers - prev_f) / prev_f, 3)
+            # First day we have numbers for them (for "New on Socialete").
+            p["tracked_since"] = rows[0]["date"]
+            # Breakouts: today's growth compared with their usual daily growth
+            # (median of up to 14 earlier days; needs at least 4 days to compare).
+            daily = []
+            for prev_r, cur_r in zip(rows[:-1], rows[1:]):
+                a_f, b_f = num(prev_r["followers"]), num(cur_r["followers"])
+                gap_d = (date.fromisoformat(cur_r["date"]) - date.fromisoformat(prev_r["date"])).days
+                if a_f and b_f is not None and gap_d > 0:
+                    daily.append(100 * (b_f - a_f) / a_f / gap_d)
+            earlier = sorted(daily[:-1][-14:])
+            if len(earlier) >= 4 and p.get("change_1d_pct") and p["change_1d_pct"] > 0:
+                typical = earlier[len(earlier) // 2]
+                p["typical_daily_pct"] = round(typical, 3)
+                p["breakout_x"] = round(p["change_1d_pct"] / max(typical, 0.02), 1)
             # "This week" growth for the home page. Until there's a week of history,
             # use growth since tracking began, and say how many days that covers.
             week_ago = (last_day - timedelta(days=7)).isoformat()

@@ -438,6 +438,36 @@
   .tcard b.gr { color: #1F8A4C !important; } .tcard b.dn { color: #C2364F !important; }
   @media (max-width: 860px) { .bd-list { grid-template-columns: 1fr; } .bd-controls { position: static; } }
   @media (max-width: 520px) { .hide-s { display: none; } }
+  .hub-lede { margin: 0 0 18px; max-width: 64ch; color: #C3C9E3; font: 400 18px/1.5 var(--serif); }
+  .sp-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 16px; padding-top: 8px; }
+  .sp-tile { display: flex; flex-direction: column; gap: 14px; background: var(--card); border: 2px solid var(--line); padding: 20px; text-decoration: none; transition: border-color .15s, transform .15s; }
+  .sp-tile:hover { border-color: var(--accent); transform: translateY(-3px); }
+  .sp-top { display: flex; justify-content: space-between; align-items: baseline; }
+  .sp-top h3 { margin: 0; font: 700 34px/1 var(--serif); letter-spacing: -.02em; }
+  .sp-top span { font: 700 20px/1 var(--display); }
+  .sp-faces { display: flex; align-items: center; gap: 6px; }
+  .sp-faces .sq { width: 44px; height: 44px; }
+  .sp-faces .sq { flex: none; }
+  .sp-names { margin-left: 8px; min-width: 0; font: 700 11px/1.35 var(--display); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  .sp-stats { display: flex; gap: 22px; border-top: 1px dashed var(--line); padding-top: 12px; }
+  .sp-stats b { display: block; font: 700 26px/1 var(--display); }
+  .sp-stats small { font: 700 11px/1 var(--display); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+  .sp-leagues { font: 600 13px/1.4 var(--display); letter-spacing: .06em; color: #C3C9E3; }
+  .sp-go { margin-top: auto; font: 700 12px/1 var(--display); letter-spacing: .14em; text-transform: uppercase; color: var(--accent); }
+  .sp-sum { margin: 0 0 18px; align-items: center; }
+  .sp-back { margin-left: 8px; font: 700 12px/1 var(--display); letter-spacing: .12em; text-transform: uppercase; color: var(--accent); text-decoration: none; }
+  .tr-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+  .tr-h { display: flex; justify-content: space-between; align-items: baseline; border-bottom: 2px solid var(--cream); padding-bottom: 10px; margin-bottom: 6px; }
+  .tr-h h2 { margin: 0; font: 700 34px/1 var(--serif); }
+  .tr-h h2.gr { color: var(--up); } .tr-h h2.dn { color: var(--down); }
+  .tr-h a { font: 700 12px/1 var(--display); letter-spacing: .12em; text-transform: uppercase; color: var(--accent); text-decoration: none; }
+  .tr-break { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 12px; }
+  .tr-bk { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 4px 12px; align-items: center; background: var(--card); border: 2px solid var(--accent); padding: 12px 14px; text-decoration: none; }
+  .tr-bk .who b { display: block; font: 700 18px/1.15 var(--serif); } .tr-bk .who small { font: 700 10px/1.3 var(--display); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+  .tr-bk .x { font: 700 30px/1 var(--display); color: var(--accent); text-align: right; } .tr-bk .x small { display: block; font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+  .tr-bk .d { grid-column: 1 / -1; font: 600 12px/1.3 var(--display); letter-spacing: .06em; color: var(--muted); }
+  .tr-new { display: grid; grid-template-columns: repeat(auto-fill, minmax(86px, 1fr)); gap: 14px; }
+  @media (max-width: 860px) { .tr-cols { grid-template-columns: 1fr; } }
   .ring.sm img, .ring.sm .ph { width: 42px; height: 42px; border-width: 2px; font-size: 14px; }
   .stories { padding: 20px 0 4px; }
   .disc-head { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
@@ -454,7 +484,8 @@
   .story { min-width: 86px; flex: none; text-align: center; text-decoration: none; }
   .story .ring:hover { transform: scale(1.05); }
   .story b { display: block; font: 700 12px/1.2 var(--display); letter-spacing: .06em; text-transform: uppercase; margin-top: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .story small { display: block; font: 700 11px/1.3 var(--display); letter-spacing: .06em; color: var(--muted); white-space: nowrap; }
+  .story small { display: block; font: 700 11px/1.3 var(--display); letter-spacing: .06em; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+  .story { min-width: 0; }
 
   /* hero */
   .mx-hero { display: grid; grid-template-columns: minmax(0, 1fr) 400px; gap: 36px; padding: 30px 0 44px; align-items: center; }
@@ -594,7 +625,7 @@
       </div>
       <nav class="foot-col" aria-label="Explore"><h4>Explore</h4>
         <a href="#/">Home</a><a href="#/sports">All sports</a><a href="#/followed">Most followed</a><a href="#/followed?gender=women">Women</a><a href="#/followed?gender=men">Men</a>
-        <a href="#/growth">Trending up</a><a href="#/drops">Trending down</a></nav>
+        <a href="#/trending">Trending</a></nav>
       <nav class="foot-col" aria-label="Company"><h4>Socialete</h4>
         <a class="soon" href="#">About</a><a class="soon" href="#">How the rankings work</a><a class="soon" href="#">Contact</a><a class="soon" href="#">Advertise &amp; partner</a><a class="soon" href="#">Media kit</a></nav>
       <nav class="foot-col" aria-label="Athletes"><h4>Athletes</h4>
@@ -1200,6 +1231,8 @@ function showBoard(mode, params) {
     <section class="bd-hero">
       <div class="kicker">${B.kicker}</div>
       <h1>${B.title(board.sport)}</h1>
+      ${board.sport !== "All" ? (() => { const st = groupStats(DATA.players.filter(p => p.sport === board.sport && (board.league === "All" || inLeague(p, board.league))));
+        return `<div class="stats sp-sum"><div><small>Athletes</small><b>${st.n}</b></div><div><small>Combined followers</small><b>${compact(st.followers)}</b></div>${st.pct != null ? `<div><small>${st.days && st.days < 7 ? `Last ${st.days} day${st.days > 1 ? "s" : ""}` : "This week"}</small><b class="${st.pct >= 0 ? "up" : "down"}">${signed(st.pct)}%</b></div>` : ""}<a class="sp-back" href="#/sports">← All sports</a></div>`; })() : ""}
       <div class="bd-modes">${Object.entries(BOARDS).map(([k, v]) => `<a href="${boardLink(k, { sport: board.sport, gender: board.gender })}" class="${k === mode ? "on" : ""}">${{ sports: "Most followed", growth: "Trending up", drops: "Trending down" }[k]}</a>`).join("")}</div>
     </section>
     <div class="bd-controls">
@@ -1267,15 +1300,143 @@ function renderBoard() {
   $("bdMore")?.addEventListener("click", () => { board.shown += BOARD_PAGE; renderBoard(); });
 }
 
+/* ---------------------------------------------------------------- sports hub (#/sports) */
+// Combined numbers for a group of athletes: followers now, and growth this week.
+function groupStats(list) {
+  const withF = list.filter(p => p.followers != null);
+  let now = 0, before = 0, days = 0;
+  for (const p of withF) {
+    const g = weekGrowth(p);
+    now += p.followers; before += p.followers - (g && g.n ? g.n : 0);
+    if (g) days = Math.max(days, g.days || 0);
+  }
+  return { n: list.length, tracked: withF.length, followers: now,
+           pct: before > 0 && now !== before ? 100 * (now - before) / before : null, days,
+           top: withF.slice().sort((a, b) => b.followers - a.followers).slice(0, 3) };
+}
+function showSportsHub() {
+  current = null;
+  document.title = `Sports – ${SITE_NAME}`;
+  const sports = sportsList();
+  const all = groupStats(DATA.players);
+  const tiles = sports.map(sp => {
+    const list = DATA.players.filter(p => p.sport === sp), st = groupStats(list);
+    const leagues = [...new Set(list.flatMap(clubLeagues))], nats = [...new Set(list.flatMap(nationalTeams))];
+    return `<a class="sp-tile" href="${boardLink("growth", { sport: sp })}">
+      <div class="sp-top"><h3>${esc(SPORT_LABEL[sp] || sp)}</h3>${st.pct != null ? `<span class="${st.pct >= 0 ? "up" : "down"}">${signed(st.pct)}%</span>` : ""}</div>
+      <div class="sp-faces">${st.top.map(p => `<span class="sq">${photo(p)}</span>`).join("")}<span class="sp-names">${st.top.map(p => esc(surname(p.name))).join("<br>")}</span></div>
+      <div class="sp-stats"><div><b>${st.n}</b><small>athletes</small></div><div><b>${compact(st.followers)}</b><small>followers</small></div></div>
+      <div class="sp-leagues">${[...leagues, ...nats.map(groupName)].map(esc).join(" · ") || "&nbsp;"}</div>
+      <span class="sp-go">Explore ${esc((SPORT_LABEL[sp] || sp).toLowerCase())} →</span>
+    </a>`;
+  }).join("");
+  $("main").innerHTML = `
+    <section class="bd-hero">
+      <div class="kicker">Sports · every code, side by side</div>
+      <h1>Pick your sport</h1>
+      <p class="lede hub-lede">${all.n} athletes across ${sports.length} sports with ${compact(all.followers)} Instagram followers between them${all.pct != null && Math.abs(all.pct) >= 0.005 ? `, <span class="${all.pct >= 0 ? "up" : "down"}">${signed(all.pct)}%</span> ${all.days && all.days < 7 ? `over the last ${all.days} day${all.days > 1 ? "s" : ""}` : "this week"}` : ""}. Growth is the combined change in their players' followers.</p>
+      <div class="bd-modes"><a href="${boardLink("growth")}">All sports: trending up</a><a href="${boardLink("sports")}">All sports: most followed</a></div>
+    </section>
+    <div class="sp-grid">${tiles}</div>`;
+  window.scrollTo(0, 0);
+}
+
+/* ---------------------------------------------------------------- trending (#/trending) */
+const MILESTONES = [10000, 25000, 50000, 100000, 250000, 500000, 1000000, 2000000, 5000000, 10000000];
+const trend = { win: "day", sport: "All", gender: "All" };
+function moveOf(p, win) {
+  if (win === "day") {
+    const newest = DATA.players.map(x => x.as_of).filter(Boolean).sort().at(-1);
+    return p.change_1d_pct != null && p.as_of === newest ? { pct: p.change_1d_pct, n: p.change_1d } : null;
+  }
+  if (win === "month" && p.change_30d_pct != null) return { pct: p.change_30d_pct, n: p.change_30d };
+  const g = weekGrowth(p);
+  return g ? { pct: g.pct, n: g.n, days: g.days } : null;
+}
+function showTrending(params) {
+  current = null;
+  document.title = `Trending – ${SITE_NAME}`;
+  trend.sport = params.get("sport") || "All"; trend.gender = params.get("gender") || "All";
+  if (params.get("win")) trend.win = params.get("win");
+  const sports = sportsList();
+  if (!sports.includes(trend.sport)) trend.sport = "All";
+  const L = o => { const q = new URLSearchParams(Object.entries({ win: trend.win, sport: trend.sport, gender: trend.gender, ...o }).filter(([k, v]) => v && v !== "All" && !(k === "win" && v === "day"))); return "#/trending" + (q.toString() ? "?" + q : ""); };
+  const pool = DATA.players.filter(p => (trend.sport === "All" || p.sport === trend.sport) && (trend.gender === "All" || p.gender === trend.gender) && p.followers >= BOARD_MIN);
+  const moves = pool.map(p => ({ p, m: moveOf(p, trend.win) })).filter(x => x.m && x.m.n);
+  const rising = moves.filter(x => x.m.pct > 0).sort((a, b) => b.m.pct - a.m.pct).slice(0, 10);
+  const falling = moves.filter(x => x.m.pct < 0).sort((a, b) => a.m.pct - b.m.pct).slice(0, 10);
+  const days = Math.max(0, ...moves.map(x => x.m.days || 0));
+  const winLabel = { day: "today", week: days && days < 7 ? `over the last ${days} day${days > 1 ? "s" : ""}` : "this week",
+                     month: moves.some(x => !x.m.days) ? "this month" : `over the last ${days} day${days > 1 ? "s" : ""}` }[trend.win];
+  const row = (x, i, cls) => `<a class="lrow" href="${href(x.p)}"><span class="n">${i + 1}</span>${sq(x.p)}
+      <span class="who"><b>${esc(x.p.name)}</b><small>${teamLine(x.p)}</small></span>
+      <span class="val"><b class="${cls}">${signed(x.m.pct)}%</b><small>${compact(x.p.followers)} · <span class="${x.m.n >= 0 ? "up" : "down"}">${exactSigned(x.m.n)}</span>${engTxt(x.p) ? ` · <span class="engv">${engTxt(x.p)}</span>` : ""}</small></span></a>`;
+  const col = (title, list, cls, mode, empty) => `<section class="tr-col"><div class="tr-h"><h2 class="${cls}">${title}</h2><a href="${boardLink(mode, { sport: trend.sport, gender: trend.gender })}">Full list →</a></div>
+      ${list.length ? list.map((x, i) => row(x, i, cls)).join("") : `<p class="empty">${empty}</p>`}</section>`;
+  // Breakouts: growing much faster than their usual pace today.
+  const breakouts = pool.filter(p => p.breakout_x >= 3).sort((a, b) => b.breakout_x - a.breakout_x).slice(0, 6);
+  // Milestones: crossed a round number this week.
+  const miles = [];
+  for (const p of DATA.players.filter(p => (trend.sport === "All" || p.sport === trend.sport) && (trend.gender === "All" || p.gender === trend.gender) && p.followers != null)) {
+    const g = weekGrowth(p); if (!g || !g.n) continue;
+    const before = p.followers - g.n;
+    const hit = MILESTONES.filter(t => before < t && p.followers >= t).at(-1);
+    if (hit) miles.push({ p, t: hit });
+  }
+  miles.sort((a, b) => b.t - a.t || b.p.followers - a.p.followers);
+  // New on Socialete: first tracked in the last 14 days (not the launch batch).
+  const first = DATA.players.map(p => p.tracked_since).filter(Boolean).sort()[0];
+  const newest = DATA.players.map(p => p.as_of).filter(Boolean).sort().at(-1);
+  const cutoff = newest ? new Date(new Date(newest + "T12:00:00") - 14 * 864e5).toISOString().slice(0, 10) : "";
+  const fresh = DATA.players.filter(p => p.tracked_since && p.tracked_since > first && p.tracked_since >= cutoff &&
+    (trend.sport === "All" || p.sport === trend.sport) && (trend.gender === "All" || p.gender === trend.gender))
+    .sort((a, b) => b.followers - a.followers).slice(0, 12);
+  const building = "Building up: this fills in as the daily numbers come in.";
+  $("main").innerHTML = `
+    <section class="bd-hero">
+      <div class="kicker">Trending · who's moving right now</div>
+      <h1>${trend.win === "day" ? "Today's movers" : trend.win === "week" ? "This week's movers" : "This month's movers"}</h1>
+      <div class="bd-modes">${[["day", "Today"], ["week", "This week"], ["month", "This month"]].map(([k, l]) => `<a href="${L({ win: k })}" class="${k === trend.win ? "on" : ""}">${l}</a>`).join("")}</div>
+    </section>
+    <div class="bd-controls">
+      <div class="bd-chips" role="tablist" aria-label="Sport">${["All", ...sports].map(sp => `<a role="tab" aria-selected="${sp === trend.sport}" href="${L({ sport: sp })}">${sp === "All" ? "All sports" : esc(SPORT_LABEL[sp] || sp)}</a>`).join("")}</div>
+      <div class="bd-row"><span class="sechint" style="margin:0">Follower change ${winLabel} · ${compact(BOARD_MIN)}+ followers</span>
+        <div class="pills" role="group" aria-label="Men or women">${[["All", "Everyone"], ["women", "Women"], ["men", "Men"]].map(([g, l]) => `<a href="${L({ gender: g })}" aria-pressed="${g === trend.gender}" class="pill">${l}</a>`).join("")}</div></div>
+    </div>
+    <div class="tr-cols">
+      ${col("▲ Rising", rising, "gr", "growth", trend.win === "day" ? "Today's numbers arrive after the morning update." : building)}
+      ${col("▼ Falling", falling, "dn", "drops", moves.length ? "Nobody's dropping. Good day for the feed." : building)}
+    </div>
+    <section class="mx-sec">
+      <div class="sechead"><h2>Breakouts</h2><span class="hand">way above their usual pace</span><span class="sechint">Today vs their typical day</span></div>
+      ${breakouts.length ? `<div class="tr-break">${breakouts.map(p => `<a class="tr-bk" href="${href(p)}">${sq(p)}<span class="who"><b>${esc(p.name)}</b><small>${teamLine(p)}</small></span>
+          <span class="x">${p.breakout_x}×<small>usual pace</small></span><span class="d">+${p.change_1d_pct.toFixed(2)}% today · usually +${p.typical_daily_pct.toFixed(2)}%</span></a>`).join("")}</div>`
+        : `<p class="empty">Breakouts need about a week of daily numbers to know each athlete's usual pace. They'll start appearing soon.</p>`}
+    </section>
+    <section class="mx-lower" style="padding-top:44px">
+      <div><div class="sechead"><h2>Milestones</h2><span class="hand">round numbers</span><span class="sechint">Crossed this week</span></div>
+        ${miles.length ? `<div class="stubs">${miles.slice(0, 8).map(x => `<a class="stub" href="${href(x.p)}"><span class="n">★</span>${sq(x.p)}
+          <span class="who"><b>${esc(x.p.name)}</b><small>${teamLine(x.p)}</small></span><span class="pct">${compact(x.t)}<small>now ${exact(x.p.followers)}</small></span></a>`).join("")}</div>`
+          : `<p class="empty">No one has crossed 10K, 25K, 50K, 100K, 250K, 500K or 1M this week yet.</p>`}</div>
+      <div><div class="sechead"><h2>New on ${esc(SITE_NAME)}</h2><span class="sechint">Added recently</span></div>
+        ${fresh.length ? `<div class="tr-new">${fresh.map(p => `<a class="story" href="${href(p)}">${ring(p)}<b>${esc(surname(p.name))}</b><small>${esc(clubLeagues(p)[0] || (SPORT_LABEL[p.sport] || p.sport))}${p.followers != null ? " · " + compact(p.followers) : ""}</small></a>`).join("")}</div>`
+          : `<p class="empty">Newly added athletes show here for their first two weeks.</p>`}</div>
+    </section>`;
+  window.scrollTo(0, 0);
+}
+
 /* ---------------------------------------------------------------- routing */
 function route() {
   document.querySelectorAll(".nav details[open]").forEach(d => d.removeAttribute("open"));
   const h = location.hash;
   const m = h.match(/^#\/p\/(.+)$/);
   if (m) return showProfile(decodeURIComponent(m[1]));
+  const tm = h.match(/^#\/trending(?:\?(.*))?$/);
+  if (tm) return showTrending(new URLSearchParams(tm[1] || ""));
   const bm = h.match(/^#\/(sports|growth|drops|followed|rankings)(?:\?(.*))?$/);
   if (bm) {
     const q = new URLSearchParams(bm[2] || "");
+    if (bm[1] === "sports" && !q.get("sport")) return showSportsHub();
     // The Sports page opens on Trending up; most followed is #/followed.
     const mode = { sports: "growth", growth: "growth", drops: "drops", followed: "sports",
                    rankings: q.get("view") === "growth7" ? "growth" : "sports" }[bm[1]];
@@ -1314,12 +1475,10 @@ function buildNav() {
   }).join("");
   $("nav").innerHTML = `
     <a href="#/">Home</a>
-    <details><summary>Sports</summary><div class="menu"><a href="#/sports"><b>All sports</b> <small>${DATA.players.length}</small></a>
+    <details><summary>Sports</summary><div class="menu"><a href="#/sports"><b>All sports</b> <small>${sportsList().length} sports</small></a>
       <a href="#/sports?gender=women">Women <small>${count(p => p.gender === "women")}</small></a><a href="#/sports?gender=men">Men <small>${count(p => p.gender === "men")}</small></a><hr>${sportMenu}</div></details>
     ${natMenu ? `<details><summary>National<span class="hide-m"> teams</span></summary><div class="menu">${natMenu}</div></details>` : ""}
-    <details><summary>Trending</summary><div class="menu">
-      <a href="#/growth">▲ Up <small>fastest growing</small></a>
-      <a href="#/drops">▼ Down <small>biggest drops</small></a></div></details>`;
+    <a href="#/trending">Trending</a>`;
   // Only one menu open at a time; clicking elsewhere closes them.
   $("nav").querySelectorAll("details").forEach(d => d.addEventListener("toggle", () => {
     if (d.open) $("nav").querySelectorAll("details").forEach(o => o !== d && o.removeAttribute("open"));
@@ -1479,7 +1638,7 @@ function showHome() {
           <span class="who"><b>${esc(x.p.name)}</b><small>${teamLine(x.p)}</small></span>
           <span class="pct">+${x.g.pct.toFixed(1)}%<small>${compact(x.p.followers)} followers</small></span></a>`).join("")}</div>`
           : `<p class="empty">Growth rankings start once there are two days of numbers. Check back tomorrow.</p>`}
-        <a class="all" href="#/growth">See who's growing fastest →</a>
+        <a class="all" href="#/trending">See who's trending →</a>
       </div>
       <div><section class="board" id="widget"></section><div class="hand board-note">chalked up every morning ✎</div></div>
     </section>`;
