@@ -594,7 +594,7 @@
       </div>
       <nav class="foot-col" aria-label="Explore"><h4>Explore</h4>
         <a href="#/">Home</a><a href="#/sports">All sports</a><a href="#/sports?gender=women">Women</a><a href="#/sports?gender=men">Men</a>
-        <a href="#/growth">Fastest growing</a><a href="#/drops">Biggest drops</a></nav>
+        <a href="#/growth">Trending up</a><a href="#/drops">Trending down</a></nav>
       <nav class="foot-col" aria-label="Company"><h4>Socialete</h4>
         <a class="soon" href="#">About</a><a class="soon" href="#">How the rankings work</a><a class="soon" href="#">Contact</a><a class="soon" href="#">Advertise &amp; partner</a><a class="soon" href="#">Media kit</a></nav>
       <nav class="foot-col" aria-label="Athletes"><h4>Athletes</h4>
@@ -1162,12 +1162,12 @@ const BOARDS = {
             title: s => s === "All" ? "Australia's most followed athletes" : `${esc(SPORT_LABEL[s] || s)}'s most followed`,
             hint: "Ranked by Instagram followers today",
             rank: list => list.filter(p => p.followers != null).sort((a, b) => b.followers - a.followers) },
-  growth: { path: "#/growth", nav: "Growth", kicker: "On the rise · fastest growing profiles",
+  growth: { path: "#/growth", nav: "Trending up", kicker: "Changes · trending up",
             title: s => s === "All" ? "Who's growing fastest" : `${esc(SPORT_LABEL[s] || s)}'s fastest growing`,
             hint: d => `Follower growth ${d && d < 7 ? `over the last ${d} day${d > 1 ? "s" : ""}` : "this week"} · ${compact(BOARD_MIN)}+ followers`,
             rank: list => list.filter(p => p.followers >= BOARD_MIN && (weekGrowth(p) || {}).pct > 0)
               .sort((a, b) => weekGrowth(b).pct - weekGrowth(a).pct) },
-  drops:  { path: "#/drops", nav: "Drops", kicker: "Cooling off · biggest drops",
+  drops:  { path: "#/drops", nav: "Trending down", kicker: "Changes · trending down",
             title: s => s === "All" ? "Who's losing followers" : `${esc(SPORT_LABEL[s] || s)}'s biggest drops`,
             hint: d => `Follower change ${d && d < 7 ? `over the last ${d} day${d > 1 ? "s" : ""}` : "this week"} · ${compact(BOARD_MIN)}+ followers`,
             rank: list => list.filter(p => p.followers >= BOARD_MIN && (weekGrowth(p) || {}).pct < 0)
@@ -1200,7 +1200,7 @@ function showBoard(mode, params) {
     <section class="bd-hero">
       <div class="kicker">${B.kicker}</div>
       <h1>${B.title(board.sport)}</h1>
-      <div class="bd-modes">${Object.entries(BOARDS).map(([k, v]) => `<a href="${boardLink(k, { sport: board.sport, gender: board.gender })}" class="${k === mode ? "on" : ""}">${{ sports: "Most followed", growth: "Fastest growing", drops: "Biggest drops" }[k]}</a>`).join("")}</div>
+      <div class="bd-modes">${Object.entries(BOARDS).map(([k, v]) => `<a href="${boardLink(k, { sport: board.sport, gender: board.gender })}" class="${k === mode ? "on" : ""}">${{ sports: "Most followed", growth: "Trending up", drops: "Trending down" }[k]}</a>`).join("")}</div>
     </section>
     <div class="bd-controls">
       <div class="bd-chips" role="tablist" aria-label="Sport">${["All", ...sports].map(sp => `<a role="tab" aria-selected="${sp === board.sport}" href="${L({ sport: sp, league: "All" })}">${sp === "All" ? "All sports" : esc(SPORT_LABEL[sp] || sp)}<small>${cnt(sp)}</small></a>`).join("")}</div>
@@ -1315,7 +1315,9 @@ function buildNav() {
     <details><summary>Sports</summary><div class="menu"><a href="#/sports"><b>All sports</b> <small>${DATA.players.length}</small></a>
       <a href="#/sports?gender=women">Women <small>${count(p => p.gender === "women")}</small></a><a href="#/sports?gender=men">Men <small>${count(p => p.gender === "men")}</small></a><hr>${sportMenu}</div></details>
     ${natMenu ? `<details><summary>National<span class="hide-m"> teams</span></summary><div class="menu">${natMenu}</div></details>` : ""}
-    <a href="#/growth">Growth</a><a href="#/drops" class="hide-s">Drops</a>`;
+    <details><summary>Changes</summary><div class="menu">
+      <a href="#/growth">▲ Trending up <small>fastest growing</small></a>
+      <a href="#/drops">▼ Trending down <small>biggest drops</small></a></div></details>`;
   // Only one menu open at a time; clicking elsewhere closes them.
   $("nav").querySelectorAll("details").forEach(d => d.addEventListener("toggle", () => {
     if (d.open) $("nav").querySelectorAll("details").forEach(o => o !== d && o.removeAttribute("open"));
