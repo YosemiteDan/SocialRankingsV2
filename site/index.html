@@ -469,6 +469,40 @@
   .tr-bk .d { grid-column: 1 / -1; font: 600 12px/1.3 var(--display); letter-spacing: .06em; color: var(--muted); }
   .tr-new { display: grid; grid-template-columns: repeat(auto-fill, minmax(86px, 1fr)); gap: 14px; }
   @media (max-width: 860px) { .tr-cols { grid-template-columns: 1fr; } }
+  .tcard { container-type: inline-size; }
+  .cstats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px dashed #C9C4B8; margin-top: 8px; padding-top: 7px; }
+  .cs { min-width: 0; padding-right: 3px; }
+  .cs + .cs { border-left: 1px solid #E2DDD2; padding-left: 5px; }
+  .cs small { display: block; font: 700 8px/1 var(--display); letter-spacing: .06em; text-transform: uppercase; color: #8A867E; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .cs b { display: block; font: 700 15px/1.1 var(--display); color: var(--ink); margin-top: 4px; white-space: nowrap; }
+  .cs.key b { font-size: 19px; }
+  @container (max-width: 215px) {
+    .cstats { grid-template-columns: 1fr 1fr; row-gap: 6px; }
+    .cs.key { grid-column: 1 / -1; order: -1; }
+    .cs + .cs { border-left: 0; padding-left: 0; }
+    .cs.key ~ .cs:last-child, .cs:not(.key) + .cs:not(.key) { border-left: 1px solid #E2DDD2; padding-left: 5px; }
+  }
+  @container (min-width: 240px) { .cs small { font-size: 9px; letter-spacing: .1em; } .cs b { font-size: 16px; } .cs.key b { font-size: 22px; } }
+  .cs em { display: block; font: 600 10px/1.2 var(--display); font-style: normal; color: #8A867E; margin-top: 1px; white-space: nowrap; }
+  .cs b.gr { color: #1F8A4C; } .cs b.dn { color: #C2364F; } .cs b.ev { color: #D85F00; }
+  .tp-rest, .mf-col, .tr-col, .bd-list > div { container-type: inline-size; min-width: 0; }
+  .lhead, .lrow.lr { display: grid; grid-template-columns: 26px 46px minmax(0, 1fr) 64px 66px 50px; gap: 0 10px; align-items: center; }
+  .lhead { padding: 0 0 6px; border-bottom: 1px solid var(--line); font: 700 10px/1 var(--display); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+  .lhead .ath { grid-column: span 2; }
+  .lhead span:nth-child(n+3) { text-align: right; } .lhead .key { color: var(--text); }
+  .lhead span[title] { cursor: help; }
+  .lr .c-f, .lr .c-c, .lr .c-e { text-align: right; font: 600 15px/1.1 var(--display); color: #C3C9E3; white-space: nowrap; }
+  .lr .key { font: 700 18px/1.1 var(--display); color: var(--text); }
+  .lr .c-c small { display: block; font: 600 11px/1.2 var(--display); color: var(--muted); }
+  .lr .gr, .mob .gr { color: var(--up); } .lr .dn, .mob .dn { color: var(--down); } .lr .key.gr { color: var(--up); } .lr .key.dn { color: var(--down); }
+  .ev { color: var(--accent) !important; }
+  .lr .mob { display: none; }
+  @container (max-width: 520px) {
+    .lhead, .lrow.lr { grid-template-columns: 24px 42px minmax(0, 1fr) 70px; }
+    .lhead span:nth-child(3):not(.key), .lhead span:nth-child(4):not(.key), .lhead span:nth-child(5),
+    .lr .c-f:not(.key), .lr .c-c:not(.key), .lr .c-e { display: none; }
+    .lr .mob { display: block; font: 600 11px/1.3 var(--display); font-style: normal; color: var(--muted); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  }
   .ring.sm img, .ring.sm .ph { width: 42px; height: 42px; border-width: 2px; font-size: 14px; }
   .stories { padding: 20px 0 4px; }
   .disc-head { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
@@ -1281,26 +1315,49 @@ function renderBoard() {
   const hero = q ? [] : rows.slice(0, 5);
   const rest = q ? rows : rows.slice(5);
   const tilt = [-2, 1.5, -1, 2, -1.5];
+  const bdChLabel = days && days < 7 ? `${days} day${days > 1 ? "s" : ""}` : "Week";
   const cards = hero.map((p, i) => `
     <a class="tcard" href="${href(p)}" style="--tilt:${tilt[i]}deg">
       <span class="tape"></span>
       <span class="pic">${photo(p)}<span class="handle">@${esc(p.instagram || "")}</span><span class="big-n">${p._brank}</span></span>
       <span class="nm">${esc(p.name)}${p.verified ? TICK : ""}</span>
       <span class="tm">${teamLine(p)}</span>
-      <span class="foot">${board.mode === "sports" ? `<b>${compact(p.followers)}</b>` : `<b class="${board.mode === "growth" ? "gr" : "dn"}">${signed(weekGrowth(p).pct)}%</b>`}
-        <span>${board.mode === "sports" ? (weekGrowth(p) && weekGrowth(p).n ? `<span class="${weekGrowth(p).pct >= 0 ? "gr" : "dn"}">${growthTxt(weekGrowth(p))}</span>` : "") : compact(p.followers)}${engTxt(p) ? `<br><span class="engv">${engTxt(p)}</span>` : ""}</span></span>
+      ${cardStats(p, weekGrowth(p), bdChLabel, board.mode === "sports" ? "f" : "c")}
     </a>`).join("");
   const page = rest.slice(0, board.shown);
   $("bdBody").innerHTML = `
     <p class="sechint" style="margin:6px 0 ${hero.length ? 30 : 16}px">${esc(hint)}${q ? ` · ${rows.length} match${rows.length > 1 ? "es" : ""}` : ` · ${ranked.length} athletes`}</p>
     ${hero.length ? `<div class="tcards bd-hero-cards">${cards}</div>` : ""}
-    ${page.length ? `<div class="bd-list">${page.map(p => `<a class="lrow" href="${href(p)}"><span class="n">${p._brank}</span>${sq(p)}
-        <span class="who"><b>${esc(p.name)}</b><small>${teamLine(p)}</small></span>
-        <span class="val">${value(p)}<small>${sub(p)}</small></span></a>`).join("")}</div>` : ""}
+    ${page.length ? `<div class="bd-list">${[0, 1].map(c => `<div>${listHead(bdChLabel, board.mode === "sports" ? "f" : "c")}${page.filter((_, i) => i % 2 === c).map(p => listRow(p, p._brank, weekGrowth(p), board.mode === "sports" ? "f" : "c")).join("")}</div>`).join("")}</div>` : ""}
     ${rest.length > board.shown ? `<div class="more"><button class="btn" id="bdMore">Show more (${rest.length - board.shown} to go)</button></div>` : ""}`;
   $("bdMore")?.addEventListener("click", () => { board.shown += BOARD_PAGE; renderBoard(); });
 }
 
+
+/* ---------------------------------------------------------------- stat display (one system everywhere)
+   Followers in cream/ink, change in green/red, engagement in orange.
+   Cards: three labelled boxes (Followers · Change · Eng), the one the list is ranked by emphasised.
+   Lists: aligned columns under a header; on phones the non-ranked stats move under the name. */
+const ENG_INFO = "Engagement: Socialete's score from likes and comments on their last 10 posts";
+function pct1(x) { if (x == null) return "–"; const a = Math.abs(x); return (x >= 0 ? "+" : "−") + (a > 0 && a < 0.1 ? a.toFixed(2) : a.toFixed(1)) + "%"; }
+const engVal = p => p.engagement_rate != null ? p.engagement_rate.toFixed(1) + "%" : "–";
+const chCls = ch => !ch || ch.pct == null ? "" : ch.pct >= 0 ? "gr" : "dn";
+function cardStats(p, ch, chLabel, key) {
+  const box = (k, label, val, sub, cls) => `<span class="cs${k === key ? " key" : ""}"><small>${label}</small><b class="${cls || ""}">${val}</b>${sub ? `<em>${sub}</em>` : ""}</span>`;
+  return `<span class="cstats">${box("f", "Followers", compact(p.followers))}${box("c", chLabel, ch && ch.n ? pct1(ch.pct) : "–", ch && ch.n ? exactSigned(ch.n) : "", chCls(ch))}${box("e", "Eng", engVal(p), "", "ev")}</span>`;
+}
+function listHead(chLabel, key) {
+  return `<div class="lhead"><span></span><span class="ath">Athlete</span><span class="${key === "f" ? "key" : ""}">Followers</span><span class="${key === "c" ? "key" : ""}">${chLabel}</span><span title="${ENG_INFO}">Eng ⓘ</span></div>`;
+}
+function listRow(p, rank, ch, key) {
+  const mob = [key !== "f" ? `${compact(p.followers)} followers` : "", key !== "c" && ch && ch.n ? `<span class="${chCls(ch)}">${pct1(ch.pct)}</span>` : "",
+    p.engagement_rate != null ? `<span class="ev">${engVal(p)} eng</span>` : ""].filter(Boolean).join(" · ");
+  return `<a class="lrow lr" href="${href(p)}"><span class="n">${rank}</span>${sq(p)}
+    <span class="who"><b>${esc(p.name)}</b><small>${teamLine(p)}</small>${mob ? `<i class="mob">${mob}</i>` : ""}</span>
+    <span class="c-f${key === "f" ? " key" : ""}">${compact(p.followers)}</span>
+    <span class="c-c${key === "c" ? " key" : ""} ${chCls(ch)}">${ch && ch.n ? pct1(ch.pct) : "–"}${ch && ch.n ? `<small>${exactSigned(ch.n)}</small>` : ""}</span>
+    <span class="c-e ev">${engVal(p)}</span></a>`;
+}
 /* ---------------------------------------------------------------- sports hub (#/sports) */
 // Combined numbers for a group of athletes: followers now, and growth this week.
 function groupStats(list) {
@@ -1371,11 +1428,10 @@ function showTrending(params) {
   const days = Math.max(0, ...moves.map(x => x.m.days || 0));
   const winLabel = { day: "today", week: days && days < 7 ? `over the last ${days} day${days > 1 ? "s" : ""}` : "this week",
                      month: moves.some(x => !x.m.days) ? "this month" : `over the last ${days} day${days > 1 ? "s" : ""}` }[trend.win];
-  const row = (x, i, cls) => `<a class="lrow" href="${href(x.p)}"><span class="n">${i + 1 + (cls === "gr" ? 5 : 0)}</span>${sq(x.p)}
-      <span class="who"><b>${esc(x.p.name)}</b><small>${teamLine(x.p)}</small></span>
-      <span class="val"><b class="${cls}">${signed(x.m.pct)}%</b><small>${compact(x.p.followers)} · <span class="${x.m.n >= 0 ? "up" : "down"}">${exactSigned(x.m.n)}</span>${engTxt(x.p) ? ` · <span class="engv">${engTxt(x.p)}</span>` : ""}</small></span></a>`;
+  const trLabel = { day: "Today", week: days && days < 7 ? `${days} day${days > 1 ? "s" : ""}` : "Week", month: moves.some(x => !x.m.days) ? "Month" : `${days} day${days > 1 ? "s" : ""}` }[trend.win];
+  const row = (x, i, cls) => listRow(x.p, i + 1 + (cls === "gr" ? 5 : 0), x.m, "c");
   const col = (title, list, cls, mode, empty) => `<section class="tr-col"><div class="tr-h"><h2 class="${cls}">${title}</h2><a href="${boardLink(mode, { sport: trend.sport, gender: trend.gender })}">Full list →</a></div>
-      ${list.length ? list.map((x, i) => row(x, i, cls)).join("") : `<p class="empty">${empty}</p>`}</section>`;
+      ${list.length ? listHead(trLabel, "c") + list.map((x, i) => row(x, i, cls)).join("") : `<p class="empty">${empty}</p>`}</section>`;
   // Breakouts: growing much faster than their usual pace today.
   const breakouts = pool.filter(p => p.breakout_x >= 3).sort((a, b) => b.breakout_x - a.breakout_x).slice(0, 6);
   // Milestones: crossed a round number this week.
@@ -1413,7 +1469,7 @@ function showTrending(params) {
           <span class="pic">${photo(x.p)}<span class="handle">@${esc(x.p.instagram || "")}</span><span class="big-n">${i + 1}</span></span>
           <span class="nm">${esc(x.p.name)}${x.p.verified ? TICK : ""}</span>
           <span class="tm">${teamLine(x.p)}</span>
-          <span class="foot"><b class="gr">${signed(x.m.pct)}%</b><span>${compact(x.p.followers)} · <span class="gr">${exactSigned(x.m.n)}</span>${engTxt(x.p) ? `<br><span class="engv">${engTxt(x.p)}</span>` : ""}</span></span>
+          ${cardStats(x.p, x.m, trLabel, "c")}
         </a>`).join("")}</div></section>` : ""}
     <div class="tr-cols">
       ${col(hero5.length ? "▲ Also rising" : "▲ Rising", rising, "gr", "growth", hero5.length ? "That's everyone rising right now." : trend.win === "day" ? "Today's numbers arrive after the morning update." : building)}
@@ -1587,6 +1643,7 @@ function showHome() {
   const hottest = [rising[0], tp.byGrowth ? tp.list[0] : null].filter(Boolean).sort((a, b) => b.g.pct - a.g.pct)[0];
   const sportsCount = new Set(DATA.players.map(p => p.sport)).size;
   const days = Math.max(0, ...rising.map(x => x.g.days || 0));
+  const homeChLabel = Math.max(0, ...withF.map(p => (weekGrowth(p) || {}).days || 0)) < 7 && withF.some(p => weekGrowth(p)) ? `${Math.max(...withF.map(p => (weekGrowth(p) || {}).days || 0))} day${Math.max(...withF.map(p => (weekGrowth(p) || {}).days || 0)) > 1 ? "s" : ""}` : "Week";
   const window_ = days && days < 7 ? `last ${days} day${days > 1 ? "s" : ""}` : "this week";
 
   const tick = [
@@ -1635,9 +1692,7 @@ function showHome() {
       <div class="sechead"><h2>Most followed</h2><span class="hand">the big names</span><span class="sechint">Instagram followers today</span></div>
       <div class="mf">${["women", "men"].map(g => `
         <div class="mf-col"><h3>${GENDER_LABEL[g]}</h3>
-          ${mostF(g).slice(0, 10).map((p, i) => `<a class="lrow" href="${href(p)}"><span class="n">${i + 1}</span>${sq(p)}
-            <span class="who"><b>${esc(p.name)}</b><small>${teamLine(p)}</small></span>
-            <span class="val"><b>${compact(p.followers)}</b><small>${[p.change_7d != null ? `<span class="${p.change_7d >= 0 ? "up" : "down"}">${exactSigned(p.change_7d)}</span>` : "", engTxt(p) ? `<span class="engv">${engTxt(p)}</span>` : ""].filter(Boolean).join(" · ")}</small></span></a>`).join("") || `<p class="empty">No numbers yet.</p>`}
+          ${mostF(g).length ? listHead(homeChLabel, "f") + mostF(g).slice(0, 10).map((p, i) => listRow(p, i + 1, weekGrowth(p), "f")).join("") : `<p class="empty">No numbers yet.</p>`}
           <a class="all" href="${boardLink("sports", { gender: g })}">See all ${GENDER_LABEL[g].toLowerCase()} →</a>
         </div>`).join("")}
       </div>
@@ -1682,17 +1737,16 @@ function renderDiscover() {
 function renderTopProfiles() {
   const tp = topProfiles(topTab);
   const tilt = [-2, 1.5, -1, 2, -1.5];
+  const tpLabel = tp.days && tp.days < 7 ? `${tp.days} day${tp.days > 1 ? "s" : ""}` : "Week";
   const cards = tp.list.slice(0, 5).map(({ p, g }, i) => `
     <a class="tcard" href="${href(p)}" style="--tilt:${tilt[i]}deg">
       <span class="tape"></span>
       <span class="pic">${photo(p)}<span class="handle">@${esc(p.instagram)}</span><span class="big-n" aria-label="Rank ${i + 1}">${i + 1}</span></span>
       <span class="nm">${esc(p.name)}${p.verified ? TICK : ""}</span>
       <span class="tm">${teamLine(p)}</span>
-      <span class="foot"><b>${compact(p.followers)}</b><span>${g && g.n ? `<span class="${g.pct >= 0 ? "gr" : "dn"}">${growthTxt(g)}</span>` : ""}${engTxt(p) ? `<br><span class="engv">${engTxt(p)}</span>` : ""}</span></span>
+      ${cardStats(p, g, tpLabel, tp.byGrowth ? "c" : "f")}
     </a>`).join("");
-  const rest = tp.list.slice(5).map(({ p, g }, i) => `<a class="lrow" href="${href(p)}"><span class="n">${i + 6}</span>${sq(p)}
-      <span class="who"><b>${esc(p.name)}</b><small>${teamLine(p)}</small></span>
-      <span class="val"><b>${compact(p.followers)}</b><small>${[g && g.n ? `<span class="up">${growthTxt(g)}</span>` : "", engTxt(p) ? `<span class="engv">${engTxt(p)}</span>` : ""].filter(Boolean).join(" · ")}</small></span></a>`).join("");
+  const rest = tp.list.slice(5).length ? listHead(tpLabel, tp.byGrowth ? "c" : "f") + tp.list.slice(5).map(({ p, g }, i) => listRow(p, i + 6, g, tp.byGrowth ? "c" : "f")).join("") : "";
   const how = tp.byGrowth
     ? `Biggest follower growth ${tp.days && tp.days < 7 ? `over the last ${tp.days} day${tp.days > 1 ? "s" : ""}` : "this week"} · ${compact(TOP_PROFILE_MIN)}+ followers`
     : "Ranked by followers until the growth numbers arrive";
