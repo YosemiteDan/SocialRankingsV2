@@ -239,6 +239,12 @@ def main():
                 p["growth_days"] = win_days
             cutoff = (last_day - timedelta(days=SPARK_DAYS)).isoformat()
             p["spark"] = [num(r["followers"]) for r in rows if r["date"] >= cutoff]
+        # Height and birthdate in the summary too, for the advanced search.
+        det = details.get(a["name"]) or {}
+        if det.get("height_cm"):
+            p["height_cm"] = det["height_cm"]
+        if det.get("birthdate"):
+            p["birthdate"] = det["birthdate"]
         summaries.append(p)
         pages[p["id"]] = {
             **{k: v for k, v in p.items() if k != "spark"},

@@ -507,6 +507,42 @@
     .lr .c-f:not(.key), .lr .c-c:not(.key), .lr .c-e { display: none; }
     .lr .mob { display: block; font: 600 11px/1.3 var(--display); font-style: normal; color: var(--muted); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   }
+  .nav-search { color: var(--accent) !important; }
+  .adv-link { font: 700 12px/1 var(--display); letter-spacing: .12em; text-transform: uppercase; color: var(--accent); text-decoration: none; white-space: nowrap; }
+  .adv { display: grid; grid-template-columns: 320px minmax(0, 1fr); gap: 32px; align-items: start; }
+  .adv-panel { position: sticky; top: 76px; background: var(--card); border: 2px solid var(--line); padding: 18px; display: grid; gap: 18px; }
+  .adv-panel input[type=search] { font: 500 16px/1 "Barlow", sans-serif; color: var(--text); background: var(--bg); border: 2px solid var(--line); padding: 11px 14px; }
+  .adv-group small, .adv-top span { font: 700 11px/1 var(--display); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+  .adv-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .adv-chips button { font: 700 12px/1 var(--display); letter-spacing: .08em; text-transform: uppercase; padding: 8px 10px; border: 2px solid var(--line); background: none; color: var(--text); cursor: pointer; }
+  .adv-chips button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--bg); }
+  .adv-top { display: flex; justify-content: space-between; align-items: baseline; }
+  .adv-top b { font: 700 15px/1 var(--display); color: var(--text); }
+  .dual { position: relative; height: 30px; margin-top: 6px; }
+  .dual .track { position: absolute; left: 0; right: 0; top: 13px; height: 4px; background: var(--line); border-radius: 2px; }
+  .dual .track i { position: absolute; top: 0; bottom: 0; background: var(--accent); border-radius: 2px; }
+  .dual input { position: absolute; left: 0; width: 100%; top: 4px; margin: 0; height: 22px; background: none; pointer-events: none; -webkit-appearance: none; appearance: none; }
+  .dual input::-webkit-slider-thumb { -webkit-appearance: none; pointer-events: auto; width: 20px; height: 20px; border-radius: 50%; background: var(--cream); border: 3px solid var(--accent); cursor: pointer; }
+  .dual input::-moz-range-thumb { pointer-events: auto; width: 16px; height: 16px; border-radius: 50%; background: var(--cream); border: 3px solid var(--accent); cursor: pointer; }
+  .dual input::-webkit-slider-runnable-track { background: none; } .dual input::-moz-range-track { background: none; }
+  .adv-note { margin: 0; font-size: 12px; color: var(--muted); line-height: 1.4; }
+  .adv-bar { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; border-bottom: 2px solid var(--cream); padding-bottom: 12px; margin-bottom: 8px; }
+  .adv-bar b { font: 700 28px/1 var(--serif); margin-right: auto; }
+  .adv-bar label { font: 700 12px/1 var(--display); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+  .adv-bar select { margin-left: 6px; font: 600 15px/1 "Barlow", sans-serif; background: var(--card); color: var(--text); border: 2px solid var(--line); padding: 8px; }
+  #advList { container-type: inline-size; }
+  .ahead, .lrow.ar { display: grid; grid-template-columns: 26px 46px minmax(0, 1fr) 64px 60px 50px 60px 36px; gap: 0 10px; align-items: center; }
+  .ahead { padding: 8px 0 6px; border-bottom: 1px solid var(--line); font: 700 10px/1 var(--display); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+  .ahead .ath { grid-column: span 2; } .ahead span:nth-child(n+3) { text-align: right; }
+  .ar .c-f, .ar .c-c, .ar .c-e, .ar .c-h, .ar .c-a { text-align: right; font: 600 15px/1.1 var(--display); color: #C3C9E3; white-space: nowrap; }
+  .ar .c-f { color: var(--text); font-weight: 700; } .ar .c-c.gr { color: var(--up); } .ar .c-c.dn { color: var(--down); }
+  .ar .mob { display: none; }
+  @container (max-width: 560px) {
+    .ahead, .lrow.ar { grid-template-columns: 24px 42px minmax(0, 1fr) 64px; }
+    .ahead span:nth-child(n+4), .ar .c-c, .ar .c-e, .ar .c-h, .ar .c-a { display: none; }
+    .ar .mob { display: block; font: 600 11px/1.3 var(--display); font-style: normal; color: var(--muted); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  }
+  @media (max-width: 860px) { .adv { grid-template-columns: 1fr; } .adv-panel { position: static; } }
   .ring.sm img, .ring.sm .ph { width: 42px; height: 42px; border-width: 2px; font-size: 14px; }
   .stories { padding: 20px 0 4px; }
   .disc-head { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
@@ -664,7 +700,7 @@
       </div>
       <nav class="foot-col" aria-label="Explore"><h4>Explore</h4>
         <a href="#/">Home</a><a href="#/sports">All sports</a><a href="#/followed">Most followed</a><a href="#/followed?gender=women">Women</a><a href="#/followed?gender=men">Men</a>
-        <a href="#/trending">Trending</a></nav>
+        <a href="#/trending">Trending</a><a href="#/search">Advanced search</a></nav>
       <nav class="foot-col" aria-label="Company"><h4>Socialete</h4>
         <a class="soon" href="#">About</a><a class="soon" href="#">How the rankings work</a><a class="soon" href="#">Contact</a><a class="soon" href="#">Advertise &amp; partner</a><a class="soon" href="#">Media kit</a></nav>
       <nav class="foot-col" aria-label="Athletes"><h4>Athletes</h4>
@@ -1283,6 +1319,7 @@ function showBoard(mode, params) {
       </div>` : ""}
       <div class="bd-row">
         <input id="bdSearch" type="search" placeholder="Search athletes, teams or leagues" aria-label="Search athletes, teams or leagues">
+        <a class="adv-link" href="#/search${board.sport !== "All" ? "?sport=" + encodeURIComponent(board.sport) : ""}">Advanced search →</a>
         <div class="pills" role="group" aria-label="Men or women">${[["All", "Everyone"], ["women", "Women"], ["men", "Men"]].map(([g, l]) => `<a href="${L({ gender: g, league: "All" })}" aria-pressed="${g === board.gender}" class="pill">${l}</a>`).join("")}</div>
       </div>
     </div>
@@ -1499,12 +1536,140 @@ function showTrending(params) {
   window.scrollTo(0, 0);
 }
 
+/* ---------------------------------------------------------------- advanced search (#/search) */
+// Ranges: [min, max] for each slider. Followers use a log scale so 1K-10K is as easy to pick as 1M-10M.
+const ADV = {
+  followers: { label: "Followers", min: 0, max: 100, fmt: v => compact(advF(v)) },
+  eng:       { label: "Engagement", min: 0, max: 20, step: 0.5, fmt: v => v + "%" + (v >= 20 ? "+" : "") },
+  height:    { label: "Height", min: 150, max: 220, fmt: v => v + " cm" },
+  age:       { label: "Age", min: 15, max: 45, fmt: v => v + (v >= 45 ? "+" : "") },
+};
+const F_LO = 1000, F_HI = 20000000;
+// Rounded to two significant figures (52.5K -> 53K, 1.27M -> 1.3M).
+const advF = v => { const x = F_LO * Math.pow(F_HI / F_LO, v / 100), m = Math.pow(10, Math.floor(Math.log10(x)) - 1); return Math.round(x / m) * m; };
+const advFinv = f => Math.max(0, Math.min(100, Math.round(100 * Math.log(f / F_LO) / Math.log(F_HI / F_LO))));
+const adv = { q: "", sport: "All", gender: "All", sort: "followers", shown: 50, r: {} };
+function advReset() { for (const [k, c] of Object.entries(ADV)) adv.r[k] = [c.min, c.max]; }
+advReset();
+
+function showSearch(params) {
+  current = null;
+  document.title = `Advanced search – ${SITE_NAME}`;
+  advReset();
+  adv.q = params.get("q") || ""; adv.sport = params.get("sport") || "All"; adv.gender = params.get("gender") || "All";
+  adv.sort = params.get("sort") || "followers"; adv.shown = 50;
+  for (const k of Object.keys(ADV)) {
+    const v = (params.get(k) || "").split("-").map(Number);
+    if (v.length === 2 && v.every(n => !isNaN(n))) adv.r[k] = k === "followers" ? [advFinv(v[0]), advFinv(v[1])] : v;
+  }
+  const sports = sportsList();
+  const slider = k => { const c = ADV[k]; return `
+    <div class="adv-s" data-k="${k}">
+      <div class="adv-top"><span>${c.label}</span><b id="lab-${k}"></b></div>
+      <div class="dual"><div class="track"><i id="fill-${k}"></i></div>
+        <input type="range" min="${c.min}" max="${c.max}" step="${c.step || 1}" value="${adv.r[k][0]}" aria-label="${c.label} minimum">
+        <input type="range" min="${c.min}" max="${c.max}" step="${c.step || 1}" value="${adv.r[k][1]}" aria-label="${c.label} maximum"></div>
+    </div>`; };
+  $("main").innerHTML = `
+    <section class="bd-hero">
+      <div class="kicker">Advanced search · find the right athlete</div>
+      <h1>Search athletes</h1>
+    </section>
+    <div class="adv">
+      <div class="adv-panel">
+        <input id="advQ" type="search" placeholder="Name, team or league" value="${esc(adv.q)}" aria-label="Name, team or league">
+        <div class="adv-group"><small>Sport</small><div class="adv-chips">${["All", ...sports].map(sp => `<button data-sport="${esc(sp)}" aria-pressed="${sp === adv.sport}">${sp === "All" ? "All" : esc(SPORT_LABEL[sp] || sp)}</button>`).join("")}</div></div>
+        <div class="adv-group"><small>Athletes</small><div class="adv-chips">${[["All", "Everyone"], ["women", "Women"], ["men", "Men"]].map(([g, l]) => `<button data-gender="${g}" aria-pressed="${g === adv.gender}">${l}</button>`).join("")}</div></div>
+        ${Object.keys(ADV).map(slider).join("")}
+        <p class="adv-note">Height and age come from Wikidata, so not every athlete has them. Narrowing those sliders only shows athletes we have them for.</p>
+        <button class="btn" id="advReset">Reset filters</button>
+      </div>
+      <div class="adv-results">
+        <div class="adv-bar"><b id="advCount"></b>
+          <label>Sort by <select id="advSort">${[["followers", "Most followed"], ["eng", "Highest engagement"], ["growth", "Fastest growing"], ["height", "Tallest"], ["age", "Youngest"]].map(([k, l]) => `<option value="${k}" ${k === adv.sort ? "selected" : ""}>${l}</option>`).join("")}</select></label>
+          <button class="btn" id="advShare">Copy link</button></div>
+        <div id="advList"></div>
+      </div>
+    </div>`;
+  document.querySelectorAll(".adv-s").forEach(el => {
+    const k = el.dataset.k, [lo, hi] = el.querySelectorAll("input");
+    const upd = e => {
+      let a = +lo.value, b = +hi.value;
+      if (a > b) { if (e && e.target === lo) a = b; else b = a; lo.value = a; hi.value = b; }
+      adv.r[k] = [a, b]; adv.shown = 50; paintSlider(k); renderSearch();
+    };
+    lo.addEventListener("input", upd); hi.addEventListener("input", upd);
+    paintSlider(k);
+  });
+  $("advQ").addEventListener("input", e => { adv.q = e.target.value; adv.shown = 50; renderSearch(); });
+  $("main").querySelectorAll(".adv-chips").forEach(row => row.addEventListener("click", e => {
+    const b = e.target.closest("button"); if (!b) return;
+    if (b.dataset.sport) adv.sport = b.dataset.sport; else adv.gender = b.dataset.gender;
+    row.querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+    adv.shown = 50; renderSearch();
+  }));
+  $("advSort").addEventListener("change", e => { adv.sort = e.target.value; renderSearch(); });
+  $("advReset").addEventListener("click", () => { location.hash = "#/search"; showSearch(new URLSearchParams()); });
+  $("advShare").addEventListener("click", () => { history.replaceState(null, "", advLink()); share("Athlete search", "Athletes on " + SITE_NAME); });
+  renderSearch();
+  window.scrollTo(0, 0);
+}
+function paintSlider(k) {
+  const c = ADV[k], [a, b] = adv.r[k];
+  $("lab-" + k).textContent = a === c.min && b === c.max ? "Any" : `${c.fmt(a)} – ${c.fmt(b)}`;
+  $("fill-" + k).style.left = (100 * (a - c.min) / (c.max - c.min)) + "%";
+  $("fill-" + k).style.right = (100 - 100 * (b - c.min) / (c.max - c.min)) + "%";
+}
+const advActive = k => adv.r[k][0] !== ADV[k].min || adv.r[k][1] !== ADV[k].max;
+function advLink() {
+  const q = new URLSearchParams();
+  if (adv.q) q.set("q", adv.q);
+  if (adv.sport !== "All") q.set("sport", adv.sport);
+  if (adv.gender !== "All") q.set("gender", adv.gender);
+  if (adv.sort !== "followers") q.set("sort", adv.sort);
+  for (const k of Object.keys(ADV)) if (advActive(k)) q.set(k, (k === "followers" ? adv.r[k].map(advF) : adv.r[k]).join("-"));
+  return "#/search" + (q.toString() ? "?" + q : "");
+}
+function renderSearch() {
+  const q = adv.q.trim().toLowerCase();
+  const inR = (k, v) => {
+    if (!advActive(k)) return true;
+    if (v == null) return false;
+    const [a, b] = adv.r[k], c = ADV[k];
+    return v >= a && (b >= c.max ? true : v <= b) && (a <= c.min || v >= a);
+  };
+  const list = DATA.players.filter(p =>
+    (adv.sport === "All" || p.sport === adv.sport) && (adv.gender === "All" || p.gender === adv.gender) &&
+    (!q || p.name.toLowerCase().includes(q) || (p.teams || []).some(t => (t[1] || "").toLowerCase().includes(q) || (t[0] || "").toLowerCase().includes(q))) &&
+    (!advActive("followers") || (p.followers != null && p.followers >= (adv.r.followers[0] <= 0 ? 0 : advF(adv.r.followers[0])) && (adv.r.followers[1] >= 100 || p.followers <= advF(adv.r.followers[1])))) &&
+    inR("eng", p.engagement_rate) && inR("height", p.height_cm) && inR("age", ageFrom(p.birthdate)));
+  const key = { followers: p => p.followers, eng: p => p.engagement_rate, growth: p => (weekGrowth(p) || {}).pct, height: p => p.height_cm, age: p => { const a = ageFrom(p.birthdate); return a == null ? null : -a; } }[adv.sort];
+  list.sort((a, b) => (key(b) ?? -Infinity) - (key(a) ?? -Infinity) || (b.followers || 0) - (a.followers || 0));
+  $("advCount").textContent = `${list.length} athlete${list.length === 1 ? "" : "s"}`;
+  history.replaceState(null, "", advLink());
+  const page = list.slice(0, adv.shown);
+  $("advList").innerHTML = list.length ? `
+    <div class="ahead"><span></span><span class="ath">Athlete</span><span>Followers</span><span>Week</span><span title="${ENG_INFO}">Eng ⓘ</span><span>Height</span><span>Age</span></div>
+    ${page.map((p, i) => { const g = weekGrowth(p), age = ageFrom(p.birthdate); return `<a class="lrow ar" href="${href(p)}"><span class="n">${i + 1}</span>${sq(p)}
+      <span class="who"><b>${esc(p.name)}</b><small>${teamLine(p)}</small><i class="mob">${[p.followers != null ? compact(p.followers) + " followers" : "", p.engagement_rate != null ? `<span class="ev">${engVal(p)} eng</span>` : "", p.height_cm ? p.height_cm + " cm" : "", age != null ? age + " yrs" : ""].filter(Boolean).join(" · ")}</i></span>
+      <span class="c-f">${p.followers != null ? compact(p.followers) : "–"}</span>
+      <span class="c-c ${chCls(g)}">${g && g.n ? pct1(g.pct) : "–"}</span>
+      <span class="c-e ev">${engVal(p)}</span>
+      <span class="c-h">${p.height_cm ? p.height_cm + " cm" : "–"}</span>
+      <span class="c-a">${age != null ? age : "–"}</span></a>`; }).join("")}
+    ${list.length > adv.shown ? `<div class="more"><button class="btn" id="advMore">Show more (${list.length - adv.shown} to go)</button></div>` : ""}`
+    : `<p class="empty" style="margin-top:20px">No athletes match these filters. Try widening a slider.</p>`;
+  $("advMore")?.addEventListener("click", () => { adv.shown += 50; renderSearch(); });
+}
+
 /* ---------------------------------------------------------------- routing */
 function route() {
   document.querySelectorAll(".nav details[open]").forEach(d => d.removeAttribute("open"));
   const h = location.hash;
   const m = h.match(/^#\/p\/(.+)$/);
   if (m) return showProfile(decodeURIComponent(m[1]));
+  const sm = h.match(/^#\/search(?:\?(.*))?$/);
+  if (sm) return showSearch(new URLSearchParams(sm[1] || ""));
   const tm = h.match(/^#\/trending(?:\?(.*))?$/);
   if (tm) return showTrending(new URLSearchParams(tm[1] || ""));
   const bm = h.match(/^#\/(sports|growth|drops|followed|rankings)(?:\?(.*))?$/);
@@ -1541,7 +1706,8 @@ function buildNav() {
     <details><summary>Sports</summary><div class="menu"><a href="#/sports"><b>All sports</b> <small>${sportsList().length} sports</small></a>
 <hr>${sportMenu}</div></details>
     ${natMenu ? `<details><summary>National<span class="hide-m"> teams</span></summary><div class="menu">${natMenu}</div></details>` : ""}
-    <a href="#/trending">Trending</a>`;
+    <a href="#/trending">Trending</a>
+    <a href="#/search" class="nav-search" aria-label="Advanced search">⌕<span class="hide-m"> Search</span></a>`;
   // Only one menu open at a time; clicking elsewhere closes them.
   $("nav").querySelectorAll("details").forEach(d => d.addEventListener("toggle", () => {
     if (d.open) $("nav").querySelectorAll("details").forEach(o => o !== d && o.removeAttribute("open"));
