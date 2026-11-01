@@ -1793,6 +1793,14 @@ function creatorsSection(sport) {
   return `<section class="mx-sec"><div class="sechead"><h2>Top creators</h2><span class="hand">the voices around the game</span></div>
     <div class="t5-grid one">${list.map((c, i) => `<a class="t5-row" href="${orgLink(c)}" target="_blank" rel="noopener"><span class="n">${i + 1}</span>${sq(c)}<span class="who"><b>${esc(c.name)}</b><small>${esc(c.kind || "Creator")}</small></span><span class="v">${compact(c.followers)}</span></a>`).join("")}</div></section>`;
 }
+// Governing bodies and events get their own tables: a Grand Slam's account isn't a fair fight for a governing body.
+function govEventsHtml(list) {
+  const sec = (type, title, hand) => list.some(o => o.type === type) ? `<section class="mx-sec">
+      <div class="sechead"><h2>${title}</h2><span class="hand">${hand}</span></div>
+      ${h2hTable(list.filter(o => o.type === type), { key: spState.h2h, sub: o => SPORT_LABEL[o.sport] || o.sport })}
+    </section>` : "";
+  return sec("governing", "Governing bodies", "running the game") + sec("event", "Events", "the big stages");
+}
 function showSportsHub(first = true) {
   current = null;
   document.title = `Sports – ${SITE_NAME}`;
@@ -1827,10 +1835,7 @@ function showSportsHub(first = true) {
       <div class="sechead"><h2>Club ladders</h2><span class="hand">the clubs online</span>${h2hSort("cl", spState.h2h)}</div>
       ${clubHtml(list)}
     </section>
-    ${list.some(o => o.type === "governing" || o.type === "event") ? `<section class="mx-sec">
-      <div class="sechead"><h2>Governing bodies &amp; events</h2></div>
-      ${h2hTable(list.filter(o => o.type === "governing" || o.type === "event"), { key: spState.h2h, sub: o => `${ORG_TYPE[o.type]} · ${SPORT_LABEL[o.sport] || o.sport}` })}
-    </section>` : ""}
+    ${govEventsHtml(list)}
     <section class="mx-sec t5">${top5Html(list)}</section>
     ${creatorsSection()}`;
   wireSports(() => keepScroll(() => showSportsHub(false)));
@@ -1866,6 +1871,7 @@ function showSport(sport, first = true) {
       <div class="sechead"><h2>Club ladder</h2><span class="hand">the clubs online</span>${h2hSort("cl", spState.h2h)}</div>
       ${clubHtml(list)}
     </section>` : ""}
+    ${govEventsHtml(list)}
     <section class="mx-sec">
       <div class="sechead"><h2>Trending accounts</h2><span class="hand">who's moving</span></div>
       ${trendHtml(list)}
