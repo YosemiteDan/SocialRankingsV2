@@ -1,5 +1,5 @@
 {
-  "ran_at": "2026-11-01T03:41:35+00:00",
+  "ran_at": "2026-11-01T04:12:31+00:00",
   "method": "meta",
   "succeeded": [],
   "failed": {
@@ -239,10 +239,20 @@
   "warnings": [],
   "token_expires": "never",
   "orgs_succeeded": [
-    "Boomers",
-    "Opals",
-    "Fremantle",
-    "Kanga TV"
+    "Swimming Australia",
+    "AusCycling",
+    "Athletics Australia",
+    "Softball Australia",
+    "Netball Australia",
+    "Hockey Australia",
+    "Surfing Australia",
+    "Volleyball Australia",
+    "Golf Australia",
+    "Australian baseball team",
+    "Australian women's cricket",
+    "Diamonds",
+    "Hockeyroos",
+    "Kookaburras"
   ],
   "orgs_failed": {
     "New Zealand Breakers": "@nzbreakers not found; @skycitybreakers not found; @breakersbasketball not found; @nz_breakers not found. Check data/organisations.csv.",
