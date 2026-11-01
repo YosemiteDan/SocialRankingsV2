@@ -7,9 +7,9 @@ Brisbane Bullets,brisbanebullets,club,Basketball,NBL,Australia,men
 Cairns Taipans,cairnstaipans,club,Basketball,NBL,Australia,men
 Illawarra Hawks,illawarrahawks,club,Basketball,NBL,Australia,men
 Melbourne United,melbunited,club,Basketball,NBL,Australia,men
-New Zealand Breakers,skycitybreakers,club,Basketball,NBL,Australia,men
+New Zealand Breakers,nzbreakers|skycitybreakers|breakersbasketball|nz_breakers,club,Basketball,NBL,Australia,men
 Perth Wildcats,perthwildcats,club,Basketball,NBL,Australia,men
-South East Melbourne Phoenix,semphoenix|sem_phoenix|southeastmelbournephoenix,club,Basketball,NBL,Australia,men
+South East Melbourne Phoenix,semphoenix|sem.phoenix|semphoenixbasketball|southeastmelbournephoenix,club,Basketball,NBL,Australia,men
 Sydney Kings,sydneykings,club,Basketball,NBL,Australia,men
 Tasmania JackJumpers,jackjumpers|tasjackjumpers|jackjumpersnbl,club,Basketball,NBL,Australia,men
 AFL,afl,league,AFL,AFL,Australia,men
@@ -19,7 +19,7 @@ Brisbane Lions,brisbanelions,club,AFL,AFL,Australia,mixed
 Carlton,carlton_fc,club,AFL,AFL,Australia,mixed
 Collingwood,collingwood_fc,club,AFL,AFL,Australia,mixed
 Essendon,essendonfc,club,AFL,AFL,Australia,mixed
-Fremantle,fremantle_fc|fremantlefc|freofc|fremantledockers,club,AFL,AFL,Australia,mixed
+Fremantle,fremantlefc|freodockers|fremantle_fc|freofc,club,AFL,AFL,Australia,mixed
 Geelong Cats,geelongcats,club,AFL,AFL,Australia,mixed
 Gold Coast Suns,gcsuns,club,AFL,AFL,Australia,mixed
 GWS Giants,gwsgiants,club,AFL,AFL,Australia,mixed
