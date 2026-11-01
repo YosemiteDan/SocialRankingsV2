@@ -167,6 +167,28 @@ def growth_fields(rows):
     return out
 
 
+REGIONS = {"Australia": "Australasia", "New Zealand": "Australasia", "USA": "North America", "Canada": "North America",
+           "England": "Europe", "UK": "Europe", "International": "Global"}
+
+
+def post_stats(recent, as_of):
+    """Posts in the last 7 / 30 days and the content mix (count and average likes + comments per type)."""
+    out = {"posts_7d": None, "posts_30d": None, "mix": {}}
+    if not recent or not as_of:
+        return out
+    t = date.fromisoformat(as_of)
+    ages = [(t - date.fromisoformat(m["date"])).days for m in recent if m.get("date")]
+    out["posts_7d"] = sum(1 for a in ages if 0 <= a <= 7)
+    out["posts_30d"] = sum(1 for a in ages if 0 <= a <= 30)
+    for m in recent:
+        if isinstance(m.get("likes"), int):
+            c = out["mix"].setdefault(m.get("type", "photo"), [0, 0])
+            c[0] += 1
+            c[1] += m["likes"] + (m.get("comments") or 0)
+    out["mix"] = {k: [n, round(tot / n)] for k, (n, tot) in out["mix"].items()}
+    return out
+
+
 def build_orgs(history, profiles, filename="organisations.csv"):
     """Official accounts (data/organisations.csv), or creators (data/creators.csv), for the Sports pages."""
     path = DATA / filename
@@ -184,12 +206,21 @@ def build_orgs(history, profiles, filename="organisations.csv"):
                     "sport": o["sport"], "league": o.get("league") or "", "country": o.get("country") or "Australia",
                     "gender": o.get("gender") or "mixed", "verified": prof.get("is_verified"), "kind": o.get("kind") or "", "live": (o.get("live") or "").lower() == "yes",
                     "photo": f"img/{handle}.jpg" if (SITE / "img" / f"{handle}.jpg").exists() else None,
-                    "followers": None}
+                    "region": REGIONS.get(o.get("country") or "Australia", "Global"), "followers": None}
             if rows:
                 item.update(growth_fields(rows))
+                item.update(post_stats(prof.get("recent"), item["as_of"]))
+                # The account's own page: recent posts and follower history.
+                acc = SITE / "accounts"
+                acc.mkdir(exist_ok=True)
+                (acc / f"{handle}.json").write_text(json.dumps({
+                    "recent": prof.get("recent") or [],
+                    "history": [[r["date"], num(r["followers"])] for r in rows]}, separators=(",", ":"), ensure_ascii=False))
+            keys = ("url", "type", "date", "caption", "likes", "comments", "thumb")
             bp = prof.get("best_post")
             if bp:
-                item["best_post"] = {k: bp.get(k) for k in ("url", "type", "date", "caption", "likes", "comments", "thumb")}
+                item["best_post"] = {k: bp.get(k) for k in keys}
+            item["top_posts"] = [{k: m.get(k) for k in keys} for m in (prof.get("top_posts") or ([bp] if bp else []))]
             out.append(item)
     return out
 
@@ -333,6 +364,7 @@ def main():
     if (DATA / "last_run.json").exists() and not sample:
         last_run = json.loads((DATA / "last_run.json").read_text())
 
+    shutil.rmtree(SITE / "accounts", ignore_errors=True)   # rebuilt by build_orgs below
     (SITE / "data.json").write_text(json.dumps({
         "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "sample_data": sample,

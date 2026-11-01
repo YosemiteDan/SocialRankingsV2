@@ -203,6 +203,8 @@ def token_expiry(token):
 
 
 RECENT_POSTS = 10  # latest posts fetched per athlete: the video strip on their profile, and engagement
+ORG_POSTS = 40     # official accounts and creators post a lot: enough for posts in the last 7/30 days
+TOP_POSTS = 3      # preview images kept per official account (its best posts of the week)
 
 # Whether Meta lets us fetch recent posts in the same lookup. None = not known yet.
 # If asking for posts ever causes errors, the run carries on without them.
@@ -288,10 +290,10 @@ def engagement(followers, recent, today=None):
     return out
 
 
-def lookup_meta(handle, token, ig_id):
+def lookup_meta(handle, token, ig_id, posts=RECENT_POSTS):
     fields = ("username,name,biography,followers_count,follows_count,"
               "media_count,profile_picture_url")
-    media = f",media.limit({RECENT_POSTS}){{{POST_FIELDS}{IMAGE_FIELDS if MEDIA_STATE['images'] else ''}}}"
+    media = f",media.limit({posts}){{{POST_FIELDS}{IMAGE_FIELDS if MEDIA_STATE['images'] else ''}}}"
     body = graph_get(ig_id, token,
                      fields=f"business_discovery.username({handle}){{{fields}{media if MEDIA_STATE['ok'] else ''}}}")
     d = body["business_discovery"]
@@ -299,7 +301,7 @@ def lookup_meta(handle, token, ig_id):
     return {
         "followers": d.get("followers_count"), "following": d.get("follows_count"),
         "posts": d.get("media_count"), "source": "meta",
-        **engagement(d.get("followers_count"), recent),
+        **engagement(d.get("followers_count"), recent[:RECENT_POSTS] if recent else recent),   # same 10-post basis for everyone
         "_profile": {"username": d.get("username"), "full_name": d.get("name"),
                      "biography": d.get("biography"), "pic_url": d.get("profile_picture_url"),
                      "recent": recent},
@@ -477,24 +479,35 @@ def best_post(recent, today, days=7):
 
 
 def save_best_posts(results, today):
-    """For official accounts: keep their best post of the week, with a small preview image."""
+    """For official accounts and creators: keep their best posts of the week (or month, if
+    they've been quiet), with small preview images saved on the site."""
     profiles = json.loads(PROFILES_FILE.read_text()) if PROFILES_FILE.exists() else {}
+    t = datetime.fromisoformat(today).date()
+    score = lambda m: m["likes"] + (m.get("comments") or 0)
     for handle, r in results.items():
         recent = (r.get("_profile") or {}).get("recent")
         if recent is None:
             continue
         p = profiles.setdefault(handle, {})
-        best = best_post(recent, today)
-        old = p.get("best_post") or {}
-        if not best:
+        dated = [m for m in recent if m.get("date") and isinstance(m.get("likes"), int)]
+        week = [m for m in dated if (t - datetime.fromisoformat(m["date"]).date()).days <= 7]
+        pool = week or [m for m in dated if (t - datetime.fromisoformat(m["date"]).date()).days <= 30]
+        top = sorted(pool, key=score, reverse=True)[:TOP_POSTS]
+        old = {m["url"]: m for m in p.get("top_posts") or []}
+        keep = []
+        for i, m in enumerate(top, 1):
+            item = {k: v for k, v in m.items() if not k.startswith("_")}
+            path, rel = POST_DIR / f"{handle}-{i}.jpg", f"img/posts/{handle}-{i}.jpg"
+            if old.get(m["url"], {}).get("thumb") == rel and path.exists():
+                item["thumb"] = rel                     # same post in the same slot: keep its image
+            elif m.get("_img") and save_thumbnail(m["_img"], path):
+                item["thumb"] = rel
+            keep.append(item)
+        p["top_posts"] = keep
+        if keep:
+            p["best_post"] = keep[0]
+        else:
             p.pop("best_post", None)
-        elif best["url"] != old.get("url") or not (IMG_DIR.parent / old.get("thumb", "-")).exists():
-            item = {k: v for k, v in best.items() if not k.startswith("_")}
-            if best.get("_img") and save_thumbnail(best["_img"], POST_DIR / f"{handle}.jpg"):
-                item["thumb"] = f"img/posts/{handle}.jpg"
-            p["best_post"] = item
-        else:   # same post: just refresh its likes and comments
-            old.update(likes=best.get("likes"), comments=best.get("comments"))
     PROFILES_FILE.write_text(json.dumps(profiles, indent=2, ensure_ascii=False))
 
 
@@ -695,7 +708,7 @@ def run(now, report):
             for handle in [clean_handle(h) for h in o["instagram"].split("|") if h.strip()]:
                 time.sleep(SECONDS_BETWEEN_LOOKUPS)
                 try:
-                    res = lookup_meta(handle, token, ig_id)
+                    res = lookup_meta(handle, token, ig_id, posts=ORG_POSTS)
                 except NotVisible:
                     tried.append(f"@{handle} not found"); continue
                 except (RateLimited, TokenProblem) as e:
