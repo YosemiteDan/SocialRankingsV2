@@ -1673,7 +1673,13 @@ function renderAthletes() {
    country. Tournament widgets (data/events.csv) show while an event is on. */
 const sportHref = sp => `#/sport/${encodeURIComponent(sp)}`;
 const ORG_TYPE = { league: "League", club: "Club", national: "National team", governing: "Governing body", event: "Event" };
-const orgsAll = () => (DATA.orgs || []).filter(o => o.followers != null);
+// Event accounts (e.g. the Australian Open) only appear while their event is on (data/events.csv).
+const orgsAll = () => (DATA.orgs || []).filter(o => o.followers != null && (o.type !== "event" || eventLive(o.instagram)));
+function eventWindow(e) {
+  const add = (d, n) => new Date(new Date(d + "T12:00:00") - -n * 864e5).toISOString().slice(0, 10), today = new Date().toISOString().slice(0, 10);
+  return today >= add(e.start, -7) && today <= add(e.end, 3);
+}
+const eventLive = handle => (DATA.events || []).some(e => (e.account || "").toLowerCase() === handle && eventWindow(e));
 const orgCountries = () => [...new Set(orgsAll().map(o => o.country))].sort((a, b) => (a !== "Australia") - (b !== "Australia") || a.localeCompare(b));
 const spState = { country: "Australia", trend: "up", win: "week", clubLeague: "", h2h: "followers" };
 function orgMove(o, win) {
@@ -1751,14 +1757,15 @@ function trendHtml(list) {
 function activeEvents(sport) {
   const today = new Date().toISOString().slice(0, 10), add = (d, n) => new Date(new Date(d + "T12:00:00") - -n * 864e5).toISOString().slice(0, 10);
   const preview = /[?&]preview=event/.test(location.hash);
-  const list = (DATA.events || []).filter(e => (!sport || e.sport === sport) && (preview || (today >= add(e.start, -7) && today <= add(e.end, 3))));
+  const list = (DATA.events || []).filter(e => (!sport || e.sport === sport) && (preview || eventWindow(e)));
   if (!list.length && preview) list.push({ name: "Example: FIBA Basketball World Cup Qualifiers", sport: "Basketball", start: today, end: add(today, 5), teams: "Boomers;Opals", competition: "Preview", blurb: "This is what an event feature looks like while a tournament is on. Add events in data/events.csv.", preview: true });
   return list;
 }
 function eventHtml(sport) {
   return activeEvents(sport).map(e => {
     const teams = (e.teams || "").split(";").map(t => t.trim()).filter(Boolean);
-    const accounts = teams.map(t => orgsAll().find(o => o.league === t || o.name === t || o.instagram === t)).filter(Boolean);
+    const own = (DATA.orgs || []).find(o => e.account && o.instagram === e.account.toLowerCase() && o.followers != null);
+    const accounts = [own, ...teams.map(t => orgsAll().find(o => o.league === t || o.name === t || o.instagram === t))].filter(Boolean);
     const athletes = DATA.players.filter(p => p.followers != null && teams.some(t => inLeague(p, t))).sort((a, b) => b.followers - a.followers).slice(0, 6);
     const today = new Date().toISOString().slice(0, 10);
     const status = today < e.start ? `Starts ${niceDate(e.start, { day: "numeric", month: "short" })}` : today > e.end ? "Just finished" : "On now";
@@ -1766,7 +1773,7 @@ function eventHtml(sport) {
       <div class="ev-top"><span class="ev-badge">${status}</span><span class="ev-dates">${niceDate(e.start, { day: "numeric", month: "short" })} – ${niceDate(e.end, { day: "numeric", month: "short" })}</span></div>
       <h2>${esc(e.name)}</h2>${e.blurb ? `<p>${esc(e.blurb)}</p>` : ""}
       <div class="ev-body">
-        ${accounts.length ? `<div class="ev-col"><h3 class="t5-h">Team accounts</h3>${accounts.map((o, i) => `<a class="t5-row" href="${orgLink(o)}" target="_blank" rel="noopener"><span class="n">${i + 1}</span>${sq(o)}<span class="who"><b>${esc(o.name)}</b><small>${compact(o.followers)} followers</small></span><span class="v"><span class="${chCls(weekGrowth(o))}">${weekGrowth(o) ? pct1(weekGrowth(o).pct) : "–"}</span></span></a>`).join("")}</div>` : ""}
+        ${accounts.length ? `<div class="ev-col"><h3 class="t5-h">${own ? "The accounts" : "Team accounts"}</h3>${accounts.map((o, i) => `<a class="t5-row" href="${orgLink(o)}" target="_blank" rel="noopener"><span class="n">${i + 1}</span>${sq(o)}<span class="who"><b>${esc(o.name)}</b><small>${compact(o.followers)} followers</small></span><span class="v"><span class="${chCls(weekGrowth(o))}">${weekGrowth(o) ? pct1(weekGrowth(o).pct) : "–"}</span></span></a>`).join("")}</div>` : ""}
         ${athletes.length ? `<div class="ev-col"><h3 class="t5-h">Players to watch</h3><div class="ev-faces">${athletes.map(p => `<a href="${href(p)}">${sq(p)}<b>${esc(surname(p.name))}</b><small>${compact(p.followers)}</small></a>`).join("")}</div></div>` : ""}
       </div>
     </section>`;
@@ -2107,7 +2114,11 @@ function showHome() {
   window.scrollTo(0, 0);
 }
 
-function surname(n) { const w = n.split(" ").filter(x => !/^(jr|jnr|sr|ii|iii|iv)\.?$/i.test(x)); return w.at(-1) || n; }
+function surname(n) {
+  const w = n.split(" ").filter(x => !/^(jr|jnr|sr|ii|iii|iv)\.?$/i.test(x));
+  const i = w.length - 1, pre = w[i - 1] && /^(de|van|von|di|da|del|der|le|la)$/i.test(w[i - 1]) ? w[i - 1] + " " : "";   // "de Minaur", "van Egmond"
+  return pre + (w[i] || n);
+}
 // Discover: a random handful of athletes, reshuffled on demand.
 let discoverSkip = new Set();
 function renderDiscover() {
