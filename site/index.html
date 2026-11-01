@@ -1943,7 +1943,10 @@ function showHub(slug, first = true) {
   if (!sports.includes(hubState.sport)) hubState.sport = "All";
   const leagues = type === "club" ? [...new Set(all.filter(o => hubState.sport === "All" || o.sport === hubState.sport).map(o => o.league))].filter(Boolean).sort() : [];
   if (!leagues.includes(hubState.league)) hubState.league = "All";
-  if (type !== "club") hubState.gender = "All";
+  // Clubs filter by sport and league; leagues and national teams by men / women; federations need no filter.
+  const bySport = type === "club", byGender = type !== "governing";
+  if (!bySport) { hubState.sport = "All"; hubState.league = "All"; }
+  if (!byGender) hubState.gender = "All";
   // Women: women's clubs plus clubs whose account covers both; same for men.
   const gOk = o => hubState.gender === "All" || o.gender === hubState.gender || o.gender === "mixed";
   const list = all.filter(o => (hubState.sport === "All" || o.sport === hubState.sport) && (hubState.league === "All" || o.league === hubState.league) && gOk(o));
@@ -1963,9 +1966,9 @@ function showHub(slug, first = true) {
       <div class="bd-modes hub-tabs">${HUBS.map(([t, sl, l]) => `<a href="#/sports/${sl}" class="${t === type ? "on" : ""}">${l}</a>`).join("")}</div>
     </section>
     <div class="bd-controls" style="position:static">
-      <div class="bd-chips" data-hub="sport">${["All", ...sports].map(sp => `<a href="#" data-v="${esc(sp)}" aria-selected="${sp === hubState.sport}">${sp === "All" ? "All sports" : esc(SPORT_LABEL[sp] || sp)}</a>`).join("")}</div>
+      ${bySport ? `<div class="bd-chips" data-hub="sport">${["All", ...sports].map(sp => `<a href="#" data-v="${esc(sp)}" aria-selected="${sp === hubState.sport}">${sp === "All" ? "All sports" : esc(SPORT_LABEL[sp] || sp)}</a>`).join("")}</div>` : ""}
       ${leagues.length > 1 ? `<div class="bd-chips sub" data-hub="league">${["All", ...leagues].map(l => `<a href="#" data-v="${esc(l)}" aria-selected="${l === hubState.league}">${l === "All" ? "All leagues" : esc(l)}</a>`).join("")}</div>` : ""}
-      <div class="bd-row" style="justify-content:flex-end">${type === "club" ? `<div class="pills" data-hub="gender">${[["All", "Everyone"], ["women", "Women"], ["men", "Men"]].map(([k, l]) => `<a href="#" class="pill" data-v="${k}" aria-pressed="${k === hubState.gender}">${l}</a>`).join("")}</div>` : ""}<div class="pills" data-hub="days">${[[7, "Last 7 days"], [30, "Last 30 days"]].map(([k, l]) => `<a href="#" class="pill" data-v="${k}" aria-pressed="${k === d}">${l}</a>`).join("")}</div></div>
+      <div class="bd-row" style="justify-content:${byGender ? "space-between" : "flex-end"}">${byGender ? `<div class="pills" data-hub="gender">${[["All", "Everyone"], ["women", "Women"], ["men", "Men"]].map(([k, l]) => `<a href="#" class="pill" data-v="${k}" aria-pressed="${k === hubState.gender}">${l}</a>`).join("")}</div>` : ""}<div class="pills" data-hub="days">${[[7, "Last 7 days"], [30, "Last 30 days"]].map(([k, l]) => `<a href="#" class="pill" data-v="${k}" aria-pressed="${k === d}">${l}</a>`).join("")}</div></div>
     </div>
     <section class="mx-sec" style="margin-top:10px">
       <div class="sechead"><h2>Top 5 posts</h2><span class="hand">what landed</span><span class="sechint">${title} · last ${d} days · likes + comments</span></div>
