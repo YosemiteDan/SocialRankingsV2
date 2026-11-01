@@ -530,7 +530,7 @@
   .post-card:hover { transform: translateY(-3px); }
   .post-img { position: relative; display: block; aspect-ratio: 4 / 5; overflow: hidden; background: var(--card-2, #1b2350); }
   .post-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .post-ph { position: absolute; inset: 0; padding: 14px 14px 80px; color: var(--cream); font: 500 14px/1.4 var(--serif); display: flex; align-items: flex-start; }
+  .pc-ph { position: absolute; inset: 0; padding: 14px 14px 80px; color: var(--cream); font: 500 14px/1.4 var(--serif); display: flex; align-items: flex-start; }
   .post-img .big-n { position: absolute; left: 6px; bottom: 0; font: 700 64px/1 var(--serif); color: transparent; -webkit-text-stroke: 2px var(--cream); }
   .post-kind { position: absolute; right: 8px; top: 8px; background: var(--accent); color: var(--bg); font: 700 10px/1 var(--display); letter-spacing: .1em; text-transform: uppercase; padding: 4px 7px; }
   .post-who { display: flex; gap: 8px; align-items: center; margin-top: 9px; min-width: 0; }
@@ -1770,7 +1770,7 @@ const h2hSort = (id, cur) => `<div class="pills sm" role="group" aria-label="Ran
 function postCard(o, i) {
   const b = o.best_post;
   return `<a class="post-card" href="${esc(b.url)}" target="_blank" rel="noopener">
-    <span class="post-img">${b.thumb ? `<img src="${esc(b.thumb)}" alt="" loading="lazy">` : `<span class="post-ph">${esc((b.caption || "").slice(0, 90)) || "View post"}</span>`}
+    <span class="post-img">${b.thumb ? `<img src="${esc(b.thumb)}" alt="" loading="lazy">` : `<span class="pc-ph">${esc((b.caption || "").slice(0, 90)) || "View post"}</span>`}
       <span class="big-n">${i + 1}</span>${b.type === "reel" ? `<span class="post-kind">Reel</span>` : ""}</span>
     <span class="post-who">${sq(o)}<span><b>${esc(o.name)}</b><small>${esc(SPORT_LABEL[o.sport] || o.sport)}</small></span></span>
     <span class="post-stats"><span>♥ ${compact(b.likes || 0)}</span><span>💬 ${compact(b.comments || 0)}</span></span>
@@ -1888,7 +1888,7 @@ function bestPosts(list, days, n = 5) {
 }
 function postTile(o, m, i, who = true) {
   return `<a class="post-card" href="${esc(m.url)}" target="_blank" rel="noopener">
-    <span class="post-img">${m.thumb ? `<img src="${esc(m.thumb)}" alt="" loading="lazy">` : `<span class="post-ph">${esc((m.caption || "").slice(0, 90)) || "View post"}</span>`}
+    <span class="post-img">${m.thumb ? `<img src="${esc(m.thumb)}" alt="" loading="lazy">` : `<span class="pc-ph">${esc((m.caption || "").slice(0, 90)) || "View post"}</span>`}
       <span class="big-n">${i + 1}</span>${m.type === "reel" ? `<span class="post-kind">Reel</span>` : m.type === "carousel" ? `<span class="post-kind">Carousel</span>` : ""}</span>
     ${who ? `<span class="post-who">${sq(o)}<span><b>${esc(o.name)}</b><small>${esc(SPORT_LABEL[o.sport] || o.sport)}${m.date ? " · " + niceDate(m.date) : ""}</small></span></span>`
       : `<span class="post-who"><span><b class="cap">${esc((m.caption || "").split("\n")[0].slice(0, 44) || "Post")}</b><small>${m.date ? niceDate(m.date) : ""}</small></span></span>`}
