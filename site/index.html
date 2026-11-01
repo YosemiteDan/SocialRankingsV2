@@ -1850,8 +1850,8 @@ function govEventsHtml(list) {
 }
 /* ---- Sports home (#/sports): pick a region (tabs), then a hub. Only Australasia is live for now. */
 const REGION_TABS = [["Australasia", true], ["North America", false], ["Europe", false], ["Asia", false], ["South America", false], ["Africa", false]];
-const HUBS = [["league", "leagues", "Leagues", "the competitions", "league"], ["national", "national-teams", "National teams", "green and gold", "national team"],
-              ["governing", "federations", "Federations", "running the game", "federation"], ["club", "clubs", "Clubs", "the clubs online", "club"]];
+const HUBS = [["club", "clubs", "Clubs", "the clubs online", "club"], ["league", "leagues", "Leagues", "the competitions", "league"],
+              ["national", "national-teams", "National teams", "green and gold", "national team"], ["governing", "federations", "Federations", "running the game", "federation"]];
 const hubBy = k => HUBS.find(h => h[0] === k || h[1] === k);
 const REGION = "Australasia";
 const regionOrgs = () => orgsAll().filter(o => (o.region || "Australasia") === REGION);
