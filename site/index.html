@@ -416,7 +416,7 @@
   .bd-modes a { padding: 10px 16px; font: 700 13px/1 var(--display); letter-spacing: .12em; text-transform: uppercase; text-decoration: none; white-space: nowrap; }
   .bd-modes a.on { background: var(--cream); color: var(--bg); }
   .bd-controls { position: sticky; top: 58px; z-index: 5; background: var(--bg); padding: 14px 0 12px; border-bottom: 2px solid var(--line); margin-bottom: 26px; }
-  .bd-chips { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; }
+  .bd-chips { display: flex; flex-wrap: wrap; gap: 8px; padding-bottom: 2px; }
   .bd-chips::-webkit-scrollbar { display: none; }
   .bd-chips a { flex: none; display: inline-flex; align-items: center; gap: 8px; padding: 10px 15px; border: 2px solid var(--line); background: var(--card); font: 700 15px/1 var(--display); letter-spacing: .06em; text-transform: uppercase; text-decoration: none; }
   .bd-chips a small { font-size: 11px; color: var(--muted); }
@@ -567,6 +567,8 @@
   .hub-n { font: 700 28px/1 var(--display); color: var(--accent); }
   .hub-tile .sp-stats b { font-size: 18px; }
   .hub-tabs { margin-top: 20px; }
+  @media (max-width: 760px) { .hub-tabs { display: grid; grid-template-columns: 1fr 1fr; width: 100%; } .hub-tabs a { text-align: center; padding: 11px 6px; }
+    .bd-chips a { padding: 8px 11px; font-size: 13px; } }
   .hub-h2h .h2h-row { grid-template-columns: 30px minmax(0, 1fr) 80px 80px 56px 70px 76px 86px; }
   .t5-grid.three { grid-template-columns: repeat(3, 1fr); margin-top: 0; }
   .crumbs { margin-bottom: 4px; }
@@ -1957,7 +1959,7 @@ function showHub(slug, first = true) {
     <section class="bd-hero">
       <div class="kicker crumbs"><a href="#/sports" class="kick-link">Sports</a> › <a href="#/sports" class="kick-link">${REGION}</a> › ${title}</div>
       <h1>${title}</h1>
-      <p class="lede hub-lede">${all.length} official ${title.toLowerCase()} accounts in ${REGION}, ${compact(all.reduce((s, o) => s + o.followers, 0))} followers between them.</p>
+      <p class="lede hub-lede">${all.length} official ${H[4]} accounts in ${REGION}, ${compact(all.reduce((s, o) => s + o.followers, 0))} followers between them.</p>
       <div class="bd-modes hub-tabs">${HUBS.map(([t, sl, l]) => `<a href="#/sports/${sl}" class="${t === type ? "on" : ""}">${l}</a>`).join("")}</div>
     </section>
     <div class="bd-controls" style="position:static">
