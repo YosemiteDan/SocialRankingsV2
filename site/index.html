@@ -1341,7 +1341,7 @@ function engagementPanel(p) {
   ];
   return `<section class="panel eng-panel">
       <h2>Engagement</h2>
-      <p class="hint">${has ? "From their last 10 posts: likes and comments, with reels and comments weighted higher." : "Engagement figures start with the next daily update."}</p>
+      <p class="hint">${has ? "Socialete's own score, built from insights across their most recent posts." : "Engagement figures start with the next daily update."}</p>
       <div class="eng">${items.map(([v, l, hot]) => `<div class="${hot ? "hot" : ""}"><b>${esc(v)}</b><span>${esc(l)}</span></div>`).join("")}</div>
     </section>`;
 }
@@ -1464,7 +1464,7 @@ const engTxt = p => p.engagement_rate != null ? `${p.engagement_rate.toFixed(1)}
    Followers in cream/ink, change in green/red, engagement in orange.
    Cards: three labelled boxes (Followers · Change · Eng), the one the list is ranked by emphasised.
    Lists: aligned columns under a header; on phones the non-ranked stats move under the name. */
-const ENG_INFO = "Engagement: Socialete's score from likes and comments on their last 10 posts";
+const ENG_INFO = "Engagement: Socialete's own score, built from insights across each account's most recent posts";
 function pct1(x) { if (x == null) return "–"; const a = Math.abs(x); return (x >= 0 ? "+" : "−") + (a > 0 && a < 0.01 ? a.toFixed(3) : a > 0 && a < 0.1 ? a.toFixed(2) : a.toFixed(1)) + "%"; }
 const engVal = p => p.engagement_rate != null ? p.engagement_rate.toFixed(1) + "%" : "–";
 const chCls = ch => !ch || ch.pct == null ? "" : ch.pct >= 0 ? "gr" : "dn";
@@ -2180,7 +2180,7 @@ function showHow() {
       <li><b>Milestones</b> mark anyone crossing 10K, 25K, 50K, 100K, 250K, 500K, 1M, 2M, 5M or 10M followers this week.</li>
     </ul>
     <h2>The engagement score</h2>
-    <p>Engagement shows how much an account's audience actually interacts with it, relative to its size. It's Socialete's own score, built from the likes and comments on each account's <b>most recent posts</b>, and it's worked out the same way for every athlete, club, league and creator, so they can be compared fairly whatever their size.</p>
+    <p>Engagement shows how much an account's audience actually interacts with it, relative to its size. It's Socialete's own score, built from insights across each account's <b>most recent posts</b>, and it's worked out the same way for every athlete, club, league and creator, so they can be compared fairly whatever their size.</p>
     <h2>Teams, leagues and national squads</h2>
     <ul>
       <li><b>Fastest growing leagues and clubs</b> (home page) add up the followers of every athlete we track in that league or club, and show how much that total grew. It's not the club's own account.</li>
