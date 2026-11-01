@@ -483,6 +483,68 @@
   .cr-chip .sq { width: 42px; height: 42px; }
   .cr-chip b { display: block; font: 700 15px/1.15 var(--serif); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .cr-chip small { display: block; font: 700 10px/1.3 var(--display); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+  .h2h { container-type: inline-size; }
+  .h2h-row { display: grid; grid-template-columns: 30px minmax(0, 1fr) 80px 80px 60px 70px; gap: 0 12px; align-items: center; padding: 10px 0; border-bottom: 1px dashed var(--line); color: inherit; text-decoration: none; }
+  .h2h.with-pl .h2h-row { grid-template-columns: 30px minmax(0, 1fr) 80px 80px 60px 70px 110px; }
+  a.h2h-row:hover b { color: var(--accent); }
+  .h2h-head { font: 700 11px/1 var(--display); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); padding: 0 0 10px; border-bottom: 2px solid var(--line); }
+  .h2h-head > span:nth-child(n+3) { text-align: right; } .h2h-head .key { color: var(--cream); }
+  .h2h-row .n { font: 700 20px/1 var(--serif); }
+  .h2h-row .who { display: flex; align-items: center; gap: 12px; min-width: 0; }
+  .h2h-row .who > span:last-child { min-width: 0; flex: 1; }
+  .h2h-row .who .sq { width: 44px; height: 44px; flex: none; }
+  .h2h-row .who b { display: block; font: 700 18px/1.15 var(--serif); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .h2h-row .who small { display: block; font: 700 11px/1.3 var(--display); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-top: 2px; }
+  .hbar { display: block; height: 5px; margin-top: 7px; background: rgba(255,255,255,.06); }
+  .hbar > i { display: block; height: 100%; background: var(--accent); } .hbar > i.neg { background: #FF6B81; }
+  .h2h-row .c-f, .h2h-row .c-c, .h2h-row .c-e, .h2h-row .c-p, .h2h-row .c-pl { font: 700 16px/1.1 var(--display); text-align: right; color: #C3C9E3; }
+  .h2h-row:not(.h2h-head) .key { color: var(--cream); font-size: 19px; }
+  .h2h-row .c-c.gr { color: var(--green, #4BE38E); } .h2h-row .c-c.dn { color: #FF6B81; }
+  .h2h-row .c-e { color: var(--accent); }
+  .h2h-row small { display: block; font: 700 10px/1.3 var(--display); letter-spacing: .06em; color: var(--muted); margin-top: 3px; }
+  @container (max-width: 640px) { .h2h-row, .h2h.with-pl .h2h-row { grid-template-columns: 22px minmax(0, 1fr) 62px 62px 48px; gap: 0 8px; } .h2h-row .hide-s { display: none; } .h2h-row .who .sq { width: 34px; height: 34px; } .h2h-row .who b { font-size: 15px; } .h2h-row .key { font-size: 16px; } }
+  .sechead [data-sort] { margin-left: auto; }
+  .sp-pick { margin-top: 18px; }
+  .pills.country { margin-top: 14px; }
+  .tr-ctrl { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+  .sm-modes button { background: none; border: 0; color: inherit; padding: 10px 16px; font: 700 13px/1 var(--display); letter-spacing: .12em; text-transform: uppercase; cursor: pointer; }
+  .sm-modes button.on { background: var(--cream); color: var(--bg); }
+  .org-trend { display: grid; grid-template-columns: 1fr 1fr; gap: 0 36px; }
+  .t5-row { display: grid; grid-template-columns: 24px 40px minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 9px 0; border-bottom: 1px dashed var(--line); color: inherit; text-decoration: none; }
+  .t5-row .n { font: 700 17px/1 var(--serif); } .t5-row .sq { width: 40px; height: 40px; }
+  .t5-row b { display: block; font: 700 16px/1.15 var(--serif); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .t5-row small { display: block; font: 700 10px/1.3 var(--display); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+  .t5-row .v { font: 700 17px/1.1 var(--display); text-align: right; } .t5-row .v .gr { color: var(--green, #4BE38E); } .t5-row .v .dn { color: #FF6B81; } .t5-row .v .ev { color: var(--accent); }
+  .t5-row .v small { text-transform: none; letter-spacing: .04em; }
+  a.t5-row:hover b { color: var(--accent); }
+  .t5-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 36px; margin-top: 30px; } .t5-grid.one { grid-template-columns: 1fr; }
+  .t5-h { font: 700 13px/1 var(--display); letter-spacing: .14em; text-transform: uppercase; color: var(--accent); margin: 0 0 6px; }
+  .posts5 { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 16px; }
+  .post-card { display: flex; flex-direction: column; background: var(--cream); color: var(--ink); text-decoration: none; padding: 8px 8px 10px; box-shadow: 0 18px 34px -16px rgba(0,0,0,.9); transition: transform .15s; }
+  .post-card:hover { transform: translateY(-3px); }
+  .post-img { position: relative; display: block; aspect-ratio: 4 / 5; overflow: hidden; background: var(--card-2, #1b2350); }
+  .post-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .post-ph { position: absolute; inset: 0; padding: 14px; color: var(--cream); font: 500 14px/1.4 var(--serif); display: flex; align-items: flex-start; }
+  .post-img .big-n { position: absolute; left: 6px; bottom: 0; font: 700 64px/1 var(--serif); color: transparent; -webkit-text-stroke: 2px var(--cream); }
+  .post-kind { position: absolute; right: 8px; top: 8px; background: var(--accent); color: var(--bg); font: 700 10px/1 var(--display); letter-spacing: .1em; text-transform: uppercase; padding: 4px 7px; }
+  .post-who { display: flex; gap: 8px; align-items: center; margin-top: 9px; min-width: 0; }
+  .post-who .sq { width: 30px; height: 30px; flex: none; } .post-who > span:last-child { min-width: 0; }
+  .post-who b { display: block; font: 700 15px/1.1 var(--serif); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .post-who small { display: block; font: 700 10px/1.2 var(--display); letter-spacing: .1em; text-transform: uppercase; color: #6F6C66; }
+  .post-stats { display: flex; gap: 12px; margin-top: 8px; padding-top: 7px; border-top: 1px dashed #C9C4B8; font: 700 14px/1 var(--display); }
+  .event { margin: 10px 0 34px; padding: 26px 28px; border: 2px solid var(--accent); background: linear-gradient(135deg, rgba(255,122,26,.14), rgba(255,122,26,0) 60%); position: relative; }
+  .event.is-preview::after { content: "Preview"; position: absolute; right: 14px; top: 12px; font: 700 10px/1 var(--display); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+  .ev-top { display: flex; gap: 12px; align-items: center; }
+  .ev-badge { background: var(--accent); color: var(--bg); font: 700 11px/1 var(--display); letter-spacing: .14em; text-transform: uppercase; padding: 6px 9px; }
+  .ev-dates { font: 700 12px/1 var(--display); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+  .event h2 { font: 700 clamp(28px, 4vw, 44px)/1 var(--serif); margin: 14px 0 8px; }
+  .event p { color: #C3C9E3; font: 400 16px/1.5 var(--serif); margin: 0 0 16px; max-width: 70ch; }
+  .ev-body { display: grid; grid-template-columns: 1fr 1.3fr; gap: 0 36px; }
+  .ev-faces { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 8px; }
+  .ev-faces a { display: flex; flex-direction: column; align-items: center; width: 84px; text-align: center; color: inherit; text-decoration: none; }
+  .ev-faces .sq { width: 64px; height: 64px; } .ev-faces b { font: 700 14px/1.2 var(--serif); margin-top: 6px; } .ev-faces small { font: 700 11px/1 var(--display); color: var(--muted); }
+  .ev-faces.wide a { width: 120px; } .ev-faces.wide .sq { width: 88px; height: 88px; }
+  @media (max-width: 760px) { .org-trend, .t5-grid, .ev-body { grid-template-columns: 1fr; } .posts5 { grid-template-columns: repeat(5, 70%); overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 10px; } .post-card { scroll-snap-align: start; } .event { padding: 20px; } }
   .sp-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 16px; padding-top: 8px; }
   .sp-tile { display: flex; flex-direction: column; gap: 14px; background: var(--card); border: 2px solid var(--line); padding: 20px; text-decoration: none; transition: border-color .15s, transform .15s; }
   .sp-tile:hover { border-color: var(--accent); transform: translateY(-3px); }
@@ -774,8 +836,8 @@
         </div>
       </div>
       <nav class="foot-col" aria-label="Explore"><h4>Explore</h4>
-        <a href="#/">Home</a><a href="#/sports">All athletes</a><a href="#/followed">Most followed</a><a href="#/followed?gender=women">Women</a><a href="#/followed?gender=men">Men</a>
-        <a href="#/sports?dir=down">Trending down</a></nav>
+        <a href="#/">Home</a><a href="#/athletes">All athletes</a><a href="#/athletes?gender=women">Women</a><a href="#/athletes?gender=men">Men</a>
+        <a href="#/athletes?tab=up">Trending</a><a href="#/sports">Sports</a></nav>
       <nav class="foot-col" aria-label="Company"><h4>Socialete</h4>
         <a class="soon" href="#">About</a><a class="soon" href="#">How the rankings work</a><a class="soon" href="#">Contact</a><a class="soon" href="#">Advertise &amp; partner</a><a class="soon" href="#">Media kit</a></nav>
       <nav class="foot-col" aria-label="Athletes"><h4>Athletes</h4>
@@ -1075,7 +1137,7 @@ async function showProfile(id) {
   const mini = q => `<span class="mini">${photo(q)}</span>`;
 
   $("main").innerHTML = `
-    <a class="back" href="#/followed">← All athletes</a>
+    <a class="back" href="#/athletes">← All athletes</a>
     ${DATA.sample_data ? `<div class="notice">Preview mode: sample numbers.</div>` : ""}
     <section class="pro">
       <div class="shot">${photo(p)}${lgRank ? `<span class="rank">${lgRank}</span>` : ""}</div>
@@ -1338,165 +1400,16 @@ function drawChart() {
    five hero cards, then a list of up to 50 with "Show more". */
 const BOARD_MIN = 5000;          // growth and drops only count accounts with at least this many followers
 const BOARD_PAGE = 50;
-const BOARDS = {
-  growth: { path: "#/growth", nav: "Trending up", kicker: "Trending · up",
-            title: s => s === "All" ? "Who's growing fastest" : `${esc(SPORT_LABEL[s] || s)}'s fastest growing`,
-            hint: d => `Follower growth ${d && d < 7 ? `over the last ${d} day${d > 1 ? "s" : ""}` : "this week"} · ${compact(BOARD_MIN)}+ followers`,
-            rank: list => list.filter(p => p.followers >= BOARD_MIN && (weekGrowth(p) || {}).pct > 0)
-              .sort((a, b) => weekGrowth(b).pct - weekGrowth(a).pct) },
-  drops:  { path: "#/drops", nav: "Trending down", kicker: "Trending · down",
-            title: s => s === "All" ? "Who's losing followers" : `${esc(SPORT_LABEL[s] || s)}'s biggest drops`,
-            hint: d => `Follower change ${d && d < 7 ? `over the last ${d} day${d > 1 ? "s" : ""}` : "this week"} · ${compact(BOARD_MIN)}+ followers`,
-            rank: list => list.filter(p => p.followers >= BOARD_MIN && (weekGrowth(p) || {}).pct < 0)
-              .sort((a, b) => weekGrowth(a).pct - weekGrowth(b).pct) },
-  sports: { path: "#/followed", nav: "Most followed", kicker: "The leaderboard · every sport, one ladder",
-            title: s => s === "All" ? "Australia's most followed athletes" : `${esc(SPORT_LABEL[s] || s)}'s most followed`,
-            hint: "Ranked by Instagram followers today",
-            rank: list => list.filter(p => p.followers != null).sort((a, b) => b.followers - a.followers) },
-};
 const board = { mode: "sports", sport: "All", league: "All", gender: "All", q: "", shown: BOARD_PAGE };
 const sportsList = () => [...new Set(DATA.players.map(p => p.sport).filter(Boolean))]
   .sort((a, b) => ((SPORT_ORDER.indexOf(a) + 1) || 99) - ((SPORT_ORDER.indexOf(b) + 1) || 99));
 // All sports always means the Sports page for trending up / down; most followed keeps its own list.
-function allSportsLink(mode, gender) {
-  if (mode === "sports") return boardLink("sports", { gender });
-  const q = new URLSearchParams(Object.entries({ dir: mode === "drops" ? "down" : "", gender }).filter(([, v]) => v && v !== "All"));
-  return "#/sports" + (q.toString() ? "?" + q : "");
-}
-function boardLink(mode, o = {}) {
-  const q = new URLSearchParams(Object.entries({ sport: o.sport, league: o.league, gender: o.gender }).filter(([, v]) => v && v !== "All"));
-  return BOARDS[mode].path + (q.toString() ? "?" + q : "");
-}
 const engTxt = p => p.engagement_rate != null ? `${p.engagement_rate.toFixed(1)}% eng` : "";
 
-function showBoard(mode, params) {
-  current = null;
-  Object.assign(board, { mode, sport: params.get("sport") || "All", league: params.get("league") || "All",
-    gender: params.get("gender") || "All", q: "", shown: BOARD_PAGE });
-  const B = BOARDS[mode];
-  document.title = `${B.nav} – ${SITE_NAME}`;
-  const sports = sportsList();
-  if (!sports.includes(board.sport)) board.sport = "All";
-  const inSport = DATA.players.filter(p => board.sport === "All" || p.sport === board.sport);
-  const groups = [...new Set(inSport.filter(p => board.gender === "All" || p.gender === board.gender).flatMap(p => p.leagues || []).filter(Boolean))]
-    .sort((a, b) => ((LEAGUE_ORDER.indexOf(a) + 1) || 99) - ((LEAGUE_ORDER.indexOf(b) + 1) || 99));
-  if (!groups.includes(board.league)) board.league = "All";
-  const cnt = sp => DATA.players.filter(p => (sp === "All" || p.sport === sp) && (board.gender === "All" || p.gender === board.gender)).length;
-  const L = o => boardLink(mode, { sport: board.sport, league: board.league, gender: board.gender, ...o });
-  $("main").innerHTML = `
-    <section class="bd-hero">
-      <div class="kicker">${B.kicker}</div>
-      <h1>${B.title(board.sport)}</h1>
-      ${board.sport !== "All" ? (() => { const st = groupStats(DATA.players.filter(p => p.sport === board.sport && (board.league === "All" || inLeague(p, board.league))));
-        return `<div class="stats sp-sum"><div><small>Athletes</small><b>${st.n}</b></div><div><small>Combined followers</small><b>${compact(st.followers)}</b></div>${st.pct != null ? `<div><small>${st.days && st.days < 7 ? `Last ${st.days} day${st.days > 1 ? "s" : ""}` : "This week"}</small><b class="${st.pct >= 0 ? "up" : "down"}">${signed(st.pct)}%</b></div>` : ""}<a class="sp-back" href="#/sports">← All sports</a></div>`; })() : ""}
-      <div class="bd-modes">${Object.entries(BOARDS).map(([k, v]) => `<a href="${board.sport === "All" ? allSportsLink(k, board.gender) : boardLink(k, { sport: board.sport, gender: board.gender })}" class="${k === mode ? "on" : ""}">${{ sports: "Most followed", growth: "Trending up", drops: "Trending down" }[k]}</a>`).join("")}</div>
-    </section>
-    <div class="bd-controls">
-      <div class="bd-chips" role="tablist" aria-label="Sport">${["All", ...sports].map(sp => `<a role="tab" aria-selected="${sp === board.sport}" href="${sp === "All" ? allSportsLink(mode, board.gender) : L({ sport: sp, league: "All" })}">${sp === "All" ? "All sports" : esc(SPORT_LABEL[sp] || sp)}<small>${cnt(sp)}</small></a>`).join("")}</div>
-      ${board.sport !== "All" && groups.length > 1 ? `<div class="bd-chips sub" role="tablist" aria-label="League">
-        <a role="tab" aria-selected="${board.league === "All"}" href="${L({ league: "All" })}">All ${esc((SPORT_LABEL[board.sport] || board.sport).toLowerCase())}</a>
-        ${groups.filter(g => !isNational(g)).map(g => `<a role="tab" aria-selected="${g === board.league}" href="${L({ league: g })}">${esc(g)}</a>`).join("")}
-        ${groups.some(isNational) ? `<span class="tab-label">National teams</span>${groups.filter(isNational).map(g => `<a role="tab" class="nat" aria-selected="${g === board.league}" href="${L({ league: g })}">${esc(groupName(g))}</a>`).join("")}` : ""}
-      </div>` : ""}
-      <div class="bd-row">
-        <input id="bdSearch" type="search" placeholder="Search athletes, teams or leagues" aria-label="Search athletes, teams or leagues">
-        <div class="pills" role="group" aria-label="Men or women">${[["All", "Everyone"], ["women", "Women"], ["men", "Men"]].map(([g, l]) => `<a href="${L({ gender: g, league: "All" })}" aria-pressed="${g === board.gender}" class="pill">${l}</a>`).join("")}</div>
-      </div>
-      ${advPanel()}
-    </div>
-    <section id="bdBody"></section>`;
-  $("bdSearch").addEventListener("input", e => { board.q = e.target.value; board.shown = BOARD_PAGE; renderBoard(); });
-  wireAdv(() => { board.shown = BOARD_PAGE; renderBoard(); const n = Object.keys(ADV).filter(advActive).length;
-    document.querySelector(".bd-adv summary").innerHTML = `Advanced filters${n ? ` <span class="adv-n">${n}</span>` : ""}`; });
-  renderBoard();
-  window.scrollTo(0, 0);
-}
 
 // Sport page heroes, side by side: the biggest name and the fastest riser,
 // each with "View more" opening the full ranked list underneath.
-function sportSpotlight(pool) {
-  const label = (() => { const d = Math.max(0, ...pool.map(p => (weekGrowth(p) || {}).days || 0)); return d && d < 7 ? `${d} day${d > 1 ? "s" : ""}` : "Week"; })();
-  const stars = pool.filter(p => p.followers != null).sort((a, b) => b.followers - a.followers);
-  const emerging = pool.filter(p => p.followers >= 1000 && p.followers < UP_AND_COMING_CAP && (weekGrowth(p) || {}).pct > 0)
-    .sort((a, b) => weekGrowth(b).pct - weekGrowth(a).pct);
-  const MAX = 50;
-  const col = (title, hand, hint, list, key, tilt, empty, allLink) => {
-    const p = list[0];
-    const more = list.slice(1, MAX);
-    return `<div class="spot-col">
-      <div class="sechead"><h2>${title}</h2><span class="hand">${hand}</span><span class="sechint">${hint}</span></div>
-      ${p ? `<a class="tcard spot" href="${href(p)}" style="--tilt:${tilt}deg">
-        <span class="tape"></span>
-        <span class="pic">${photo(p)}<span class="handle">@${esc(p.instagram || "")}</span><span class="big-n">1</span></span>
-        <span class="body">
-          <span class="nm">${esc(p.name)}${p.verified ? TICK : ""}</span>
-          <span class="tm">${teamLine(p)}</span>
-          ${cardStats(p, weekGrowth(p), label, key)}
-        </span>
-      </a>
-      ${more.length ? `<details class="spot-more"><summary><span class="o">View more</span><span class="c">Show less</span> <small>${list.length - 1 > more.length ? `top ${MAX}` : list.length}</small></summary>
-        <div class="spot-list">${listHead(label, key)}${more.map((x, i) => listRow(x, i + 2, weekGrowth(x), key)).join("")}
-        ${allLink ? `<a class="spot-all" href="${allLink}">Full list →</a>` : ""}</div>
-      </details>` : ""}` : `<p class="empty">${empty}</p>`}
-    </div>`;
-  };
-  return `<div class="spot-row">
-    ${col("Stars", "the biggest name", "Most followed", stars, "f", -1.5, "No numbers yet.",
-      stars.length > MAX ? boardLink("sports", { sport: board.sport, gender: board.gender }) : "")}
-    ${col("Emerging", "one to watch", `Under ${compact(UP_AND_COMING_CAP)} followers`, emerging, "c", 1.5,
-      "Emerging athletes show once there are two days of numbers.", "")}
-  </div>`;
-}
 
-function renderBoard() {
-  const B = BOARDS[board.mode];
-  const q = board.q.trim().toLowerCase();
-  const pool = DATA.players.filter(p => (board.sport === "All" || p.sport === board.sport) &&
-    (board.gender === "All" || p.gender === board.gender) && (board.league === "All" || inLeague(p, board.league)) && advPass(p));
-  const ranked = B.rank(pool);
-  ranked.forEach((p, i) => p._brank = i + 1);
-  const matches = p => !q || p.name.toLowerCase().includes(q) || (p.teams || []).some(t => (t[1] || "").toLowerCase().includes(q) || (t[0] || "").toLowerCase().includes(q)) || (p.sport || "").toLowerCase().includes(q);
-  const rows = ranked.filter(matches);
-  const days = Math.max(0, ...ranked.slice(0, 50).map(p => (weekGrowth(p) || {}).days || 0));
-  const hint = typeof B.hint === "function" ? B.hint(days) : B.hint;
-  const value = p => board.mode === "sports" ? `<b>${compact(p.followers)}</b>` : `<b class="${board.mode === "growth" ? "gr" : "dn"}">${signed(weekGrowth(p).pct)}%</b>`;
-  const sub = p => {
-    const g = weekGrowth(p);
-    const bits = board.mode === "sports" ? [g && g.n ? `<span class="${g.pct >= 0 ? "up" : "down"}">${growthTxt(g)}</span>` : ""]
-      : [`${compact(p.followers)}`, g ? `<span class="${g.n >= 0 ? "up" : "down"}">${exactSigned(g.n)}</span>` : ""];
-    if (engTxt(p)) bits.push(`<span class="engv">${engTxt(p)}</span>`);
-    return bits.filter(Boolean).join(" · ");
-  };
-  if (!rows.length) {
-    $("bdBody").innerHTML = `<p class="sechint" style="margin:6px 0 0">${esc(hint)}</p><p class="empty" style="margin-top:24px">${q ? `No athletes match "${esc(board.q)}".`
-      : board.mode === "sports" ? "No numbers yet." : "Nothing here yet. This fills in once there are two days of numbers."}</p>`;
-    return;
-  }
-  // Sport pages lead with two hero rows, Stars and Emerging; the ranking below then starts at #1.
-  const spotlight = board.sport !== "All" && !q;
-  const hero = q || spotlight ? [] : rows.slice(0, 5);
-  const rest = q || spotlight ? rows : rows.slice(5);
-  const tilt = [-2, 1.5, -1, 2, -1.5];
-  const bdChLabel = days && days < 7 ? `${days} day${days > 1 ? "s" : ""}` : "Week";
-  const cards = hero.map((p, i) => `
-    <a class="tcard" href="${href(p)}" style="--tilt:${tilt[i]}deg">
-      <span class="tape"></span>
-      <span class="pic">${photo(p)}<span class="handle">@${esc(p.instagram || "")}</span><span class="big-n">${p._brank}</span></span>
-      <span class="nm">${esc(p.name)}${p.verified ? TICK : ""}</span>
-      <span class="tm">${teamLine(p)}</span>
-      ${cardStats(p, weekGrowth(p), bdChLabel, board.mode === "sports" ? "f" : "c")}
-    </a>`).join("");
-  const page = rest.slice(0, board.shown);
-  $("bdBody").innerHTML = `
-    <p class="sechint" style="margin:6px 0 ${hero.length ? 30 : 16}px">${esc(hint)}${q ? ` · ${rows.length} match${rows.length > 1 ? "es" : ""}` : ` · ${ranked.length} athletes`}</p>
-    ${spotlight ? sportSpotlight(pool) : ""}
-    ${hero.length ? `<div class="tcards bd-hero-cards">${cards}</div>` : ""}
-    ${spotlight && rest.length ? `<div class="sechead" style="margin-top:10px"><h2>${{ sports: "Most followed", growth: "Trending up", drops: "Trending down" }[board.mode]}</h2><span class="sechint">${esc(hint)}</span></div>` : ""}
-    ${page.length ? `<div class="bd-list">${[0, 1].map(c => `<div>${listHead(bdChLabel, board.mode === "sports" ? "f" : "c")}${page.filter((_, i) => i % 2 === c).map(p => listRow(p, p._brank, weekGrowth(p), board.mode === "sports" ? "f" : "c")).join("")}</div>`).join("")}</div>` : ""}
-    ${rest.length > board.shown ? `<div class="more"><button class="btn" id="bdMore">Show more (${rest.length - board.shown} to go)</button></div>` : ""}
-    ${board.sport !== "All" ? extrasHtml(pool.filter(matches), pool.filter(p => matches(p) && p.followers >= BOARD_MIN), board.mode !== "drops") : ""}`;
-  $("bdMore")?.addEventListener("click", () => { board.shown += BOARD_PAGE; renderBoard(); });
-}
 
 
 /* ---------------------------------------------------------------- stat display (one system everywhere)
@@ -1552,19 +1465,6 @@ function moveOf(p, win) {
   const g = weekGrowth(p);
   return g ? { pct: g.pct, n: g.n, days: g.days } : null;
 }
-function sportTiles() {
-  return sportsList().map(sp => {
-    const list = DATA.players.filter(p => p.sport === sp), st = groupStats(list);
-    const leagues = [...new Set(list.flatMap(clubLeagues))], nats = [...new Set(list.flatMap(nationalTeams))];
-    return `<a class="sp-tile" href="${boardLink("growth", { sport: sp })}">
-      <div class="sp-top"><h3>${esc(SPORT_LABEL[sp] || sp)}</h3>${st.pct != null ? `<span class="${st.pct >= 0 ? "up" : "down"}">${signed(st.pct)}%</span>` : ""}</div>
-      <div class="sp-faces">${st.top.map(p => `<span class="sq">${photo(p)}</span>`).join("")}<span class="sp-names">${st.top.map(p => esc(surname(p.name))).join("<br>")}</span></div>
-      <div class="sp-stats"><div><b>${st.n}</b><small>athletes</small></div><div><b>${compact(st.followers)}</b><small>followers</small></div></div>
-      <div class="sp-leagues">${[...leagues, ...nats.map(groupName)].map(esc).join(" · ") || "&nbsp;"}</div>
-      <span class="sp-go">Explore ${esc((SPORT_LABEL[sp] || sp).toLowerCase())} →</span>
-    </a>`;
-  }).join("");
-}
 // Breakouts and Milestones (trending up only) and New on Socialete, for whatever athletes are passed in.
 function extrasHtml(base, pool, up) {
   const breakouts = pool.filter(p => p.breakout_x >= 3).sort((a, b) => b.breakout_x - a.breakout_x).slice(0, 6);
@@ -1600,81 +1500,6 @@ function extrasHtml(base, pool, up) {
     </section>`;
 }
 
-function showSportsMain(params) {
-  current = null;
-  document.title = `Athletes – ${SITE_NAME}`;
-  trend.gender = params.get("gender") || "All";
-  if (params.get("win")) trend.win = params.get("win");
-  trend.dir = params.get("dir") === "down" ? "down" : "up";
-  trend.q = ""; trend.shown = 20;
-  if (params.get("adv")) board.advOpen = true;
-  const sports = sportsList(), all = groupStats(DATA.players);
-  const L = o => { const q = new URLSearchParams(Object.entries({ dir: trend.dir, win: trend.win, gender: trend.gender, ...o }).filter(([k, v]) => v && v !== "All" && !(k === "win" && v === "day") && !(k === "dir" && v === "up"))); return "#/sports" + (q.toString() ? "?" + q : ""); };
-  const up = trend.dir === "up";
-  $("main").innerHTML = `
-    <section class="bd-hero">
-      <div class="kicker">Athletes · every sport, one feed</div>
-      <h1>${up ? "Trending up" : "Trending down"} ${trend.win === "day" ? "today" : trend.win === "week" ? "this week" : "this month"}</h1>
-      <p class="lede hub-lede">${all.n} athletes across ${sports.length} sports, ${compact(all.followers)} Instagram followers between them.</p>
-      <div class="bd-modes"><a href="${L({ dir: "up" })}" class="${up ? "on" : ""}">▲ Trending up</a><a href="${L({ dir: "down" })}" class="${up ? "" : "on"}">▼ Trending down</a><a href="${boardLink("sports")}">Most followed</a></div>
-    </section>
-    <div id="smHero"></div>
-    <div class="bd-controls sm-controls">
-      <div class="bd-row" style="margin-top:0">
-        <input id="smSearch" type="search" placeholder="Search athletes, teams or leagues" aria-label="Search athletes, teams or leagues">
-        <div class="pills" role="group" aria-label="Men or women">${[["All", "Everyone"], ["women", "Women"], ["men", "Men"]].map(([g, l]) => `<a href="${L({ gender: g })}" aria-pressed="${g === trend.gender}" class="pill">${l}</a>`).join("")}</div>
-      </div>
-      <div class="bd-chips sm-chips" aria-label="Drill into a sport"><span class="tab-label">Drill into</span>${sports.map(sp => `<a href="${boardLink(up ? "growth" : "drops", { sport: sp, gender: trend.gender })}">${esc(SPORT_LABEL[sp] || sp)}<small>${DATA.players.filter(p => p.sport === sp).length}</small></a>`).join("")}</div>
-      <div class="bd-row">
-        <div class="pills" role="group" aria-label="Time">${[["day", "Today"], ["week", "This week"], ["month", "This month"]].map(([k, l]) => `<a href="${L({ win: k })}" aria-pressed="${k === trend.win}" class="pill">${l}</a>`).join("")}</div>
-      </div>
-      ${advPanel()}
-    </div>
-    <div id="smBody"></div>
-    <section class="mx-sec">
-      <div class="sechead"><h2>Browse by sport</h2><span class="hand">pick your code</span><span class="sechint">Growth is the combined change in each sport's players' followers</span></div>
-      <div class="sp-grid">${sportTiles()}</div>
-    </section>`;
-  $("smSearch").addEventListener("input", e => { trend.q = e.target.value; trend.shown = 20; renderSportsMain(); });
-  wireAdv(() => { renderSportsMain(); const n = Object.keys(ADV).filter(advActive).length;
-    document.querySelector(".bd-adv summary").innerHTML = `Advanced filters${n ? ` <span class="adv-n">${n}</span>` : ""}`; },
-    () => { advReset(); board.advOpen = true; showSportsMain(new URLSearchParams(location.hash.split("?")[1] || "")); });
-  renderSportsMain();
-  window.scrollTo(0, 0);
-}
-function renderSportsMain() {
-  const up = trend.dir === "up", q = trend.q.trim().toLowerCase();
-  const matches = p => !q || p.name.toLowerCase().includes(q) || (p.sport || "").toLowerCase().includes(q) ||
-    (p.teams || []).some(t => (t[1] || "").toLowerCase().includes(q) || (t[0] || "").toLowerCase().includes(q));
-  const base = DATA.players.filter(p => (trend.gender === "All" || p.gender === trend.gender) && matches(p) && advPass(p));
-  const pool = base.filter(p => p.followers >= BOARD_MIN);
-  const moves = pool.map(p => ({ p, m: moveOf(p, trend.win) })).filter(x => x.m && x.m.n);
-  const ranked = up ? moves.filter(x => x.m.pct > 0).sort((a, b) => b.m.pct - a.m.pct)
-                    : moves.filter(x => x.m.pct < 0).sort((a, b) => a.m.pct - b.m.pct);
-  const days = Math.max(0, ...moves.map(x => x.m.days || 0));
-  const winLabel = { day: "today", week: days && days < 7 ? `over the last ${days} day${days > 1 ? "s" : ""}` : "this week",
-                     month: moves.some(x => !x.m.days) ? "this month" : `over the last ${days} day${days > 1 ? "s" : ""}` }[trend.win];
-  const trLabel = { day: "Today", week: days && days < 7 ? `${days} day${days > 1 ? "s" : ""}` : "Week", month: moves.some(x => !x.m.days) ? "Month" : `${days} day${days > 1 ? "s" : ""}` }[trend.win];
-  const hero = ranked.slice(0, 10), more = ranked.slice(10, 10 + trend.shown);
-  const emptyMsg = q || Object.keys(ADV).some(advActive) ? "No athletes match these filters. Try widening them."
-    : !moves.length ? (trend.win === "day" ? "Today's numbers arrive after the morning update." : "Building up: this fills in as the daily numbers come in.")
-    : up ? "Nobody's growing right now." : "Nobody's dropping. Good day for the feed.";
-  const tilt = [-2, 1.5, -1, 2, -1.5, 1.2, -1.6, 0.8, -1.2, 1.8];
-  $("smHero").innerHTML = hero.length ? `<p class="sechint" style="margin:0 0 22px">Follower ${up ? "growth" : "drops"} ${winLabel} · ${compact(BOARD_MIN)}+ followers · ${ranked.length} athletes</p>
-    <div class="tcards hero10">${hero.map((x, i) => `
-      <a class="tcard" href="${href(x.p)}" style="--tilt:${tilt[i]}deg">
-        <span class="tape"></span>
-        <span class="pic">${photo(x.p)}<span class="handle">@${esc(x.p.instagram || "")}</span><span class="big-n">${i + 1}</span></span>
-        <span class="nm">${esc(x.p.name)}${x.p.verified ? TICK : ""}</span>
-        <span class="tm">${teamLine(x.p)}</span>
-        ${cardStats(x.p, x.m, trLabel, "c")}
-      </a>`).join("")}</div>` : `<p class="empty" style="margin:0 0 20px">${emptyMsg}</p>`;
-  $("smBody").innerHTML = `
-    ${more.length ? `<div class="bd-list">${[0, 1].map(c => `<div>${listHead(trLabel, "c")}${more.filter((_, i) => i % 2 === c).map(x => listRow(x.p, ranked.indexOf(x) + 1, x.m, "c")).join("")}</div>`).join("")}</div>
-      ${ranked.length > 10 + trend.shown ? `<div class="more"><button class="btn" id="smMore">Show more (${ranked.length - 10 - trend.shown} to go)</button></div>` : ""}` : ""}
-    ${extrasHtml(base, pool, up)}`;
-  $("smMore")?.addEventListener("click", () => { trend.shown += 40; renderSportsMain(); });
-}
 
 /* ---------------------------------------------------------------- advanced search (#/search) */
 // Ranges: [min, max] for each slider. Followers use a log scale so 1K-10K is as easy to pick as 1M-10M.
@@ -1735,7 +1560,7 @@ function wireAdv(onChange, onReset) {
     lo.addEventListener("input", upd); hi.addEventListener("input", upd);
     paintSlider(k);
   });
-  $("advReset")?.addEventListener("click", onReset || (() => { advReset(); board.advOpen = true; showBoard(board.mode, new URLSearchParams(location.hash.split("?")[1] || "")); }));
+  $("advReset")?.addEventListener("click", onReset || (() => { advReset(); board.advOpen = true; route(); }));
   document.querySelector(".bd-adv")?.addEventListener("toggle", e => { board.advOpen = e.target.open; });
 }
 
@@ -1842,146 +1667,217 @@ function renderAthletes() {
 }
 
 /* ---------------------------------------------------------------- sports (#/sports, #/sport/<name>)
-   Sports are about the groups, not individual athletes: leagues, national teams and clubs,
-   each measured by the combined Instagram followers of its athletes, plus each sport's top creators. */
-function groupsOf(list, kind) {
-  const out = {};
-  for (const p of list) {
-    const keys = kind === "league" ? clubLeagues(p) : kind === "national" ? nationalTeams(p)
-      : (p.teams || []).filter(t => t[1] && t[1] !== "Australia" && !isNational(t[0])).map(t => t[1]);
-    for (const k of new Set(keys)) (out[k] ||= []).push(p);
-  }
-  return Object.entries(out).map(([k, ps]) => ({ key: k, name: kind === "national" ? groupName(k) : k, ps, st: groupStats(ps),
-    league: kind === "club" ? (ps[0].teams.find(t => t[1] === k) || [])[0] : "" }));
-}
-function groupCard(g, sport, kind) {
-  const st = g.st, lead = g.ps.filter(p => (weekGrowth(p) || {}).n > 0).sort((a, b) => weekGrowth(b).n - weekGrowth(a).n)[0];
-  const comp = kind === "national" ? (g.ps.find(p => p.national && p.national[g.key]) || {}).national?.[g.key] : "";
-  return `<a class="sp-tile lg-tile" href="${athLink({ tab: "followed", sport, league: g.key, gender: "All" })}">
-    <div class="sp-top"><h3>${esc(g.name)}</h3>${st.pct != null ? `<span class="${st.pct >= 0 ? "up" : "down"}">${pct1(st.pct)}</span>` : ""}</div>
-    ${comp ? `<div class="lg-note">Squad: ${esc(comp)}</div>` : ""}
-    <div class="sp-faces">${st.top.map(p => `<span class="sq">${photo(p)}</span>`).join("")}<span class="sp-names">${st.top.map(p => esc(surname(p.name))).join("<br>")}</span></div>
-    <div class="sp-stats"><div><b>${st.n}</b><small>athletes</small></div><div><b>${compact(st.followers)}</b><small>combined followers</small></div></div>
-    ${lead ? `<div class="sp-leagues">Driving it: ${esc(lead.name)} ${exactSigned(weekGrowth(lead).n)}</div>` : ""}
-    <span class="sp-go">See the athletes →</span>
-  </a>`;
-}
+   Sports are about the official accounts: leagues, clubs, national teams and governing bodies,
+   head to head. Followers, growth, engagement and their best posts. Athletes only appear as a
+   supporting number (the combined followers of a league's players). Leagues are grouped by
+   country. Tournament widgets (data/events.csv) show while an event is on. */
 const sportHref = sp => `#/sport/${encodeURIComponent(sp)}`;
-const club = { by: "followers" };
-function clubLadder(sport) {
-  // Clubs with at least 3 tracked athletes, so one star in an overseas club doesn't top the ladder.
-  const clubs = groupsOf(DATA.players.filter(p => p.sport === sport), "club").filter(g => g.st.tracked >= 3);
-  const byG = club.by === "growth";
-  clubs.sort(byG ? (a, b) => (b.st.pct ?? -1e9) - (a.st.pct ?? -1e9) : (a, b) => b.st.followers - a.st.followers);
-  if (!clubs.length) return `<p class="empty">No clubs yet.</p>`;
-  const top = clubs.slice(0, 20);
-  return `<div class="club-list">
-    <div class="club-row club-head"><span></span><span>Club</span><span>Athletes</span><span class="${byG ? "" : "key"}">Followers</span><span class="${byG ? "key" : ""}">Week</span><span class="hide-s">Biggest name</span></div>
-    ${top.map((g, i) => `<a class="club-row" href="${athLink({ tab: "followed", sport, league: "All", gender: "All", q: g.key })}">
-      <span class="n">${i + 1}</span>
-      <span class="who"><b>${esc(shortTeam(g.key, sport))}</b><small>${esc(groupName(g.league || ""))}</small></span>
-      <span class="c-n">${g.st.n}</span>
-      <span class="c-f">${compact(g.st.followers)}</span>
-      <span class="c-c ${g.st.pct == null ? "" : g.st.pct >= 0 ? "gr" : "dn"}">${g.st.pct == null ? "–" : pct1(g.st.pct)}</span>
-      <span class="c-top hide-s">${g.st.top[0] ? `${sq(g.st.top[0])}<em>${esc(g.st.top[0].name)}</em>` : ""}</span>
-    </a>`).join("")}
+const ORG_TYPE = { league: "League", club: "Club", national: "National team", governing: "Governing body", event: "Event" };
+const orgsAll = () => (DATA.orgs || []).filter(o => o.followers != null);
+const orgCountries = () => [...new Set(orgsAll().map(o => o.country))].sort((a, b) => (a !== "Australia") - (b !== "Australia") || a.localeCompare(b));
+const spState = { country: "Australia", trend: "up", win: "week", clubLeague: "", h2h: "followers" };
+function orgMove(o, win) {
+  if (win === "day") {
+    const newest = orgsAll().map(x => x.as_of).sort().at(-1);
+    return o.change_1d != null && o.as_of === newest ? { pct: o.change_1d_pct, n: o.change_1d } : null;
+  }
+  return weekGrowth(o);
+}
+const orgLink = o => `https://instagram.com/${encodeURIComponent(o.instagram)}`;
+// Combined followers of the athletes we track in a league or national team (the athletes' angle).
+function playersIn(o) {
+  const lg = o.league;
+  if (!lg || !["league", "national"].includes(o.type)) return null;
+  const list = DATA.players.filter(p => p.followers != null && inLeague(p, lg));
+  return list.length ? { n: list.length, followers: list.reduce((s, p) => s + p.followers, 0) } : null;
+}
+// Head to head: one row per account, with a bar so the gaps between them are obvious.
+function h2hTable(list, opts = {}) {
+  if (!list.length) return `<p class="empty">${opts.empty || "Nothing here yet."}</p>`;
+  const key = opts.key || "followers";
+  const val = o => key === "growth" ? ((weekGrowth(o) || {}).pct ?? -1e9) : key === "eng" ? (o.engagement_rate ?? -1) : o.followers;
+  const rows = [...list].sort((a, b) => val(b) - val(a));
+  const max = Math.max(...rows.map(o => Math.abs(val(o)) || 0), 1e-9);
+  const showPlayers = opts.players && rows.some(playersIn);
+  return `<div class="h2h${showPlayers ? " with-pl" : ""}">
+    <div class="h2h-row h2h-head"><span></span><span>Account</span><span class="${key === "followers" ? "key" : ""}">Followers</span><span class="${key === "growth" ? "key" : ""}">Week</span><span class="${key === "eng" ? "key" : ""}" title="${ENG_INFO}">Eng</span><span class="hide-s">Posts 30d</span>${showPlayers ? `<span class="hide-s" title="Combined followers of the athletes we track in it">Players' followers</span>` : ""}</div>
+    ${rows.map((o, i) => { const g = weekGrowth(o), pl = playersIn(o), v = val(o);
+      return `<a class="h2h-row" href="${orgLink(o)}" target="_blank" rel="noopener">
+        <span class="n">${i + 1}</span>
+        <span class="who">${sq(o)}<span><b>${esc(o.name)}</b><small>${esc(opts.sub ? opts.sub(o) : (ORG_TYPE[o.type] || ""))}</small>
+          <i class="hbar"><i style="width:${Math.max(3, Math.abs(v) / max * 100).toFixed(1)}%" class="${key === "growth" && v < 0 ? "neg" : ""}"></i></i></span></span>
+        <span class="c-f${key === "followers" ? " key" : ""}">${compact(o.followers)}</span>
+        <span class="c-c ${chCls(g)}${key === "growth" ? " key" : ""}">${g && g.n ? pct1(g.pct) : "–"}${g && g.n ? `<small>${exactSigned(g.n)}</small>` : ""}</span>
+        <span class="c-e ev${key === "eng" ? " key" : ""}">${engVal(o)}</span>
+        <span class="c-p hide-s">${o.posts_last_30d ?? "–"}</span>
+        ${showPlayers ? `<span class="c-pl hide-s">${pl ? `${compact(pl.followers)}<small>${pl.n} athletes</small>` : "–"}</span>` : ""}
+      </a>`; }).join("")}
   </div>`;
 }
-function creatorsFor(sport) {
-  return (DATA.creators || []).filter(c => sport === "All" || c.sport === sport).sort((a, b) => (b.followers || 0) - (a.followers || 0));
+const h2hSort = (id, cur) => `<div class="pills sm" role="group" aria-label="Rank by" data-sort="${id}">${[["followers", "Followers"], ["growth", "Growth"], ["eng", "Engagement"]].map(([k, l]) => `<button data-k="${k}" aria-pressed="${k === cur}">${l}</button>`).join("")}</div>`;
+function postCard(o, i) {
+  const b = o.best_post;
+  return `<a class="post-card" href="${esc(b.url)}" target="_blank" rel="noopener">
+    <span class="post-img">${b.thumb ? `<img src="${esc(b.thumb)}" alt="" loading="lazy">` : `<span class="post-ph">${esc((b.caption || "").slice(0, 90)) || "View post"}</span>`}
+      <span class="big-n">${i + 1}</span>${b.type === "reel" ? `<span class="post-kind">Reel</span>` : ""}</span>
+    <span class="post-who">${sq(o)}<span><b>${esc(o.name)}</b><small>${esc(SPORT_LABEL[o.sport] || o.sport)}</small></span></span>
+    <span class="post-stats"><span>♥ ${compact(b.likes || 0)}</span><span>💬 ${compact(b.comments || 0)}</span></span>
+  </a>`;
 }
-function creatorsHtml(sport) {
-  const list = creatorsFor(sport);
-  const tilt = [-2, 1.5, -1, 2, -1.5];
-  if (!list.length) return `<p class="empty">Creators for ${esc(sport === "All" ? "these sports" : (SPORT_LABEL[sport] || sport))} are being added.</p>`;
-  const card = (c, i) => `<a class="tcard" href="https://instagram.com/${esc(c.instagram)}" target="_blank" rel="noopener" style="--tilt:${tilt[i]}deg">
-      <span class="tape"></span>
-      <span class="pic">${photo(c)}<span class="handle">@${esc(c.instagram)}</span><span class="big-n">${i + 1}</span></span>
-      <span class="nm">${esc(c.name)}</span>
-      <span class="tm">${esc(c.kind || "Creator")}${sport === "All" ? " · " + esc(SPORT_LABEL[c.sport] || c.sport) : ""}</span>
-      ${cardStats(c, weekGrowth(c), "Week", "f")}
-    </a>`;
-  return `<div class="tcards">${list.slice(0, 5).map(card).join("")}</div>
-    ${list.length > 5 ? `<div class="cr-more">${list.slice(5, 15).map((c, i) => `<a class="cr-chip" href="https://instagram.com/${esc(c.instagram)}" target="_blank" rel="noopener"><span class="n">${i + 6}</span>${sq(c)}<span class="who"><b>${esc(c.name)}</b><small>${esc(c.kind || "Creator")} · ${compact(c.followers)}</small></span></a>`).join("")}</div>` : ""}`;
+// The "at a glance" strip: best posts, fastest growing and most engaged official accounts.
+function top5Html(list) {
+  const posts = list.filter(o => o.best_post && o.best_post.likes != null).sort((a, b) => (b.best_post.likes + (b.best_post.comments || 0)) - (a.best_post.likes + (a.best_post.comments || 0))).slice(0, 5);
+  const fastest = list.filter(o => (weekGrowth(o) || {}).n > 0).sort((a, b) => weekGrowth(b).pct - weekGrowth(a).pct).slice(0, 5);
+  const engaged = list.filter(o => o.engagement_rate != null).sort((a, b) => b.engagement_rate - a.engagement_rate).slice(0, 5);
+  const mini = (arr, v) => arr.length ? arr.map((o, i) => `<a class="t5-row" href="${orgLink(o)}" target="_blank" rel="noopener"><span class="n">${i + 1}</span>${sq(o)}<span class="who"><b>${esc(o.name)}</b><small>${esc(SPORT_LABEL[o.sport] || o.sport)} · ${compact(o.followers)}</small></span><span class="v">${v(o)}</span></a>`).join("") : `<p class="empty">Fills in with the daily numbers.</p>`;
+  return `
+    <div class="sechead"><h2>Top 5 posts</h2><span class="hand">what landed this week</span><span class="sechint">Most likes + comments, official accounts</span></div>
+    ${posts.length ? `<div class="posts5">${posts.map(postCard).join("")}</div>` : `<p class="empty">Best posts show once the official accounts have been collected.</p>`}
+    <div class="t5-grid">
+      <div><h3 class="t5-h">Fastest growing</h3>${mini(fastest, o => `<span class="gr">${pct1(weekGrowth(o).pct)}</span>`)}</div>
+      <div><h3 class="t5-h">Most engaged</h3>${mini(engaged, o => `<span class="ev">${engVal(o)}</span>`)}</div>
+    </div>`;
 }
-function showSportsHub() {
+function trendHtml(list) {
+  const moves = list.map(o => ({ o, m: orgMove(o, spState.win) })).filter(x => x.m && x.m.n);
+  const up = spState.trend === "up";
+  const ranked = (up ? moves.filter(x => x.m.n > 0).sort((a, b) => b.m.pct - a.m.pct) : moves.filter(x => x.m.n < 0).sort((a, b) => a.m.pct - b.m.pct)).slice(0, 10);
+  return `<div class="tr-ctrl"><div class="bd-modes sm-modes">${[["up", "▲ Trending up"], ["down", "▼ Trending down"]].map(([k, l]) => `<button data-tr="${k}" class="${k === spState.trend ? "on" : ""}">${l}</button>`).join("")}</div>
+    <div class="pills sm">${[["day", "Today"], ["week", "This week"]].map(([k, l]) => `<button data-win="${k}" aria-pressed="${k === spState.win}">${l}</button>`).join("")}</div></div>
+    ${ranked.length ? `<div class="org-trend">${ranked.map((x, i) => `<a class="t5-row" href="${orgLink(x.o)}" target="_blank" rel="noopener"><span class="n">${i + 1}</span>${sq(x.o)}<span class="who"><b>${esc(x.o.name)}</b><small>${esc(ORG_TYPE[x.o.type] || "")} · ${esc(SPORT_LABEL[x.o.sport] || x.o.sport)} · ${compact(x.o.followers)}</small></span><span class="v"><span class="${up ? "gr" : "dn"}">${pct1(x.m.pct)}</span><small>${exactSigned(x.m.n)}</small></span></a>`).join("")}</div>`
+      : `<p class="empty">${moves.length ? (up ? "Nobody's growing right now." : "Nobody's dropping.") : spState.win === "day" ? "Today's numbers arrive after the morning update." : "Fills in as the daily numbers come in."}</p>`}`;
+}
+// Tournament widgets: rows in data/events.csv, shown from a week before until 3 days after.
+function activeEvents(sport) {
+  const today = new Date().toISOString().slice(0, 10), add = (d, n) => new Date(new Date(d + "T12:00:00") - -n * 864e5).toISOString().slice(0, 10);
+  const preview = /[?&]preview=event/.test(location.hash);
+  const list = (DATA.events || []).filter(e => (!sport || e.sport === sport) && (preview || (today >= add(e.start, -7) && today <= add(e.end, 3))));
+  if (!list.length && preview) list.push({ name: "Example: FIBA Basketball World Cup Qualifiers", sport: "Basketball", start: today, end: add(today, 5), teams: "Boomers;Opals", competition: "Preview", blurb: "This is what an event feature looks like while a tournament is on. Add events in data/events.csv.", preview: true });
+  return list;
+}
+function eventHtml(sport) {
+  return activeEvents(sport).map(e => {
+    const teams = (e.teams || "").split(";").map(t => t.trim()).filter(Boolean);
+    const accounts = teams.map(t => orgsAll().find(o => o.league === t || o.name === t || o.instagram === t)).filter(Boolean);
+    const athletes = DATA.players.filter(p => p.followers != null && teams.some(t => inLeague(p, t))).sort((a, b) => b.followers - a.followers).slice(0, 6);
+    const today = new Date().toISOString().slice(0, 10);
+    const status = today < e.start ? `Starts ${niceDate(e.start, { day: "numeric", month: "short" })}` : today > e.end ? "Just finished" : "On now";
+    return `<section class="event${e.preview ? " is-preview" : ""}">
+      <div class="ev-top"><span class="ev-badge">${status}</span><span class="ev-dates">${niceDate(e.start, { day: "numeric", month: "short" })} – ${niceDate(e.end, { day: "numeric", month: "short" })}</span></div>
+      <h2>${esc(e.name)}</h2>${e.blurb ? `<p>${esc(e.blurb)}</p>` : ""}
+      <div class="ev-body">
+        ${accounts.length ? `<div class="ev-col"><h3 class="t5-h">Team accounts</h3>${accounts.map((o, i) => `<a class="t5-row" href="${orgLink(o)}" target="_blank" rel="noopener"><span class="n">${i + 1}</span>${sq(o)}<span class="who"><b>${esc(o.name)}</b><small>${compact(o.followers)} followers</small></span><span class="v"><span class="${chCls(weekGrowth(o))}">${weekGrowth(o) ? pct1(weekGrowth(o).pct) : "–"}</span></span></a>`).join("")}</div>` : ""}
+        ${athletes.length ? `<div class="ev-col"><h3 class="t5-h">Players to watch</h3><div class="ev-faces">${athletes.map(p => `<a href="${href(p)}">${sq(p)}<b>${esc(surname(p.name))}</b><small>${compact(p.followers)}</small></a>`).join("")}</div></div>` : ""}
+      </div>
+    </section>`;
+  }).join("");
+}
+function clubHtml(list) {
+  const leagues = [...new Set(list.filter(o => o.type === "club").map(o => o.league))].filter(Boolean).sort();
+  if (!leagues.length) return `<p class="empty">Club accounts are being added.</p>`;
+  if (!leagues.includes(spState.clubLeague)) spState.clubLeague = leagues[0];
+  return `${leagues.length > 1 ? `<div class="bd-chips sub" data-clubs>${leagues.map(l => `<a href="#" data-lg="${esc(l)}" aria-selected="${l === spState.clubLeague}">${esc(l)}</a>`).join("")}</div>` : ""}
+    ${h2hTable(list.filter(o => o.type === "club" && o.league === spState.clubLeague), { key: spState.h2h, sub: o => o.league })}`;
+}
+function wireSports(rerender) {
+  $("main").querySelectorAll("[data-sort] button").forEach(b => b.addEventListener("click", () => { spState.h2h = b.dataset.k; rerender(); }));
+  $("main").querySelectorAll("[data-tr]").forEach(b => b.addEventListener("click", () => { spState.trend = b.dataset.tr; rerender(); }));
+  $("main").querySelectorAll("[data-win]").forEach(b => b.addEventListener("click", () => { spState.win = b.dataset.win; rerender(); }));
+  $("main").querySelectorAll("[data-clubs] a").forEach(a => a.addEventListener("click", e => { e.preventDefault(); spState.clubLeague = a.dataset.lg; rerender(); }));
+  $("main").querySelectorAll("[data-country]").forEach(a => a.addEventListener("click", e => { e.preventDefault(); spState.country = a.dataset.country; rerender(); }));
+}
+function keepScroll(fn) { const y = scrollY; fn(); scrollTo(0, y); }
+function creatorsSection(sport) {
+  const list = (DATA.creators || []).filter(c => !sport || c.sport === sport).sort((a, b) => (b.followers || 0) - (a.followers || 0)).slice(0, 5);
+  if (!list.length) return "";
+  return `<section class="mx-sec"><div class="sechead"><h2>Top creators</h2><span class="hand">the voices around the game</span></div>
+    <div class="t5-grid one">${list.map((c, i) => `<a class="t5-row" href="${orgLink(c)}" target="_blank" rel="noopener"><span class="n">${i + 1}</span>${sq(c)}<span class="who"><b>${esc(c.name)}</b><small>${esc(c.kind || "Creator")}</small></span><span class="v">${compact(c.followers)}</span></a>`).join("")}</div></section>`;
+}
+function showSportsHub(first = true) {
   current = null;
   document.title = `Sports – ${SITE_NAME}`;
-  const sports = sportsList(), all = groupStats(DATA.players);
-  const leagues = sports.flatMap(sp => [...groupsOf(DATA.players.filter(p => p.sport === sp), "league").map(g => ({ ...g, sp, kind: "league" })),
-    ...groupsOf(DATA.players.filter(p => p.sport === sp), "national").map(g => ({ ...g, sp, kind: "national" }))]);
-  leagues.sort((a, b) => b.st.followers - a.st.followers);
+  const countries = orgCountries();
+  if (!countries.includes(spState.country)) spState.country = countries[0] || "Australia";
+  const all = orgsAll(), list = all.filter(o => o.country === spState.country);
+  const sports = sportsList();
+  const total = list.reduce((s, o) => s + o.followers, 0);
+  const pending = (DATA.orgs || []).length && !all.length;
   $("main").innerHTML = `
     <section class="bd-hero">
-      <div class="kicker">Sports · leagues, national teams and clubs</div>
-      <h1>Every sport, every team</h1>
-      <p class="lede hub-lede">${sports.length} sports, ${leagues.filter(l => l.kind === "league").length} leagues and ${leagues.filter(l => l.kind === "national").length} national teams, measured by the Instagram followers of the athletes in them.</p>
+      <div class="kicker">Sports · the official accounts, head to head</div>
+      <h1>Sport's scoreboard</h1>
+      <p class="lede hub-lede">${pending ? `${DATA.orgs.length} leagues, clubs and national teams are being added. Their numbers arrive with the next daily update.` : `${list.length} official accounts in ${esc(spState.country)}: leagues, clubs, national teams and governing bodies. ${compact(total)} followers between them.`}</p>
+      <div class="bd-chips sp-pick"><span class="tab-label">Pick a sport</span>${sports.map(s => `<a href="${sportHref(s)}">${esc(SPORT_LABEL[s] || s)}</a>`).join("")}</div>
+      ${countries.length > 1 ? `<div class="pills country" role="group" aria-label="Country">${countries.map(c => `<a href="#" class="pill" data-country="${esc(c)}" aria-pressed="${c === spState.country}">${esc(c)}</a>`).join("")}</div>` : ""}
     </section>
-    <section class="mx-sec" style="margin-top:0">
-      <div class="sechead"><h2>Pick a sport</h2><span class="hand">pick your code</span><span class="sechint">Growth = combined change in its athletes' followers</span></div>
-      <div class="sp-grid">${sports.map(sp => {
-        const list = DATA.players.filter(p => p.sport === sp), st = groupStats(list);
-        const lg = [...new Set(list.flatMap(clubLeagues))], nats = [...new Set(list.flatMap(nationalTeams))];
-        return `<a class="sp-tile" href="${sportHref(sp)}">
-          <div class="sp-top"><h3>${esc(SPORT_LABEL[sp] || sp)}</h3>${st.pct != null ? `<span class="${st.pct >= 0 ? "up" : "down"}">${pct1(st.pct)}</span>` : ""}</div>
-          <div class="sp-stats"><div><b>${lg.length + nats.length}</b><small>leagues &amp; teams</small></div><div><b>${compact(st.followers)}</b><small>followers</small></div></div>
-          <div class="sp-leagues">${[...lg, ...nats.map(groupName)].map(esc).join(" · ") || "&nbsp;"}</div>
-          <span class="sp-go">Explore ${esc((SPORT_LABEL[sp] || sp).toLowerCase())} →</span></a>`;
-      }).join("")}</div>
+    ${eventHtml()}
+    <section class="mx-sec" style="margin-top:6px">
+      <div class="sechead"><h2>Leagues</h2><span class="hand">head to head</span>${h2hSort("lg", spState.h2h)}</div>
+      ${h2hTable(list.filter(o => o.type === "league"), { key: spState.h2h, players: true, sub: o => SPORT_LABEL[o.sport] || o.sport, empty: "League accounts arrive with the next update." })}
+    </section>
+    ${list.some(o => o.type === "national") ? `<section class="mx-sec">
+      <div class="sechead"><h2>National teams</h2><span class="hand">green and gold, head to head</span>${h2hSort("nt", spState.h2h)}</div>
+      ${h2hTable(list.filter(o => o.type === "national"), { key: spState.h2h, players: true, sub: o => SPORT_LABEL[o.sport] || o.sport })}
+    </section>` : ""}
+    <section class="mx-sec">
+      <div class="sechead"><h2>Trending accounts</h2><span class="hand">who's moving</span><span class="sechint">Leagues, clubs and teams</span></div>
+      ${trendHtml(list)}
     </section>
     <section class="mx-sec">
-      <div class="sechead"><h2>Biggest leagues &amp; teams</h2><span class="hand">all codes, one ladder</span><span class="sechint">Combined followers of their athletes</span></div>
-      <div class="club-list">
-        <div class="club-row club-head"><span></span><span>League or team</span><span>Athletes</span><span class="key">Followers</span><span>Week</span><span class="hide-s">Biggest name</span></div>
-        ${leagues.slice(0, 12).map((g, i) => `<a class="club-row" href="${athLink({ tab: "followed", sport: g.sp, league: g.key, gender: "All" })}">
-          <span class="n">${i + 1}</span><span class="who"><b>${esc(g.name)}</b><small>${esc(SPORT_LABEL[g.sp] || g.sp)}${g.kind === "national" ? " · national team" : ""}</small></span>
-          <span class="c-n">${g.st.n}</span><span class="c-f">${compact(g.st.followers)}</span>
-          <span class="c-c ${g.st.pct == null ? "" : g.st.pct >= 0 ? "gr" : "dn"}">${g.st.pct == null ? "–" : pct1(g.st.pct)}</span>
-          <span class="c-top hide-s">${g.st.top[0] ? `${sq(g.st.top[0])}<em>${esc(g.st.top[0].name)}</em>` : ""}</span></a>`).join("")}
-      </div>
+      <div class="sechead"><h2>Club ladders</h2><span class="hand">the clubs online</span>${h2hSort("cl", spState.h2h)}</div>
+      ${clubHtml(list)}
     </section>
-    <section class="mx-sec">
-      <div class="sechead"><h2>Top creators</h2><span class="hand">the voices around the game</span><span class="sechint">Most followed accounts making content about Australian sport</span></div>
-      ${creatorsHtml("All")}
-    </section>`;
-  window.scrollTo(0, 0);
+    ${list.some(o => o.type === "governing" || o.type === "event") ? `<section class="mx-sec">
+      <div class="sechead"><h2>Governing bodies &amp; events</h2></div>
+      ${h2hTable(list.filter(o => o.type === "governing" || o.type === "event"), { key: spState.h2h, sub: o => `${ORG_TYPE[o.type]} · ${SPORT_LABEL[o.sport] || o.sport}` })}
+    </section>` : ""}
+    <section class="mx-sec t5">${top5Html(list)}</section>
+    ${creatorsSection()}`;
+  wireSports(() => keepScroll(() => showSportsHub(false)));
+  if (first) window.scrollTo(0, 0);
 }
-function showSport(sport) {
+function showSport(sport, first = true) {
   current = null;
   if (!sportsList().includes(sport)) return showSportsHub();
   const label = SPORT_LABEL[sport] || sport;
   document.title = `${label} – ${SITE_NAME}`;
-  const list = DATA.players.filter(p => p.sport === sport), st = groupStats(list);
-  const lg = groupsOf(list, "league").sort((a, b) => b.st.followers - a.st.followers);
-  const nat = groupsOf(list, "national").sort((a, b) => b.st.followers - a.st.followers);
-  const nClubs = groupsOf(list, "club").length;
+  const list = orgsAll().filter(o => o.sport === sport);
+  const players = DATA.players.filter(p => p.sport === sport), pst = groupStats(players);
+  const total = list.reduce((s, o) => s + o.followers, 0);
+  const wk = (() => { let now = 0, before = 0; for (const o of list) { const g = weekGrowth(o); if (g && g.n != null) { now += o.followers; before += o.followers - g.n; } } return before ? 100 * (now - before) / before : null; })();
+  const countries = [...new Set(list.filter(o => o.type === "league").map(o => o.country))].sort((a, b) => (a !== "Australia") - (b !== "Australia"));
+  const stars = players.filter(p => p.followers != null).sort((a, b) => b.followers - a.followers).slice(0, 6);
   $("main").innerHTML = `
     <section class="bd-hero">
       <div class="kicker"><a href="#/sports" class="kick-link">Sports</a> · ${esc(label)}</div>
       <h1>${esc(label)}</h1>
-      <div class="stats sp-sum"><div><small>Leagues &amp; teams</small><b>${lg.length + nat.length}</b></div><div><small>Clubs</small><b>${nClubs}</b></div><div><small>Athletes</small><b>${st.n}</b></div><div><small>Combined followers</small><b>${compact(st.followers)}</b></div>${st.pct != null ? `<div><small>${st.days && st.days < 7 ? `Last ${st.days} day${st.days > 1 ? "s" : ""}` : "This week"}</small><b class="${st.pct >= 0 ? "up" : "down"}">${pct1(st.pct)}</b></div>` : ""}</div>
-      <a class="btn sp-cta" href="${athLink({ tab: "followed", sport, league: "All", gender: "All" })}">See all ${esc(label.toLowerCase())} athletes →</a>
+      <div class="stats sp-sum"><div><small>Official accounts</small><b>${list.length}</b></div><div><small>Their followers</small><b>${compact(total)}</b></div>${wk != null ? `<div><small>This week</small><b class="${wk >= 0 ? "up" : "down"}">${pct1(wk)}</b></div>` : ""}<div><small>Athletes tracked</small><b>${pst.n}</b></div></div>
     </section>
-    <section class="mx-sec" style="margin-top:10px">
-      <div class="sechead"><h2>Leagues</h2><span class="hand">where they play</span><span class="sechint">Combined followers of each league's athletes</span></div>
-      <div class="sp-grid">${lg.map(g => groupCard(g, sport, "league")).join("") || `<p class="empty">No leagues yet.</p>`}</div>
-    </section>
-    ${nat.length ? `<section class="mx-sec">
-      <div class="sechead"><h2>National teams</h2><span class="hand">in the green and gold</span><span class="sechint">Latest official squad</span></div>
-      <div class="sp-grid">${nat.map(g => groupCard(g, sport, "national")).join("")}</div>
+    ${eventHtml(sport)}
+    ${countries.map(c => `<section class="mx-sec" style="margin-top:6px">
+      <div class="sechead"><h2>Leagues${countries.length > 1 ? ` · ${esc(c)}` : ""}</h2><span class="hand">head to head</span>${h2hSort("lg", spState.h2h)}</div>
+      ${h2hTable(list.filter(o => o.type === "league" && o.country === c), { key: spState.h2h, players: true })}
+    </section>`).join("") || `<section class="mx-sec"><p class="empty">${esc(label)}'s official accounts arrive with the next update.</p></section>`}
+    ${list.some(o => o.type === "national") ? `<section class="mx-sec">
+      <div class="sechead"><h2>National teams</h2><span class="hand">head to head</span></div>
+      ${h2hTable(list.filter(o => o.type === "national"), { key: spState.h2h, players: true })}
+    </section>` : ""}
+    ${list.some(o => o.type === "club") ? `<section class="mx-sec">
+      <div class="sechead"><h2>Club ladder</h2><span class="hand">the clubs online</span>${h2hSort("cl", spState.h2h)}</div>
+      ${clubHtml(list)}
     </section>` : ""}
     <section class="mx-sec">
-      <div class="sechead"><h2>Clubs</h2><span class="hand">the club ladder</span><span class="sechint">Clubs with 3+ athletes</span>
-        <div class="pills sm" role="group" aria-label="Rank clubs by" id="clubBy">${[["followers", "Followers"], ["growth", "Growth"]].map(([k, l]) => `<button data-by="${k}" aria-pressed="${k === club.by}">${l}</button>`).join("")}</div></div>
-      <div id="clubLadder">${clubLadder(sport)}</div>
+      <div class="sechead"><h2>Trending accounts</h2><span class="hand">who's moving</span></div>
+      ${trendHtml(list)}
     </section>
-    <section class="mx-sec">
-      <div class="sechead"><h2>Top creators</h2><span class="hand">the voices around the game</span><span class="sechint">Most followed ${esc(label)} content creators</span></div>
-      ${creatorsHtml(sport)}
-    </section>`;
-  $("clubBy").addEventListener("click", e => { const b = e.target.closest("button"); if (!b) return; club.by = b.dataset.by;
-    $("clubBy").querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", x === b)); $("clubLadder").innerHTML = clubLadder(sport); });
-  window.scrollTo(0, 0);
+    <section class="mx-sec t5">${top5Html(list)}</section>
+    ${creatorsSection(sport)}
+    ${stars.length ? `<section class="mx-sec">
+      <div class="sechead"><h2>The athletes</h2><span class="hand">biggest names</span><a class="sechint" href="${athLink({ tab: "followed", sport, league: "All", gender: "All" })}">All ${pst.n} ${esc(label.toLowerCase())} athletes →</a></div>
+      <div class="ev-faces wide">${stars.map(p => `<a href="${href(p)}">${sq(p)}<b>${esc(p.name)}</b><small>${compact(p.followers)}</small></a>`).join("")}</div>
+    </section>` : ""}`;
+  wireSports(() => keepScroll(() => showSport(sport, false)));
+  if (first) window.scrollTo(0, 0);
 }
 
 /* ---------------------------------------------------------------- routing */
@@ -1994,7 +1890,12 @@ function route() {
   if (sp) return showSport(decodeURIComponent(sp[1]));
   const am = h.match(/^#\/athletes(?:\?(.*))?$/);
   if (am) return showAthletes(new URLSearchParams(am[1] || ""));
-  if (/^#\/sports\/?$/.test(h)) return showSportsHub();
+  const hub = h.match(/^#\/sports\/?(?:\?(.*))?$/);
+  if (hub) {
+    const q = new URLSearchParams(hub[1] || "");
+    if (q.get("sport")) return showSport(q.get("sport"));   // older sport-page links
+    if ([...q.keys()].every(k => k === "preview")) return showSportsHub();
+  }
   // Older links: the boards and the old trending pages now live on the Athletes page.
   const old = h.match(/^#\/(sports|growth|drops|followed|rankings|trending|search)(?:\?(.*))?$/);
   if (old) {
@@ -2175,7 +2076,7 @@ function showHome() {
       <div class="mf">${["women", "men"].map(g => `
         <div class="mf-col"><h3>${GENDER_LABEL[g]}</h3>
           ${mostF(g).length ? listHead(homeChLabel, "f") + mostF(g).slice(0, 10).map((p, i) => listRow(p, i + 1, weekGrowth(p), "f")).join("") : `<p class="empty">No numbers yet.</p>`}
-          <a class="all" href="${boardLink("sports", { gender: g })}">See all ${GENDER_LABEL[g].toLowerCase()} →</a>
+          <a class="all" href="#/athletes?gender=${g}">See all ${GENDER_LABEL[g].toLowerCase()} →</a>
         </div>`).join("")}
       </div>
     </section>
@@ -2187,7 +2088,7 @@ function showHome() {
           <span class="who"><b>${esc(x.p.name)}</b><small>${teamLine(x.p)}</small></span>
           <span class="pct">+${x.g.pct.toFixed(1)}%<small>${compact(x.p.followers)} followers</small></span></a>`).join("")}</div>`
           : `<p class="empty">Growth rankings start once there are two days of numbers. Check back tomorrow.</p>`}
-        <a class="all" href="#/sports">See who's trending →</a>
+        <a class="all" href="#/athletes?tab=up">See who's trending →</a>
       </div>
       <div><section class="board" id="widget"></section><div class="hand board-note">chalked up every morning ✎</div></div>
     </section>`;
@@ -2259,7 +2160,7 @@ function renderWidget(by) {
     <div class="pills sm wtabs" role="group" aria-label="Group by">${tabs.map(([k, l]) => `<button data-by="${k}" aria-pressed="${k === by}">${l}</button>`).join("")}</div>
     <p class="wexplain">Every athlete's Instagram followers in the ${unit} added together, and how much that total grew ${when}. Not the ${unit}'s own account.</p>
     ${ranked.length ? ranked.map((x, i) => {
-      const tag = x.link ? "a" : "div", at = x.link ? ` href="${boardLink("growth", x.link)}"` : "";
+      const tag = x.link ? "a" : "div", at = x.link ? ` href="${athLink({ tab: "up", win: "week", gender: "All", sport: x.link.sport, league: x.link.league || "All" })}"` : "";
       return `<${tag} class="grow"${at}><span class="n">${i + 1}</span>
         <span class="wmain"><span class="bn">${esc(x.name)}</span>
           <small>${x.n} athlete${x.n > 1 ? "s" : ""} · ${compact(x.now)} followers</small>

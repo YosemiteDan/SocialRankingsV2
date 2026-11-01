@@ -139,6 +139,68 @@ def value_on_or_before(rows, day):
     return num(best["followers"]) if best else None
 
 
+def growth_fields(rows):
+    """Followers, changes (1 day, 7/30/365 days, this week) and engagement from someone's history rows."""
+    latest = rows[-1]
+    last_day = date.fromisoformat(latest["date"])
+    followers = num(latest["followers"])
+    out = {"as_of": latest["date"], "followers": followers, "posts": num(latest["posts"]),
+           "engagement_rate": num(latest["engagement_rate"], float), "posts_last_30d": num(latest["posts_last_30d"]),
+           "tracked_since": rows[0]["date"]}
+    for key, days in PERIODS.items():
+        then = value_on_or_before(rows, (last_day - timedelta(days=days)).isoformat())
+        ok = then and followers is not None
+        out[f"change_{key}"] = followers - then if ok else None
+        out[f"change_{key}_pct"] = round(100 * (followers - then) / then, 2) if ok else None
+    prev = rows[-2] if len(rows) > 1 else None
+    if prev:
+        gap, prev_f = (last_day - date.fromisoformat(prev["date"])).days, num(prev["followers"])
+        if prev_f and followers is not None and 0 < gap <= 3:
+            out["change_1d"] = followers - prev_f
+            out["change_1d_pct"] = round(100 * (followers - prev_f) / prev_f, 3)
+    week_ago = (last_day - timedelta(days=7)).isoformat()
+    base = next((r for r in reversed(rows) if r["date"] <= week_ago), rows[0])
+    win_days, base_f = (last_day - date.fromisoformat(base["date"])).days, num(base["followers"])
+    if win_days > 0 and base_f and followers is not None:
+        out.update(growth=followers - base_f, growth_pct=round(100 * (followers - base_f) / base_f, 2), growth_days=win_days)
+    return out
+
+
+def build_orgs(history, profiles):
+    """Official accounts (data/organisations.csv) for the Sports pages."""
+    path = DATA / "organisations.csv"
+    if not path.exists():
+        return []
+    out = []
+    with path.open(newline="") as f:
+        for o in csv.DictReader(f):
+            handle = o["instagram"].strip().lstrip("@").lower()
+            if not handle:
+                continue
+            rows, prof = history.get(handle, []), profiles.get(handle, {})
+            item = {"id": slug(o["name"]), "name": o["name"], "instagram": handle, "type": o["type"],
+                    "sport": o["sport"], "league": o.get("league") or "", "country": o.get("country") or "Australia",
+                    "gender": o.get("gender") or "mixed", "verified": prof.get("is_verified"),
+                    "photo": f"img/{handle}.jpg" if (SITE / "img" / f"{handle}.jpg").exists() else None,
+                    "followers": None}
+            if rows:
+                item.update(growth_fields(rows))
+            bp = prof.get("best_post")
+            if bp:
+                item["best_post"] = {k: bp.get(k) for k in ("url", "type", "date", "caption", "likes", "comments", "thumb")}
+            out.append(item)
+    return out
+
+
+def load_events():
+    """Tournament feature widgets (data/events.csv): shown on the Sports pages while they're on."""
+    path = DATA / "events.csv"
+    if not path.exists():
+        return []
+    with path.open(newline="") as f:
+        return [{k: (v or "").strip() for k, v in r.items()} for r in csv.DictReader(f) if (r.get("name") or "").strip()]
+
+
 def main():
     with (DATA / "athletes.csv").open(newline="") as f:
         athletes = list(csv.DictReader(f))
@@ -274,6 +336,8 @@ def main():
         "sample_data": sample,
         "last_run": last_run,
         "players": summaries,
+        "orgs": build_orgs(history, profiles if not sample else {}),
+        "events": load_events(),
     }, indent=1, ensure_ascii=False))
 
     players_dir = SITE / "players"
