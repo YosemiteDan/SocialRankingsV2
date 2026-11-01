@@ -1,5 +1,5 @@
 {
-  "ran_at": "2026-11-01T04:12:31+00:00",
+  "ran_at": "2026-11-01T04:29:55+00:00",
   "method": "meta",
   "succeeded": [],
   "failed": {
@@ -238,25 +238,11 @@
   "handle_changes": {},
   "warnings": [],
   "token_expires": "never",
-  "orgs_succeeded": [
-    "Swimming Australia",
-    "AusCycling",
-    "Athletics Australia",
-    "Softball Australia",
-    "Netball Australia",
-    "Hockey Australia",
-    "Surfing Australia",
-    "Volleyball Australia",
-    "Golf Australia",
-    "Australian baseball team",
-    "Australian women's cricket",
-    "Diamonds",
-    "Hockeyroos",
-    "Kookaburras"
-  ],
+  "orgs_succeeded": [],
   "orgs_failed": {
     "New Zealand Breakers": "@nzbreakers not found; @skycitybreakers not found; @breakersbasketball not found; @nz_breakers not found. Check data/organisations.csv.",
     "South East Melbourne Phoenix": "@semphoenix not found; @sem.phoenix not found; @semphoenixbasketball not found; @southeastmelbournephoenix not found. Check data/organisations.csv.",
+    "Baseball Australia": "@baseballaustralia not found; @baseball_australia not found; @baseballaus not found. Check data/organisations.csv.",
     "Michael Wilson": "@michaelwilson not found. Check data/organisations.csv.",
     "Hadiola": "@hadiola.ftbl not found. Check data/organisations.csv.",
     "Jarrod Kimber": "@jarrodkimber not found. Check data/organisations.csv."
