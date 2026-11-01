@@ -1788,7 +1788,7 @@ function wireSports(rerender) {
 }
 function keepScroll(fn) { const y = scrollY; fn(); scrollTo(0, y); }
 function creatorsSection(sport) {
-  const list = (DATA.creators || []).filter(c => !sport || c.sport === sport).sort((a, b) => (b.followers || 0) - (a.followers || 0)).slice(0, 5);
+  const list = (DATA.creators || []).filter(c => c.live && c.followers != null && (!sport || c.sport === sport)).sort((a, b) => (b.followers || 0) - (a.followers || 0)).slice(0, 5);
   if (!list.length) return "";
   return `<section class="mx-sec"><div class="sechead"><h2>Top creators</h2><span class="hand">the voices around the game</span></div>
     <div class="t5-grid one">${list.map((c, i) => `<a class="t5-row" href="${orgLink(c)}" target="_blank" rel="noopener"><span class="n">${i + 1}</span>${sq(c)}<span class="who"><b>${esc(c.name)}</b><small>${esc(c.kind || "Creator")}</small></span><span class="v">${compact(c.followers)}</span></a>`).join("")}</div></section>`;

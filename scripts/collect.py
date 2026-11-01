@@ -42,6 +42,7 @@ NOT_VISIBLE_FILE = ROOT / "data" / "not_visible.json"
 RECHECK_DAYS = 7
 PROFILES_FILE = ROOT / "data" / "profiles.json"
 ORGS_FILE = ROOT / "data" / "organisations.csv"   # official accounts: leagues, clubs, national teams
+CREATORS_FILE = ROOT / "data" / "creators.csv"    # individual creators and fan accounts, by sport
 IMG_DIR = ROOT / "site" / "img"
 PHOTO_REFRESH_DAYS = 7
 
@@ -513,10 +514,12 @@ def org_matches(name, full_name, handle, followers=None):
 
 
 def load_orgs():
-    if not ORGS_FILE.exists():
-        return []
-    with ORGS_FILE.open(newline="") as f:
-        return [r for r in csv.DictReader(f) if r.get("instagram", "").strip()]
+    rows = []
+    for path in (ORGS_FILE, CREATORS_FILE):
+        if path.exists():
+            with path.open(newline="") as f:
+                rows += [r for r in csv.DictReader(f) if r.get("instagram", "").strip()]
+    return rows
 
 
 def pick_featured(recent):
@@ -678,8 +681,8 @@ def run(now, report):
         fill_handles_from_wikidata(fields, athletes, people, retry, report["handle_changes"])
 
     # 6. Official accounts (leagues, clubs, national teams), after the athletes so they
-    #    never use up the athletes' share of Meta's hourly limit. No name check: these
-    #    are listed by hand in data/organisations.csv.
+    #    never use up the athletes' share of Meta's hourly limit. Creators (data/creators.csv)
+    #    come last. Each account is checked to be the right one (see org_matches).
     orgs = [o for o in load_orgs() if not any(clean_handle(h) in done_today for h in o["instagram"].split("|"))]
     org_results = {}
     report["orgs_succeeded"], report["orgs_failed"] = [], {}
@@ -702,7 +705,7 @@ def run(now, report):
                 except Exception as e:  # noqa: BLE001
                     tried.append(f"@{handle}: {e}"); continue
                 full = (res.get("_profile") or {}).get("full_name")
-                if not org_matches(o["name"], full, handle, res.get("followers")):
+                if o.get("checked") != "yes" and not org_matches(o["name"], full, handle, res.get("followers")):
                     tried.append(f"@{handle} is '{full}', not {o['name']}"); continue
                 org_results[handle] = res
                 print(f"  ok   @{handle}: {res['followers']:,} followers ({full})")

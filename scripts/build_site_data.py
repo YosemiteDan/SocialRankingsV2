@@ -167,21 +167,22 @@ def growth_fields(rows):
     return out
 
 
-def build_orgs(history, profiles):
-    """Official accounts (data/organisations.csv) for the Sports pages."""
-    path = DATA / "organisations.csv"
+def build_orgs(history, profiles, filename="organisations.csv"):
+    """Official accounts (data/organisations.csv), or creators (data/creators.csv), for the Sports pages."""
+    path = DATA / filename
     if not path.exists():
         return []
     out = []
     with path.open(newline="") as f:
         for o in csv.DictReader(f):
-            handle = o["instagram"].strip().lstrip("@").lower()
-            if not handle:
+            options = [h.strip().lstrip("@").lower() for h in o["instagram"].split("|") if h.strip()]
+            if not options:
                 continue
+            handle = next((h for h in options if history.get(h)), options[0])   # whichever handle was collected
             rows, prof = history.get(handle, []), profiles.get(handle, {})
             item = {"id": slug(o["name"]), "name": o["name"], "instagram": handle, "type": o["type"],
                     "sport": o["sport"], "league": o.get("league") or "", "country": o.get("country") or "Australia",
-                    "gender": o.get("gender") or "mixed", "verified": prof.get("is_verified"),
+                    "gender": o.get("gender") or "mixed", "verified": prof.get("is_verified"), "kind": o.get("kind") or "", "live": (o.get("live") or "").lower() == "yes",
                     "photo": f"img/{handle}.jpg" if (SITE / "img" / f"{handle}.jpg").exists() else None,
                     "followers": None}
             if rows:
@@ -338,6 +339,7 @@ def main():
         "last_run": last_run,
         "players": summaries,
         "orgs": build_orgs(history, profiles if not sample else {}),
+        "creators": build_orgs(history, profiles if not sample else {}, "creators.csv"),
         "events": load_events(),
     }, indent=1, ensure_ascii=False))
 
