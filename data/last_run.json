@@ -1,5 +1,5 @@
 {
-  "ran_at": "2026-11-01T04:55:33+00:00",
+  "ran_at": "2026-11-01T05:02:18+00:00",
   "method": "meta",
   "succeeded": [],
   "failed": {
@@ -239,10 +239,8 @@
   "warnings": [],
   "token_expires": "never",
   "orgs_succeeded": [
-    "Wallaroos",
-    "Wallabies",
-    "Aussie Spirit",
-    "Supercars Championship"
+    "Gymnastics Australia",
+    "Australian Sailing"
   ],
   "orgs_failed": {
     "New Zealand Breakers": "@nzbreakers not found; @skycitybreakers not found; @breakersbasketball not found; @nz_breakers not found. Check data/organisations.csv.",
