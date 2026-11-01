@@ -1700,7 +1700,7 @@ function h2hTable(list, opts = {}) {
   const max = Math.max(...rows.map(o => Math.abs(val(o)) || 0), 1e-9);
   const showPlayers = opts.players && rows.some(playersIn);
   return `<div class="h2h${showPlayers ? " with-pl" : ""}">
-    <div class="h2h-row h2h-head"><span></span><span>Account</span><span class="${key === "followers" ? "key" : ""}">Followers</span><span class="${key === "growth" ? "key" : ""}">Week</span><span class="${key === "eng" ? "key" : ""}" title="${ENG_INFO}">Eng</span><span class="hide-s">Posts 30d</span>${showPlayers ? `<span class="hide-s" title="Combined followers of the athletes we track in it">Players' followers</span>` : ""}</div>
+    <div class="h2h-row h2h-head"><span></span><span>Account</span><span class="${key === "followers" ? "key" : ""}">Followers</span><span class="${key === "growth" ? "key" : ""}">Week</span><span class="${key === "eng" ? "key" : ""}" title="${ENG_INFO}">Eng</span><span class="hide-s" title="Average likes on their last 10 posts">Avg likes</span>${showPlayers ? `<span class="hide-s" title="Combined followers of the athletes we track in it">Players' followers</span>` : ""}</div>
     ${rows.map((o, i) => { const g = weekGrowth(o), pl = playersIn(o), v = val(o);
       return `<a class="h2h-row" href="${orgLink(o)}" target="_blank" rel="noopener">
         <span class="n">${i + 1}</span>
@@ -1709,7 +1709,7 @@ function h2hTable(list, opts = {}) {
         <span class="c-f${key === "followers" ? " key" : ""}">${compact(o.followers)}</span>
         <span class="c-c ${chCls(g)}${key === "growth" ? " key" : ""}">${g && g.n ? pct1(g.pct) : "–"}${g && g.n ? `<small>${exactSigned(g.n)}</small>` : ""}</span>
         <span class="c-e ev${key === "eng" ? " key" : ""}">${engVal(o)}</span>
-        <span class="c-p hide-s">${o.posts_last_30d ?? "–"}</span>
+        <span class="c-p hide-s">${o.avg_likes != null ? compact(o.avg_likes) : "–"}</span>
         ${showPlayers ? `<span class="c-pl hide-s">${pl ? `${compact(pl.followers)}<small>${pl.n} athletes</small>` : "–"}</span>` : ""}
       </a>`; }).join("")}
   </div>`;

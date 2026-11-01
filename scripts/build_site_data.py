@@ -146,6 +146,7 @@ def growth_fields(rows):
     followers = num(latest["followers"])
     out = {"as_of": latest["date"], "followers": followers, "posts": num(latest["posts"]),
            "engagement_rate": num(latest["engagement_rate"], float), "posts_last_30d": num(latest["posts_last_30d"]),
+           "avg_likes": num(latest["avg_likes"]), "avg_comments": num(latest["avg_comments"], float),
            "tracked_since": rows[0]["date"]}
     for key, days in PERIODS.items():
         then = value_on_or_before(rows, (last_day - timedelta(days=days)).isoformat())
