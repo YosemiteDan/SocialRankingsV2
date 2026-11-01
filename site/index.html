@@ -489,6 +489,7 @@
   .h2h-row { display: grid; grid-template-columns: 30px minmax(0, 1fr) 80px 80px 60px 70px; gap: 0 12px; align-items: center; padding: 10px 0; border-bottom: 1px dashed var(--line); color: inherit; text-decoration: none; }
   .h2h.with-pl .h2h-row { grid-template-columns: 30px minmax(0, 1fr) 80px 80px 60px 70px 110px; }
   a.h2h-row:hover b { color: var(--accent); }
+  .h2h-row.me { background: rgba(255,122,26,.10); box-shadow: inset 4px 0 0 var(--accent); } .h2h-row.me b { color: var(--accent); }
   .h2h-head { font: 700 11px/1 var(--display); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); padding: 0 0 10px; border-bottom: 2px solid var(--line); }
   .h2h-head > span:nth-child(n+3) { text-align: right; } .h2h-head .key { color: var(--cream); }
   .h2h-row .n { font: 700 20px/1 var(--serif); }
@@ -1747,7 +1748,7 @@ function h2hTable(list, opts = {}) {
   return `<div class="h2h${showPlayers ? " with-pl" : ""}">
     <div class="h2h-row h2h-head"><span></span><span>Account</span><span class="${key === "followers" ? "key" : ""}">Followers</span><span class="${key === "growth" ? "key" : ""}">Week</span><span class="${key === "eng" ? "key" : ""}" title="${ENG_INFO}">Eng</span><span class="hide-s" title="Average likes on their last 10 posts">Avg likes</span>${showPlayers ? `<span class="hide-s" title="Combined followers of the athletes we track in it">Players' followers</span>` : ""}</div>
     ${rows.map((o, i) => { const g = weekGrowth(o), pl = playersIn(o), v = val(o);
-      return `<a class="h2h-row" href="${accHref(o)}">
+      return `<a class="h2h-row${opts.hl === o ? " me" : ""}" href="${accHref(o)}">
         <span class="n">${i + 1}</span>
         <span class="who">${sq(o)}<span><b>${esc(o.name)}</b><small>${esc(opts.sub ? opts.sub(o) : (ORG_TYPE[o.type] || ""))}</small>
           <i class="hbar"><i style="width:${Math.max(3, Math.abs(v) / max * 100).toFixed(1)}%" class="${key === "growth" && v < 0 ? "neg" : ""}"></i></i></span></span>
@@ -2016,7 +2017,13 @@ async function showAccount(handle) {
   const best = [...rec].sort((a, b) => (b.likes + (b.comments || 0)) - (a.likes + (a.comments || 0))).slice(0, 5)
     .map(m => ({ ...m, thumb: ((o.top_posts || []).find(t => t.url === m.url) || {}).thumb }));
   const clubs = o.type === "league" ? regionOrgs().filter(x => x.type === "club" && x.league === o.league).sort((a, b) => b.followers - a.followers) : [];
-  const players = o.league ? DATA.players.filter(p => p.followers != null && inLeague(p, o.league)).sort((a, b) => b.followers - a.followers) : [];
+  // Club pages: the players on that club's list (team name starting with the club's name, e.g. Carlton -> Carlton Blues).
+  const nm = t => (t || "").toLowerCase().replace(/[^a-z ]/g, "").replace(/\bfc\b/g, "").replace(/\s+/g, " ").trim();
+  const isClub = o.type === "club", cn = nm(o.name);
+  const atClub = p => p.sport === o.sport && (p.teams || []).some(t => { const tn = nm(t[1]); return tn && (tn === cn || tn.startsWith(cn + " ") || cn.startsWith(tn + " ")); });
+  const players = (isClub ? DATA.players.filter(p => p.followers != null && atClub(p))
+    : o.league ? DATA.players.filter(p => p.followers != null && inLeague(p, o.league)) : []).sort((a, b) => b.followers - a.followers);
+  const leaguePeers = isClub ? regionOrgs().filter(x => x.type === "club" && x.league === o.league) : [];
   const g = weekGrowth(o), g30 = o.change_30d != null ? { pct: o.change_30d_pct } : null;
   const isCreator = o.type === "creator";
   $("main").innerHTML = `
@@ -2048,10 +2055,15 @@ async function showAccount(handle) {
       <div class="sechead"><h2>Best posts</h2><span class="hand">what landed</span><span class="sechint">Most likes + comments, recent posts</span></div>
       ${best.length ? `<div class="posts5">${best.map((m, i) => postTile(o, m, i, false)).join("")}</div>` : `<p class="empty">Posts show after the next update.</p>`}
     </section>
-    ${H && peers.length > 1 ? `<section class="mx-sec"><div class="sechead"><h2>Against the other ${H[2].toLowerCase()}</h2><span class="hand">head to head</span></div>${h2hTable(peers.slice(0, 10), { key: "followers", players: o.type !== "club" })}</section>` : ""}
+    ${isClub && leaguePeers.length > 1 ? `<section class="mx-sec"><div class="sechead"><h2>Against the ${esc(o.league)}</h2><span class="hand">the club ladder</span>${h2hSort("acc", spState.h2h)}</div>${h2hTable(leaguePeers, { key: spState.h2h, sub: x => x === o ? "This club" : x.league, hl: o })}</section>`
+      : H && peers.length > 1 ? `<section class="mx-sec"><div class="sechead"><h2>Against the other ${H[2].toLowerCase()}</h2><span class="hand">head to head</span></div>${h2hTable(peers.slice(0, 10), { key: "followers", players: true, hl: o })}</section>` : ""}
     ${clubs.length ? `<section class="mx-sec"><div class="sechead"><h2>Clubs in the ${esc(o.league)}</h2><span class="hand">the club ladder</span></div>${h2hTable(clubs, { key: "followers" })}</section>` : ""}
-    ${players.length ? `<section class="mx-sec"><div class="sechead"><h2>The players</h2><span class="hand">${compact(players.reduce((s, p) => s + p.followers, 0))} followers between them</span><a class="sechint" href="${athLink({ tab: "followed", sport: o.sport, league: o.league, gender: "All" })}">All ${players.length} athletes →</a></div>
+    ${isClub ? `<section class="mx-sec"><div class="sechead"><h2>Players from ${esc(o.name)}</h2>${players.length ? `<span class="hand">${compact(players.reduce((s, p) => s + p.followers, 0))} followers between them</span><span class="sechint">${players.length} athlete${players.length > 1 ? "s" : ""} we track</span>` : ""}</div>
+      ${players.length ? `<div class="bd-list club-players">${[0, 1].map(c => `<div>${listHead("Week", "f")}${players.filter((_, i) => i % 2 === c).map(p => listRow(p, players.indexOf(p) + 1, weekGrowth(p), "f")).join("")}</div>`).join("")}</div>`
+        : `<p class="empty">We don't track any ${esc(o.name)} players yet.</p>`}</section>`
+    : players.length ? `<section class="mx-sec"><div class="sechead"><h2>The players</h2><span class="hand">${compact(players.reduce((s, p) => s + p.followers, 0))} followers between them</span><a class="sechint" href="${athLink({ tab: "followed", sport: o.sport, league: o.league, gender: "All" })}">All ${players.length} athletes →</a></div>
       <div class="ev-faces wide">${players.slice(0, 6).map(p => `<a href="${href(p)}">${sq(p)}<b>${esc(p.name)}</b><small>${compact(p.followers)}</small></a>`).join("")}</div></section>` : ""}`;
+  $("main").querySelectorAll("[data-sort] button").forEach(b => b.addEventListener("click", () => { spState.h2h = b.dataset.k; showAccount(handle); }));
   window.scrollTo(0, 0);
 }
 function showSport(sport, first = true) {
