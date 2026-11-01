@@ -485,6 +485,9 @@
   .cr-chip .sq { width: 42px; height: 42px; }
   .cr-chip b { display: block; font: 700 15px/1.15 var(--serif); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .cr-chip small { display: block; font: 700 10px/1.3 var(--display); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+  .g-tag { display: inline-block; vertical-align: middle; margin-left: 8px; padding: 3px 6px 2px; border-radius: 3px; font: 700 9px/1.1 var(--display); letter-spacing: .1em; text-transform: uppercase; border: 1px solid currentColor; }
+  .g-tag.m { color: #7FB2FF; } .g-tag.w { color: #FF8FC2; } .g-tag.mw { color: #C3C9E3; }
+  .acc-g { margin-top: 8px; } .acc-g .g-tag { margin-left: 0; font-size: 11px; padding: 4px 8px; }
   .h2h { container-type: inline-size; }
   .h2h-row { display: grid; grid-template-columns: 30px minmax(0, 1fr) 80px 80px 60px 70px; gap: 0 12px; align-items: center; padding: 10px 0; border-bottom: 1px dashed var(--line); color: inherit; text-decoration: none; }
   .h2h.with-pl .h2h-row { grid-template-columns: 30px minmax(0, 1fr) 80px 80px 60px 70px 110px; }
@@ -1730,6 +1733,9 @@ function orgMove(o, win) {
   return weekGrowth(o);
 }
 const orgLink = o => `https://instagram.com/${encodeURIComponent(o.instagram)}`;
+// Men's / women's tag for club accounts (most AFL, NRL and A-League clubs run one account for both).
+const G_TAG = { men: ["Men's", "m"], women: ["Women's", "w"], mixed: ["Men's & women's", "mw"] };
+const genderTag = o => o.type === "club" && G_TAG[o.gender] ? `<span class="g-tag ${G_TAG[o.gender][1]}">${G_TAG[o.gender][0]}</span>` : "";
 // Combined followers of the athletes we track in a league or national team (the athletes' angle).
 function playersIn(o) {
   const lg = o.league;
@@ -1750,7 +1756,7 @@ function h2hTable(list, opts = {}) {
     ${rows.map((o, i) => { const g = weekGrowth(o), pl = playersIn(o), v = val(o);
       return `<a class="h2h-row${opts.hl === o ? " me" : ""}" href="${accHref(o)}">
         <span class="n">${i + 1}</span>
-        <span class="who">${sq(o)}<span><b>${esc(o.name)}</b><small>${esc(opts.sub ? opts.sub(o) : (ORG_TYPE[o.type] || ""))}</small>
+        <span class="who">${sq(o)}<span><b>${esc(o.name)}${genderTag(o)}</b><small>${esc(opts.sub ? opts.sub(o) : (ORG_TYPE[o.type] || ""))}</small>
           <i class="hbar"><i style="width:${Math.max(3, Math.abs(v) / max * 100).toFixed(1)}%" class="${key === "growth" && v < 0 ? "neg" : ""}"></i></i></span></span>
         <span class="c-f${key === "followers" ? " key" : ""}">${compact(o.followers)}</span>
         <span class="c-c ${chCls(g)}${key === "growth" ? " key" : ""}">${g && g.n ? pct1(g.pct) : "–"}${g && g.n ? `<small>${exactSigned(g.n)}</small>` : ""}</span>
@@ -1923,7 +1929,7 @@ function showSportsHub(first = true) {
   if (first) window.scrollTo(0, 0);
 }
 /* ---- A hub (#/sports/leagues etc.): head to head for one kind of account in the region. */
-const hubState = { sport: "All", league: "All", days: 7, key: "followers" };
+const hubState = { sport: "All", league: "All", gender: "All", days: 7, key: "followers" };
 function showHub(slug, first = true) {
   const H = hubBy(slug); if (!H) return showSportsHub();
   const [type, , title, hand] = H;
@@ -1934,7 +1940,10 @@ function showHub(slug, first = true) {
   if (!sports.includes(hubState.sport)) hubState.sport = "All";
   const leagues = type === "club" ? [...new Set(all.filter(o => hubState.sport === "All" || o.sport === hubState.sport).map(o => o.league))].filter(Boolean).sort() : [];
   if (!leagues.includes(hubState.league)) hubState.league = "All";
-  const list = all.filter(o => (hubState.sport === "All" || o.sport === hubState.sport) && (hubState.league === "All" || o.league === hubState.league));
+  if (type !== "club") hubState.gender = "All";
+  // Women: women's clubs plus clubs whose account covers both; same for men.
+  const gOk = o => hubState.gender === "All" || o.gender === hubState.gender || o.gender === "mixed";
+  const list = all.filter(o => (hubState.sport === "All" || o.sport === hubState.sport) && (hubState.league === "All" || o.league === hubState.league) && gOk(o));
   const d = hubState.days, pk = d === 7 ? "posts_7d" : "posts_30d";
   const ch = o => d === 7 ? weekGrowth(o) : (o.change_30d != null ? { pct: o.change_30d_pct, n: o.change_30d } : null);
   const val = o => ({ followers: o.followers, growth: (ch(o) || {}).pct ?? -1e9, eng: o.engagement_rate ?? -1, posts: o[pk] ?? -1, likes: o.avg_likes ?? -1 })[hubState.key];
@@ -1953,7 +1962,7 @@ function showHub(slug, first = true) {
     <div class="bd-controls" style="position:static">
       <div class="bd-chips" data-hub="sport">${["All", ...sports].map(sp => `<a href="#" data-v="${esc(sp)}" aria-selected="${sp === hubState.sport}">${sp === "All" ? "All sports" : esc(SPORT_LABEL[sp] || sp)}</a>`).join("")}</div>
       ${leagues.length > 1 ? `<div class="bd-chips sub" data-hub="league">${["All", ...leagues].map(l => `<a href="#" data-v="${esc(l)}" aria-selected="${l === hubState.league}">${l === "All" ? "All leagues" : esc(l)}</a>`).join("")}</div>` : ""}
-      <div class="bd-row" style="justify-content:flex-end"><div class="pills" data-hub="days">${[[7, "Last 7 days"], [30, "Last 30 days"]].map(([k, l]) => `<a href="#" class="pill" data-v="${k}" aria-pressed="${k === d}">${l}</a>`).join("")}</div></div>
+      <div class="bd-row" style="justify-content:flex-end">${type === "club" ? `<div class="pills" data-hub="gender">${[["All", "Everyone"], ["women", "Women"], ["men", "Men"]].map(([k, l]) => `<a href="#" class="pill" data-v="${k}" aria-pressed="${k === hubState.gender}">${l}</a>`).join("")}</div>` : ""}<div class="pills" data-hub="days">${[[7, "Last 7 days"], [30, "Last 30 days"]].map(([k, l]) => `<a href="#" class="pill" data-v="${k}" aria-pressed="${k === d}">${l}</a>`).join("")}</div></div>
     </div>
     <section class="mx-sec" style="margin-top:10px">
       <div class="sechead"><h2>Top 5 posts</h2><span class="hand">what landed</span><span class="sechint">${title} · last ${d} days · likes + comments</span></div>
@@ -1964,7 +1973,7 @@ function showHub(slug, first = true) {
       ${rows.length ? `<div class="h2h hub-h2h">
         <div class="h2h-row h2h-head"><span></span><span>Account</span><span class="${hubState.key === "followers" ? "key" : ""}">Followers</span><span class="${hubState.key === "growth" ? "key" : ""}">${d} days</span><span class="${hubState.key === "eng" ? "key" : ""}" title="${ENG_INFO}">Eng</span><span class="hide-s ${hubState.key === "posts" ? "key" : ""}">Posts ${d}d</span><span class="hide-s ${hubState.key === "likes" ? "key" : ""}">Avg likes</span><span class="hide-s">Avg comments</span></div>
         ${rows.map((o, i) => { const g = ch(o), v = val(o); return `<a class="h2h-row" href="${accHref(o)}"><span class="n">${i + 1}</span>
-          <span class="who">${sq(o)}<span><b>${esc(o.name)}</b><small>${esc(SPORT_LABEL[o.sport] || o.sport)}${o.league && type === "club" ? " · " + esc(o.league) : ""}</small><i class="hbar"><i style="width:${Math.max(3, Math.abs(v) / max * 100).toFixed(1)}%" class="${hubState.key === "growth" && v < 0 ? "neg" : ""}"></i></i></span></span>
+          <span class="who">${sq(o)}<span><b>${esc(o.name)}${genderTag(o)}</b><small>${esc(SPORT_LABEL[o.sport] || o.sport)}${o.league && type === "club" ? " · " + esc(o.league) : ""}</small><i class="hbar"><i style="width:${Math.max(3, Math.abs(v) / max * 100).toFixed(1)}%" class="${hubState.key === "growth" && v < 0 ? "neg" : ""}"></i></i></span></span>
           <span class="c-f${hubState.key === "followers" ? " key" : ""}">${compact(o.followers)}</span>
           <span class="c-c ${chCls(g)}${hubState.key === "growth" ? " key" : ""}">${g && g.n ? pct1(g.pct) : "–"}${g && g.n ? `<small>${exactSigned(g.n)}</small>` : d === 30 ? "<small>from Dec</small>" : ""}</span>
           <span class="c-e${hubState.key === "eng" ? " key" : ""}">${engVal(o)}</span>
@@ -1984,7 +1993,7 @@ function showHub(slug, first = true) {
   $("main").querySelectorAll("[data-hub]").forEach(box => box.addEventListener("click", e => {
     const t = e.target.closest("[data-v]"); if (!t) return; e.preventDefault();
     const k = box.dataset.hub, v = t.dataset.v;
-    if (k === "sport") { hubState.sport = v; hubState.league = "All"; } else if (k === "days") hubState.days = +v; else hubState[k] = v;
+    if (k === "sport") { hubState.sport = v; hubState.league = "All"; } else if (k === "days") hubState.days = +v; else hubState[k] = v;   // gender, league, key
     keepScroll(() => showHub(slug, false));
   }));
   if (first) window.scrollTo(0, 0);
@@ -2029,7 +2038,7 @@ async function showAccount(handle) {
   $("main").innerHTML = `
     <section class="bd-hero">
       <div class="kicker crumbs"><a href="#/sports" class="kick-link">Sports</a> › ${H ? `<a href="#/sports" class="kick-link">${REGION}</a> › <a href="#/sports/${H[1]}" class="kick-link">${H[2]}</a> › ` : ""}${esc(o.name)}</div>
-      <div class="acc-head">${sq(o)}<div><h1>${esc(o.name)}${o.verified ? TICK : ""}</h1>
+      <div class="acc-head">${sq(o)}<div><h1>${esc(o.name)}${o.verified ? TICK : ""}</h1>${genderTag(o) ? `<div class="acc-g">${genderTag(o)}</div>` : ""}
         <div class="acc-sub"><a href="${orgLink(o)}" target="_blank" rel="noopener">@${esc(o.instagram)}</a> · ${esc(isCreator ? (o.kind || "Creator") : ORG_TYPE[o.type] || "")} · ${esc(SPORT_LABEL[o.sport] || o.sport)}${o.region ? " · " + esc(o.region) : ""}</div>
         ${H && rank ? `<div class="acc-badges"><span>#${rank} ${H[4]} in ${REGION} by followers</span>${engRank ? `<span>#${engRank} by engagement</span>` : ""}</div>` : ""}</div></div>
       <div class="stats acc-stats">
