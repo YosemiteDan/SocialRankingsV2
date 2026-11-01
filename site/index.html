@@ -78,6 +78,8 @@
   .menu h4 { margin: 10px 12px 4px; font: 800 17px/1 var(--display); color: var(--accent); }
   .menu .sub { margin-left: 12px; border-left: 1px solid var(--line); padding-left: 4px; }
   .menu hr { border: 0; border-top: 1px solid var(--line); margin: 6px 4px; }
+  .menu-soon { display: flex; justify-content: space-between; gap: 12px; padding: 9px 12px; color: var(--muted); font-weight: 600; cursor: default; }
+  .menu-soon small { font: 700 10px/1.6 var(--display); letter-spacing: .12em; text-transform: uppercase; color: var(--accent); opacity: .8; white-space: nowrap; }
 
   /* ---------- home ---------- */
   .home-hero { padding: 36px 0 26px; }
@@ -2135,14 +2137,15 @@ function link(params) {
 }
 function buildNav() {
   const count = f => DATA.players.filter(f).length;
-  const sportMenu = sportsList().map(sp => `<a href="${sportHref(sp)}">${esc(SPORT_LABEL[sp] || sp)}</a>`).join("");
   $("nav").innerHTML = `
     <a href="#/">Home</a>
     <details><summary>Athletes</summary><div class="menu">
       <a href="#/athletes"><b>All athletes</b> <small>${DATA.players.length}</small></a>
       <a href="#/athletes?gender=women">Women <small>${count(p => p.gender === "women")}</small></a>
       <a href="#/athletes?gender=men">Men <small>${count(p => p.gender === "men")}</small></a></div></details>
-    <details><summary>Sports</summary><div class="menu"><a href="#/sports"><b>Sports home</b></a>${HUBS.map(h => `<a href="#/sports/${h[1]}">${h[2]}</a>`).join("")}<hr>${sportMenu}</div></details>
+    <details><summary>Sports</summary><div class="menu"><a href="#/sports"><b>Sports home</b></a><hr>
+      <h4>Australasia</h4><div class="sub">${HUBS.map(h => `<a href="#/sports/${h[1]}">${h[2]}</a>`).join("")}</div><hr>
+      ${[...REGION_TABS.filter(r => !r[1]).map(r => r[0]), "Global"].map(r => `<span class="menu-soon">${r}<small>Coming soon</small></span>`).join("")}</div></details>
 `;
   // Only one menu open at a time; clicking elsewhere closes them.
   $("nav").querySelectorAll("details").forEach(d => d.addEventListener("toggle", () => {
