@@ -1859,13 +1859,13 @@ function govEventsHtml(list) {
     </section>` : "";
   return sec("governing", "Governing bodies", "running the game") + sec("event", "Events", "the big stages");
 }
-/* ---- Sports home (#/sports): pick a region (tabs), then a hub. Only Australasia is live for now. */
-const REGION_TABS = [["Australasia", true], ["North America", false], ["Europe", false], ["Asia", false], ["South America", false], ["Africa", false]];
+/* ---- Sports home (#/sports): pick a region (tabs), then a hub. Only Australia is live for now. */
+const REGION_TABS = [["Australia", true], ["North America", false], ["Europe", false], ["Asia", false], ["South America", false], ["Africa", false]];
 const HUBS = [["club", "clubs", "Clubs", "the clubs online", "club"], ["league", "leagues", "Leagues", "the competitions", "league"],
               ["national", "national-teams", "National teams", "green and gold", "national team"], ["governing", "federations", "Federations", "running the game", "federation"]];
 const hubBy = k => HUBS.find(h => h[0] === k || h[1] === k);
-const REGION = "Australasia";
-const regionOrgs = () => orgsAll().filter(o => (o.region || "Australasia") === REGION);
+const REGION = "Australia";
+const regionOrgs = () => orgsAll().filter(o => (o.region || "Australia") === REGION);
 const accHref = o => `#/sports/a/${encodeURIComponent(o.instagram)}`;
 function regionTabs(list) {
   const tilt = [-3, 2, -1.5, 3, -2, 1.5, -2.5];
@@ -1914,7 +1914,7 @@ function showSportsHub(first = true) {
     </section>
     ${eventHtml()}
     <section class="mx-sec" style="margin-top:6px">
-      <div class="sechead"><h2>Pick a hub</h2><span class="hand">in ${REGION}</span><span class="sechint">Australia &amp; New Zealand</span></div>
+      <div class="sechead"><h2>Pick a hub</h2><span class="hand">in ${REGION}</span></div>
       <div class="sp-grid hubs">${HUBS.map(h => hubTile(h, list)).join("")}</div>
     </section>
     <section class="mx-sec">
@@ -2151,7 +2151,7 @@ function showAbout() {
     <h2>Who it's for</h2>
     <p>Fans who want to know who's hot right now. Brands and sponsors looking for athletes with real, engaged audiences, not just big ones. Clubs, agents and federations who want to see how they stack up. And athletes themselves.</p>
     <h2>Where it's heading</h2>
-    <p>We're starting with Australasia and getting it right. More regions are on the way, then a global view that puts every league, team and athlete side by side, along with the creators and fan accounts who shape how sport is talked about online.</p>
+    <p>We're starting with Australia and getting it right. More regions are on the way, then a global view that puts every league, team and athlete side by side, along with the creators and fan accounts who shape how sport is talked about online.</p>
     <p>Want to work with us, or think we've missed someone? Get in touch at <a href="mailto:hello@socialetehq.com">hello@socialetehq.com</a>, and follow along at <a href="https://www.instagram.com/socialetehq/" target="_blank" rel="noopener">@socialetehq</a>.</p>
     <p class="note">Socialete isn't affiliated with any athlete, club, league or governing body, or with Instagram or Meta.</p>`);
 }
@@ -2243,7 +2243,7 @@ function buildNav() {
       <a href="#/athletes?gender=women">Women <small>${count(p => p.gender === "women")}</small></a>
       <a href="#/athletes?gender=men">Men <small>${count(p => p.gender === "men")}</small></a></div></details>
     <details><summary>Sports</summary><div class="menu"><a href="#/sports"><b>Sports home</b></a><hr>
-      <h4>Australasia</h4><div class="sub">${HUBS.map(h => `<a href="#/sports/${h[1]}">${h[2]}</a>`).join("")}</div><hr>
+      <h4>Australia</h4><div class="sub">${HUBS.map(h => `<a href="#/sports/${h[1]}">${h[2]}</a>`).join("")}</div><hr>
       ${[...REGION_TABS.filter(r => !r[1]).map(r => r[0]), "Global"].map(r => `<span class="menu-soon">${r}<small>Coming soon</small></span>`).join("")}</div></details>
 `;
   // Only one menu open at a time; clicking elsewhere closes them.

@@ -167,7 +167,7 @@ def growth_fields(rows):
     return out
 
 
-REGIONS = {"Australia": "Australasia", "New Zealand": "Australasia", "USA": "North America", "Canada": "North America",
+REGIONS = {"Australia": "Australia", "New Zealand": "Australia", "USA": "North America", "Canada": "North America",
            "England": "Europe", "UK": "Europe", "International": "Global"}
 
 
