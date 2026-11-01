@@ -1,0 +1,81 @@
+name,instagram,type,sport,league,country,gender
+NBL,nbl,league,Basketball,NBL,Australia,men
+WNBL,wnbl,league,Basketball,WNBL,Australia,women
+Basketball Australia,basketballaus,governing,Basketball,,Australia,mixed
+Adelaide 36ers,adelaide36ers,club,Basketball,NBL,Australia,men
+Brisbane Bullets,brisbanebullets,club,Basketball,NBL,Australia,men
+Cairns Taipans,cairnstaipans,club,Basketball,NBL,Australia,men
+Illawarra Hawks,illawarrahawks,club,Basketball,NBL,Australia,men
+Melbourne United,melbourneutd,club,Basketball,NBL,Australia,men
+New Zealand Breakers,nzbreakers,club,Basketball,NBL,Australia,men
+Perth Wildcats,perthwildcats,club,Basketball,NBL,Australia,men
+South East Melbourne Phoenix,semphoenix,club,Basketball,NBL,Australia,men
+Sydney Kings,sydneykings,club,Basketball,NBL,Australia,men
+Tasmania JackJumpers,jackjumpersbasketball,club,Basketball,NBL,Australia,men
+AFL,afl,league,AFL,AFL,Australia,men
+AFLW,aflw,league,AFL,AFLW,Australia,women
+Adelaide Crows,adelaide_fc,club,AFL,AFL,Australia,mixed
+Brisbane Lions,brisbanelions,club,AFL,AFL,Australia,mixed
+Carlton,carltonfc,club,AFL,AFL,Australia,mixed
+Collingwood,collingwoodfc,club,AFL,AFL,Australia,mixed
+Essendon,essendonfc,club,AFL,AFL,Australia,mixed
+Fremantle,fremantlefc,club,AFL,AFL,Australia,mixed
+Geelong Cats,geelongcats,club,AFL,AFL,Australia,mixed
+Gold Coast Suns,goldcoastsuns,club,AFL,AFL,Australia,mixed
+GWS Giants,gwsgiants,club,AFL,AFL,Australia,mixed
+Hawthorn,hawthornfc,club,AFL,AFL,Australia,mixed
+Melbourne,melbournefc,club,AFL,AFL,Australia,mixed
+North Melbourne,northmelbournefc,club,AFL,AFL,Australia,mixed
+Port Adelaide,portadelaidefc,club,AFL,AFL,Australia,mixed
+Richmond,richmond_fc,club,AFL,AFL,Australia,mixed
+St Kilda,stkildafc,club,AFL,AFL,Australia,mixed
+Sydney Swans,sydneyswans,club,AFL,AFL,Australia,mixed
+West Coast Eagles,westcoasteagles,club,AFL,AFL,Australia,mixed
+Western Bulldogs,westernbulldogs,club,AFL,AFL,Australia,mixed
+NRL,nrl,league,Rugby league,NRL,Australia,men
+NRLW,nrlw,league,Rugby league,NRLW,Australia,women
+Kangaroos,kangaroos,national,Rugby league,Kangaroos,Australia,men
+Jillaroos,jillaroos,national,Rugby league,Jillaroos,Australia,women
+Brisbane Broncos,brisbanebroncos,club,Rugby league,NRL,Australia,mixed
+Canberra Raiders,canberraraiders,club,Rugby league,NRL,Australia,mixed
+Canterbury-Bankstown Bulldogs,nrlbulldogs,club,Rugby league,NRL,Australia,mixed
+Cronulla Sharks,cronullasharks,club,Rugby league,NRL,Australia,mixed
+Dolphins,dolphinsnrl,club,Rugby league,NRL,Australia,mixed
+Gold Coast Titans,gctitans,club,Rugby league,NRL,Australia,mixed
+Manly Sea Eagles,manlyseaeagles,club,Rugby league,NRL,Australia,mixed
+Melbourne Storm,melbournestorm,club,Rugby league,NRL,Australia,mixed
+Newcastle Knights,newcastleknights,club,Rugby league,NRL,Australia,mixed
+New Zealand Warriors,nzwarriors,club,Rugby league,NRL,Australia,mixed
+North Queensland Cowboys,nqcowboys,club,Rugby league,NRL,Australia,mixed
+Parramatta Eels,parraeels,club,Rugby league,NRL,Australia,mixed
+Penrith Panthers,penrithpanthers,club,Rugby league,NRL,Australia,mixed
+South Sydney Rabbitohs,ssfcrabbitohs,club,Rugby league,NRL,Australia,mixed
+St George Illawarra Dragons,thedragons,club,Rugby league,NRL,Australia,mixed
+Sydney Roosters,sydneyroosters,club,Rugby league,NRL,Australia,mixed
+Wests Tigers,weststigers,club,Rugby league,NRL,Australia,mixed
+Cricket Australia,cricketcomau,governing,Cricket,,Australia,mixed
+Big Bash League,bbl,league,Cricket,BBL,Australia,men
+Weber WBBL,wbbl,league,Cricket,WBBL,Australia,women
+Tennis Australia,tennisaustralia,governing,Tennis,,Australia,mixed
+Australian Open,australianopen,event,Tennis,,Australia,mixed
+Football Australia,footballaustralia,governing,Soccer,,Australia,mixed
+Socceroos,socceroos,national,Soccer,Socceroos,Australia,men
+Matildas,matildas,national,Soccer,Matildas,Australia,women
+A-Leagues,aleagues,league,Soccer,A-League,Australia,mixed
+Adelaide United,adelaideunited,club,Soccer,A-League,Australia,mixed
+Auckland FC,aucklandfc,club,Soccer,A-League,Australia,mixed
+Brisbane Roar,brisbaneroarfc,club,Soccer,A-League,Australia,mixed
+Central Coast Mariners,ccmarinersfc,club,Soccer,A-League,Australia,mixed
+Macarthur FC,macarthurfc,club,Soccer,A-League,Australia,mixed
+Melbourne City,melbournecity,club,Soccer,A-League,Australia,mixed
+Melbourne Victory,melbournevictory,club,Soccer,A-League,Australia,mixed
+Newcastle Jets,newcastlejetsfc,club,Soccer,A-League,Australia,mixed
+Perth Glory,perthgloryfc,club,Soccer,A-League,Australia,mixed
+Sydney FC,sydneyfc,club,Soccer,A-League,Australia,mixed
+Wellington Phoenix,wellingtonphoenix,club,Soccer,A-League,Australia,mixed
+Western Sydney Wanderers,wswanderersfc,club,Soccer,A-League,Australia,mixed
+NBA,nba,league,Basketball,NBA,USA,men
+WNBA,wnba,league,Basketball,WNBA,USA,women
+NFL,nfl,league,American football,NFL,USA,men
+ATP Tour,atptour,league,Tennis,ATP,International,men
+WTA,wta,league,Tennis,WTA,International,women

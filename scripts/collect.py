@@ -41,6 +41,7 @@ LAST_RUN_FILE = ROOT / "data" / "last_run.json"
 NOT_VISIBLE_FILE = ROOT / "data" / "not_visible.json"
 RECHECK_DAYS = 7
 PROFILES_FILE = ROOT / "data" / "profiles.json"
+ORGS_FILE = ROOT / "data" / "organisations.csv"   # official accounts: leagues, clubs, national teams
 IMG_DIR = ROOT / "site" / "img"
 PHOTO_REFRESH_DAYS = 7
 
@@ -210,6 +211,7 @@ POST_FIELDS = "permalink,media_type,media_product_type,timestamp,caption,like_co
 IMAGE_FIELDS = ",media_url,thumbnail_url"
 HL_DIR = IMG_DIR / "hl"           # featured highlight thumbnails
 HL_WIDTH = 440                    # small enough to keep the site (and repository) light
+POST_DIR = IMG_DIR / "posts"      # official accounts' best post of the week
 
 
 def check_media_allowed(token, ig_id):
@@ -465,6 +467,43 @@ def save_thumbnail(url, path):
         return False
 
 
+def best_post(recent, today, days=7):
+    """The post with the most likes + comments in the last `days` days, or None."""
+    t = datetime.fromisoformat(today).date()
+    fresh = [m for m in recent if m.get("date") and (t - datetime.fromisoformat(m["date"]).date()).days <= days
+             and isinstance(m.get("likes"), int)]
+    return max(fresh, key=lambda m: m["likes"] + (m.get("comments") or 0), default=None)
+
+
+def save_best_posts(results, today):
+    """For official accounts: keep their best post of the week, with a small preview image."""
+    profiles = json.loads(PROFILES_FILE.read_text()) if PROFILES_FILE.exists() else {}
+    for handle, r in results.items():
+        recent = (r.get("_profile") or {}).get("recent")
+        if recent is None:
+            continue
+        p = profiles.setdefault(handle, {})
+        best = best_post(recent, today)
+        old = p.get("best_post") or {}
+        if not best:
+            p.pop("best_post", None)
+        elif best["url"] != old.get("url") or not (IMG_DIR.parent / old.get("thumb", "-")).exists():
+            item = {k: v for k, v in best.items() if not k.startswith("_")}
+            if best.get("_img") and save_thumbnail(best["_img"], POST_DIR / f"{handle}.jpg"):
+                item["thumb"] = f"img/posts/{handle}.jpg"
+            p["best_post"] = item
+        else:   # same post: just refresh its likes and comments
+            old.update(likes=best.get("likes"), comments=best.get("comments"))
+    PROFILES_FILE.write_text(json.dumps(profiles, indent=2, ensure_ascii=False))
+
+
+def load_orgs():
+    if not ORGS_FILE.exists():
+        return []
+    with ORGS_FILE.open(newline="") as f:
+        return [r for r in csv.DictReader(f) if r.get("instagram", "").strip()]
+
+
 def pick_featured(recent):
     """Their latest reel, or their latest post if they have no reels."""
     reels = [m for m in recent if m["type"] == "reel"]
@@ -559,6 +598,7 @@ def run(now, report):
     for p in people.values():
         if not p["instagram"]:
             report["failed"][p["name"]] = "no Instagram handle yet - add it to data/athletes.csv"
+    rate_limited = False
     print(f"Collecting {len(todo)} profiles via Meta for {today}")
     for i, a in enumerate(todo):
         handle = clean_handle(a["instagram"])
@@ -573,11 +613,13 @@ def run(now, report):
             seen_hidden[handle] = today
             print(f"  --   @{handle}: not visible to Meta ({e})")
         except RateLimited as e:
+            rate_limited = True
             print(f"::warning::Meta rate limit reached at @{handle}; the rest wait until tomorrow.")
             for b in todo[i:]:
                 report["failed"][b["name"]] = "skipped - Meta rate limit reached"
             break
         except TokenProblem as e:
+            rate_limited = True
             print(f"::error::{e}")
             report["warnings"].append(str(e))
             for b in todo[i:]:
@@ -620,14 +662,42 @@ def run(now, report):
     if retry:
         fill_handles_from_wikidata(fields, athletes, people, retry, report["handle_changes"])
 
-    if results:
-        save_history(results, today)
-        save_profiles(results, today)
+    # 6. Official accounts (leagues, clubs, national teams), after the athletes so they
+    #    never use up the athletes' share of Meta's hourly limit. No name check: these
+    #    are listed by hand in data/organisations.csv.
+    orgs = [o for o in load_orgs() if clean_handle(o["instagram"]) not in done_today]
+    org_results = {}
+    report["orgs_succeeded"], report["orgs_failed"] = [], {}
+    if orgs and not rate_limited:
+        print(f"Collecting {len(orgs)} official accounts")
+        for o in orgs:
+            handle = clean_handle(o["instagram"])
+            time.sleep(SECONDS_BETWEEN_LOOKUPS)
+            try:
+                org_results[handle] = lookup_meta(handle, token, ig_id)
+                print(f"  ok   @{handle}: {org_results[handle]['followers']:,} followers "
+                      f"({(org_results[handle].get('_profile') or {}).get('full_name')})")
+                report["orgs_succeeded"].append(o["name"])
+            except NotVisible as e:
+                report["orgs_failed"][o["name"]] = f"@{handle} not found ({e}). Check the handle in data/organisations.csv."
+                print(f"  --   @{handle}: not found")
+            except (RateLimited, TokenProblem) as e:
+                report["orgs_failed"][o["name"]] = f"skipped - {e}"
+                print(f"::warning::Stopped at @{handle}: {e}")
+                break
+            except Exception as e:  # noqa: BLE001
+                report["orgs_failed"][o["name"]] = str(e)
+
+    if results or org_results:
+        save_history({**results, **org_results}, today)
+        save_profiles({**results, **org_results}, today)
+    if org_results:
+        save_best_posts(org_results, today)
     report["succeeded"] = sorted(by_handle[h]["name"] for h in results)
     write_report(report)
     print(f"Done: {len(results)} ok, {len(report['failed'])} not collected, "
           f"{len(report['handle_changes'])} handles updated from Wikidata")
-    sys.exit(0 if results else 1)
+    sys.exit(0 if results or org_results else 1)
 
 
 if __name__ == "__main__":
