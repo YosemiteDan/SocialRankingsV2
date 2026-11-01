@@ -1566,20 +1566,20 @@ function wireAdv(onChange, onReset) {
 
 
 /* ---------------------------------------------------------------- athletes (#/athletes)
-   One ladder for every athlete. Tabs: Most followed (default) · Trending up · Trending down.
+   One ladder for every athlete. Tabs: Trending up (default) · Trending down · Most followed.
    Filters sit above the list: sport (and league), search, Everyone/Women/Men,
    Today/This week/This month on the trending tabs, and advanced filters. Hero 10, then the list. */
-const ATH_TABS = { followed: "Most followed", up: "▲ Trending up", down: "▼ Trending down" };
-const ath = { tab: "followed", sport: "All", league: "All", gender: "All", win: "day", q: "", shown: 40 };
+const ATH_TABS = { up: "▲ Trending up", down: "▼ Trending down", followed: "Most followed" };
+const ath = { tab: "up", sport: "All", league: "All", gender: "All", win: "day", q: "", shown: 40 };
 function athLink(o = {}) {
   const v = { tab: ath.tab, sport: ath.sport, league: ath.league, gender: ath.gender, win: ath.win, q: "", ...o };
   if (o.sport !== undefined && o.league === undefined) v.league = "All";
-  const q = new URLSearchParams(Object.entries(v).filter(([k, x]) => x && x !== "All" && !(k === "tab" && x === "followed") && !(k === "win" && (x === "day" || v.tab === "followed"))));
+  const q = new URLSearchParams(Object.entries(v).filter(([k, x]) => x && x !== "All" && !(k === "tab" && x === "up") && !(k === "win" && (x === "day" || v.tab === "followed"))));
   return "#/athletes" + (q.toString() ? "?" + q : "");
 }
 function showAthletes(params) {
   current = null;
-  Object.assign(ath, { tab: ATH_TABS[params.get("tab")] ? params.get("tab") : "followed", sport: params.get("sport") || "All",
+  Object.assign(ath, { tab: ATH_TABS[params.get("tab")] ? params.get("tab") : "up", sport: params.get("sport") || "All",
     league: params.get("league") || "All", gender: params.get("gender") || "All", win: params.get("win") || "day", q: params.get("q") || "", shown: 40 });
   if (params.get("adv")) board.advOpen = true;
   const sports = sportsList();
@@ -2076,7 +2076,7 @@ function showHome() {
       <div class="mf">${["women", "men"].map(g => `
         <div class="mf-col"><h3>${GENDER_LABEL[g]}</h3>
           ${mostF(g).length ? listHead(homeChLabel, "f") + mostF(g).slice(0, 10).map((p, i) => listRow(p, i + 1, weekGrowth(p), "f")).join("") : `<p class="empty">No numbers yet.</p>`}
-          <a class="all" href="#/athletes?gender=${g}">See all ${GENDER_LABEL[g].toLowerCase()} →</a>
+          <a class="all" href="#/athletes?tab=followed&gender=${g}">See all ${GENDER_LABEL[g].toLowerCase()} →</a>
         </div>`).join("")}
       </div>
     </section>
