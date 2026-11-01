@@ -81,3 +81,17 @@ WNBA,wnba,league,Basketball,WNBA,USA,women
 NFL,nfl,league,American football,NFL,USA,men
 ATP Tour,atptour,league,Tennis,ATP,International,men
 WTA,wta,league,Tennis,WTA,International,women
+Swimming Australia,swimmingaustralia,governing,Swimming,,Australia,mixed
+AusCycling,auscyclingaus,governing,Cycling,,Australia,mixed
+Athletics Australia,australianathletics,governing,Athletics,,Australia,mixed
+Softball Australia,softballaustralia,governing,Softball,,Australia,mixed
+Netball Australia,netballaust,governing,Netball,,Australia,mixed
+Hockey Australia,hockeyaustraliaofficial,governing,Hockey,,Australia,mixed
+Surfing Australia,surfingaus,governing,Surfing,,Australia,mixed
+Volleyball Australia,ausvolley,governing,Volleyball,,Australia,mixed
+Golf Australia,golfaust,governing,Golf,,Australia,mixed
+Australian baseball team,teamaustraliabaseball,national,Baseball,Australia baseball,Australia,men
+Australian women's cricket,auswomencricket,national,Cricket,Australia women,Australia,women
+Diamonds,aussiediamonds,national,Netball,Diamonds,Australia,women
+Hockeyroos,hockeyroosofficial,national,Hockey,Hockeyroos,Australia,women
+Kookaburras,kookaburrasofficial,national,Hockey,Kookaburras,Australia,men

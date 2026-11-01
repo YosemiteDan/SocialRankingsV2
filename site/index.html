@@ -1936,7 +1936,8 @@ function showHub(slug, first = true) {
   current = null;
   document.title = `${title} – ${SITE_NAME}`;
   const all = regionOrgs().filter(o => o.type === type);
-  const sports = sportsList().filter(sp => all.some(o => o.sport === sp));
+  // Sports with accounts in this hub: the ones with athletes first, then the rest (netball, hockey...) A-Z.
+  const sports = [...new Set(all.map(o => o.sport))].sort((a, b) => (((SPORT_ORDER.indexOf(a) + 1) || 99) - ((SPORT_ORDER.indexOf(b) + 1) || 99)) || a.localeCompare(b));
   if (!sports.includes(hubState.sport)) hubState.sport = "All";
   const leagues = type === "club" ? [...new Set(all.filter(o => hubState.sport === "All" || o.sport === hubState.sport).map(o => o.league))].filter(Boolean).sort() : [];
   if (!leagues.includes(hubState.league)) hubState.league = "All";
