@@ -497,6 +497,21 @@ def save_best_posts(results, today):
     PROFILES_FILE.write_text(json.dumps(profiles, indent=2, ensure_ascii=False))
 
 
+ORG_GENERIC = {"the", "fc", "football", "club", "afc", "nrl", "and", "official"}
+
+
+def org_matches(name, full_name, handle, followers=None):
+    """Is this account really the club / league? One distinctive word of its name must appear
+    in the account's name or handle; fan pages and tiny accounts don't count."""
+    words_of = lambda t: re.sub(r"[^a-z ]", " ", unicodedata.normalize("NFKD", t or "").encode("ascii", "ignore").decode().lower()).split()
+    full = words_of(full_name)
+    if "fan" in full or "fanpage" in full or "fans" in full or (followers is not None and followers < 2000):
+        return False
+    words = [w for w in words_of(name) if len(w) >= 3 and w not in ORG_GENERIC] or words_of(name)
+    hay = "".join(full) + " " + plain(handle)
+    return any(w in hay for w in words)
+
+
 def load_orgs():
     if not ORGS_FILE.exists():
         return []
@@ -665,28 +680,39 @@ def run(now, report):
     # 6. Official accounts (leagues, clubs, national teams), after the athletes so they
     #    never use up the athletes' share of Meta's hourly limit. No name check: these
     #    are listed by hand in data/organisations.csv.
-    orgs = [o for o in load_orgs() if clean_handle(o["instagram"]) not in done_today]
+    orgs = [o for o in load_orgs() if not any(clean_handle(h) in done_today for h in o["instagram"].split("|"))]
     org_results = {}
     report["orgs_succeeded"], report["orgs_failed"] = [], {}
     if orgs and not rate_limited:
         print(f"Collecting {len(orgs)} official accounts")
+        stop = False
         for o in orgs:
-            handle = clean_handle(o["instagram"])
-            time.sleep(SECONDS_BETWEEN_LOOKUPS)
-            try:
-                org_results[handle] = lookup_meta(handle, token, ig_id)
-                print(f"  ok   @{handle}: {org_results[handle]['followers']:,} followers "
-                      f"({(org_results[handle].get('_profile') or {}).get('full_name')})")
+            # A row can list several possible handles ("a|b"); the first real match is used.
+            tried = []
+            for handle in [clean_handle(h) for h in o["instagram"].split("|") if h.strip()]:
+                time.sleep(SECONDS_BETWEEN_LOOKUPS)
+                try:
+                    res = lookup_meta(handle, token, ig_id)
+                except NotVisible:
+                    tried.append(f"@{handle} not found"); continue
+                except (RateLimited, TokenProblem) as e:
+                    report["orgs_failed"][o["name"]] = f"skipped - {e}"
+                    print(f"::warning::Stopped at @{handle}: {e}")
+                    stop = True; break
+                except Exception as e:  # noqa: BLE001
+                    tried.append(f"@{handle}: {e}"); continue
+                full = (res.get("_profile") or {}).get("full_name")
+                if not org_matches(o["name"], full, handle, res.get("followers")):
+                    tried.append(f"@{handle} is '{full}', not {o['name']}"); continue
+                org_results[handle] = res
+                print(f"  ok   @{handle}: {res['followers']:,} followers ({full})")
                 report["orgs_succeeded"].append(o["name"])
-            except NotVisible as e:
-                report["orgs_failed"][o["name"]] = f"@{handle} not found ({e}). Check the handle in data/organisations.csv."
-                print(f"  --   @{handle}: not found")
-            except (RateLimited, TokenProblem) as e:
-                report["orgs_failed"][o["name"]] = f"skipped - {e}"
-                print(f"::warning::Stopped at @{handle}: {e}")
                 break
-            except Exception as e:  # noqa: BLE001
-                report["orgs_failed"][o["name"]] = str(e)
+            else:
+                report["orgs_failed"][o["name"]] = "; ".join(tried) + ". Check data/organisations.csv."
+                print(f"  --   {o['name']}: " + "; ".join(tried))
+            if stop:
+                break
 
     if results or org_results:
         save_history({**results, **org_results}, today)

@@ -1,0 +1,11 @@
+# Run by hand: lists Instagram handles Wikidata has for clubs, leagues and national teams.
+name: Find official account handles
+on: workflow_dispatch
+jobs:
+  find:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - run: pip install requests
+      - run: python scripts/find_org_handles.py
