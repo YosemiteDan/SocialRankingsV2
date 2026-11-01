@@ -2,6 +2,8 @@ name,instagram,type,sport,league,country,gender
 NBL,nbl,league,Basketball,NBL,Australia,men
 WNBL,wnbl,league,Basketball,WNBL,Australia,women
 Basketball Australia,basketballaus,governing,Basketball,,Australia,mixed
+Boomers,australianboomers,national,Basketball,Boomers,Australia,men
+Opals,aus_opals,national,Basketball,Opals,Australia,women
 Adelaide 36ers,adelaide36ers,club,Basketball,NBL,Australia,men
 Brisbane Bullets,brisbanebullets,club,Basketball,NBL,Australia,men
 Cairns Taipans,cairnstaipans,club,Basketball,NBL,Australia,men
