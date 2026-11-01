@@ -299,6 +299,7 @@
   .foot-social a { width: 40px; height: 40px; display: grid; place-items: center; border: 2px solid var(--line); border-radius: 8px; color: var(--text); }
   .foot-social a:hover { border-color: var(--accent); color: var(--accent); }
   .foot-social svg { width: 18px; height: 18px; }
+  .foot-social { align-items: center; } .foot-handle { font: 700 13px/1 var(--display); letter-spacing: .1em; color: var(--text); margin-left: 4px; }
   .foot-col h4 { margin: 4px 0 14px; font: 700 13px/1 var(--display); letter-spacing: .16em; text-transform: uppercase; color: var(--accent); }
   .foot-col a { display: block; color: var(--text); text-decoration: none; padding: 5px 0; }
   .foot-col a:hover, .foot-legal a:hover { color: var(--accent); }
@@ -488,6 +489,12 @@
   .g-tag { display: inline-block; vertical-align: middle; margin-left: 8px; padding: 3px 6px 2px; border-radius: 3px; font: 700 9px/1.1 var(--display); letter-spacing: .1em; text-transform: uppercase; border: 1px solid currentColor; }
   .g-tag.m { color: #7FB2FF; } .g-tag.w { color: #FF8FC2; } .g-tag.mw { color: #C3C9E3; }
   .acc-g { margin-top: 8px; } .acc-g .g-tag { margin-left: 0; font-size: 11px; padding: 4px 8px; }
+  .prose { max-width: 760px; font: 400 18px/1.65 var(--serif); color: #D6DAEE; margin-bottom: 40px; }
+  .prose p.big { font-size: 22px; line-height: 1.5; color: var(--cream); }
+  .prose h2 { font: 700 30px/1.1 var(--serif); color: var(--cream); margin: 40px 0 12px; padding-bottom: 10px; border-bottom: 2px solid var(--cream); }
+  .prose ul, .prose ol { padding-left: 22px; } .prose li { margin: 8px 0; } .prose b { color: var(--cream); }
+  .prose a { color: var(--accent); }
+  .prose .note { font-size: 15px; color: var(--muted); margin-top: 30px; }
   .h2h { container-type: inline-size; }
   .h2h-row { display: grid; grid-template-columns: 30px minmax(0, 1fr) 80px 80px 60px 70px; gap: 0 12px; align-items: center; padding: 10px 0; border-bottom: 1px dashed var(--line); color: inherit; text-decoration: none; }
   .h2h.with-pl .h2h-row { grid-template-columns: 30px minmax(0, 1fr) 80px 80px 60px 70px 110px; }
@@ -870,23 +877,19 @@
     <div class="foot-top">
       <div class="foot-brand">
         <a class="logo" href="#/">Social<b>ete</b></a>
-        <p>Australia's athletes, ranked by Instagram. Followers, growth and engagement, updated every morning.</p>
-        <!-- Social links: replace href="#" with the real profile addresses when the accounts are ready. -->
+        <p>Australian sport, ranked by Instagram. Athletes, clubs, leagues and national teams: followers, growth and engagement, updated every morning.</p>
         <div class="foot-social">
-          <a class="soon" href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg></a>
-          <a class="soon" href="#" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.6 3c.4 2.2 1.8 3.7 4 3.9v3.2c-1.5 0-2.9-.4-4-1.2v6.3a6 6 0 1 1-6-6h.5v3.3a2.8 2.8 0 1 0 2.3 2.7V3h3.2z"/></svg></a>
-          <a class="soon" href="#" aria-label="X"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.8 3h3.3l-7.2 8.2L22.4 21h-6.6l-5.2-6.8L4.7 21H1.4l7.7-8.8L1 3h6.8l4.7 6.2L17.8 3zm-1.2 16h1.8L7.5 4.9H5.6L16.6 19z"/></svg></a>
-          <a class="soon" href="#" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M22.5 7.2a2.8 2.8 0 0 0-2-2C18.8 4.7 12 4.7 12 4.7s-6.8 0-8.5.5a2.8 2.8 0 0 0-2 2A29 29 0 0 0 1 12a29 29 0 0 0 .5 4.8 2.8 2.8 0 0 0 2 2c1.7.5 8.5.5 8.5.5s6.8 0 8.5-.5a2.8 2.8 0 0 0 2-2A29 29 0 0 0 23 12a29 29 0 0 0-.5-4.8zM9.8 15.1V8.9l5.7 3.1-5.7 3.1z"/></svg></a>
-          <a class="soon" href="#" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9.5h4V21H3V9.5zm6.5 0h3.8v1.6h.1c.5-1 1.8-2 3.8-2 4 0 4.8 2.6 4.8 6V21h-4v-5.2c0-1.2 0-2.8-1.7-2.8s-2 1.3-2 2.7V21h-4V9.5z"/></svg></a>
+          <a href="https://www.instagram.com/socialetehq/" target="_blank" rel="noopener" aria-label="Socialete on Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg></a>
+          <a href="https://www.tiktok.com/@socialetehq" target="_blank" rel="noopener" aria-label="Socialete on TikTok"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.6 3c.4 2.2 1.8 3.7 4 3.9v3.2c-1.5 0-2.9-.4-4-1.2v6.3a6 6 0 1 1-6-6h.5v3.3a2.8 2.8 0 1 0 2.3 2.7V3h3.2z"/></svg></a>
+          <span class="foot-handle">@socialetehq</span>
         </div>
       </div>
       <nav class="foot-col" aria-label="Explore"><h4>Explore</h4>
-        <a href="#/">Home</a><a href="#/athletes">All athletes</a><a href="#/athletes?gender=women">Women</a><a href="#/athletes?gender=men">Men</a>
-        <a href="#/athletes?tab=up">Trending</a><a href="#/sports">Sports</a></nav>
-      <nav class="foot-col" aria-label="Company"><h4>Socialete</h4>
-        <a class="soon" href="#">About</a><a class="soon" href="#">How the rankings work</a><a class="soon" href="#">Contact</a><a class="soon" href="#">Advertise &amp; partner</a><a class="soon" href="#">Media kit</a></nav>
-      <nav class="foot-col" aria-label="Athletes"><h4>Athletes</h4>
-        <a class="soon" href="#">Add or correct an athlete</a><a class="soon" href="#">Claim your profile</a><a class="soon" href="#">Newsletter</a></nav>
+        <a href="#/">Home</a><a href="#/athletes">Trending athletes</a><a href="#/athletes?tab=followed">Most followed</a><a href="#/athletes?gender=women">Women</a><a href="#/athletes?gender=men">Men</a></nav>
+      <nav class="foot-col" aria-label="Sports"><h4>Sports</h4>
+        <a href="#/sports">Sports home</a><a href="#/sports/clubs">Clubs</a><a href="#/sports/leagues">Leagues</a><a href="#/sports/national-teams">National teams</a><a href="#/sports/federations">Federations</a></nav>
+      <nav class="foot-col" aria-label="Socialete"><h4>Socialete</h4>
+        <a href="#/about">About</a><a href="#/how-it-works">How the rankings work</a><a href="mailto:hello@socialetehq.com">Contact</a><a href="mailto:hello@socialetehq.com?subject=Advertising%20%26%20partnerships">Advertise &amp; partner</a></nav>
     </div>
     <div class="foot-bottom">
       <p>© <span id="year">2026</span> Socialete. Follower numbers come from public Instagram accounts through Meta's official API. Heights and ages come from Wikidata. Not affiliated with any league, team or governing body, or with Instagram or Meta.</p>
@@ -2126,6 +2129,80 @@ function showSport(sport, first = true) {
   if (first) window.scrollTo(0, 0);
 }
 
+/* ---------------------------------------------------------------- About and How it works */
+function prosePage(kicker, title, body) {
+  current = null;
+  document.title = `${title} – ${SITE_NAME}`;
+  $("main").innerHTML = `<section class="bd-hero"><div class="kicker">${kicker}</div><h1>${title}</h1></section><article class="prose">${body}</article>`;
+  window.scrollTo(0, 0);
+}
+function showAbout() {
+  const n = DATA.players.length, orgs = (DATA.orgs || []).filter(o => o.followers != null).length;
+  prosePage("Socialete · about", "Sport's social scoreboard", `
+    <p class="big">Socialete ranks Australian sport by what happens on Instagram. Every morning we check the public accounts of ${n} Australian athletes and ${orgs} clubs, leagues, national teams and federations, and turn the numbers into one daily scoreboard.</p>
+    <p>Sport has always had ladders, stats and leaderboards for what happens on the field. Off the field, where athletes and teams now build audiences that rival broadcasters, there's been nothing. Socialete is that missing scoreboard: who's growing, who's dropping, who's genuinely connecting with fans, and who's about to break out.</p>
+    <h2>What you'll find</h2>
+    <ul>
+      <li><b>Athletes.</b> Men and women across basketball, AFL, NRL, cricket, tennis, football and the NFL, from household names to players a few games into their careers. Trending up and down today, this week or this month, the most followed, breakouts, milestones and new arrivals. Filter by sport, league or national team, or narrow it down by followers, engagement, height and age.</li>
+      <li><b>Athlete profiles.</b> Follower history, engagement, posting activity, latest highlights, and where they sit against everyone else.</li>
+      <li><b>Sports.</b> The official accounts, head to head: clubs, leagues, national teams and federations, with each account's best posts, content mix and posting rhythm. Big events get their own feature while they're on.</li>
+      <li><b>Engagement that means something.</b> Followers tell you reach; engagement tells you whether people care. Our engagement score is shown everywhere, so you can compare a 5K-follower rookie with a 5M-follower star.</li>
+    </ul>
+    <h2>Who it's for</h2>
+    <p>Fans who want to know who's hot right now. Brands and sponsors looking for athletes with real, engaged audiences, not just big ones. Clubs, agents and federations who want to see how they stack up. And athletes themselves.</p>
+    <h2>Where it's heading</h2>
+    <p>We're starting with Australasia and getting it right. More regions are on the way, then a global view that puts every league, team and athlete side by side, along with the creators and fan accounts who shape how sport is talked about online.</p>
+    <p>Want to work with us, or think we've missed someone? Get in touch at <a href="mailto:hello@socialetehq.com">hello@socialetehq.com</a>, and follow along at <a href="https://www.instagram.com/socialetehq/" target="_blank" rel="noopener">@socialetehq</a>.</p>
+    <p class="note">Socialete isn't affiliated with any athlete, club, league or governing body, or with Instagram or Meta.</p>`);
+}
+function showHow() {
+  prosePage("Socialete · how it works", "How the rankings work", `
+    <p class="big">Everything on Socialete comes from public Instagram numbers, collected every morning and worked out the same way for everyone. Here's exactly how.</p>
+    <h2>Where the numbers come from</h2>
+    <p>We use Meta's official Instagram API, which can read the public numbers of <b>business and creator accounts</b>: followers, posts, and the likes and comments on recent posts. It can't see personal accounts, so a few athletes are missing until they switch, and it never shares saves, shares, reach or story views.</p>
+    <p>Collection runs every morning from about 7am (Sydney time), with catch-up runs later in the morning for anyone missed. Heights and ages come from Wikidata.</p>
+    <h2>Followers and growth</h2>
+    <ul>
+      <li><b>Followers</b> are the count at that morning's collection.</li>
+      <li><b>Today</b> is the change since the previous collection, usually the day before.</li>
+      <li><b>This week</b> compares with seven days earlier. Until someone has a week of history, it's the change since we started tracking them, and we say how many days that covers.</li>
+      <li><b>This month</b> compares with 30 days earlier.</li>
+      <li>Growth is shown both ways: the number of followers gained or lost, and as a percentage of where they started (so +1,000 means more for a 10K account than a 1M one).</li>
+    </ul>
+    <h2>The athlete rankings</h2>
+    <ul>
+      <li><b>Trending up / down</b> ranks by percentage growth over the chosen window, among athletes with at least 5,000 followers, so tiny accounts can't top it with a handful of new followers.</li>
+      <li><b>Most followed</b> is simply followers, highest first.</li>
+      <li><b>Top profiles this week</b> (home page) ranks by percentage growth among accounts with 10,000+ followers.</li>
+      <li><b>The home page cover</b> goes to whoever gained the most followers since yesterday (at least 50). On a quiet day it's the most gained this week.</li>
+      <li><b>Up &amp; coming</b> is the fastest growth among athletes under 100,000 followers.</li>
+      <li><b>Breakouts</b> are athletes growing at least three times faster than their usual day, compared with the middle of their previous two weeks. They need a few days of history first.</li>
+      <li><b>Milestones</b> mark anyone crossing 10K, 25K, 50K, 100K, 250K, 500K, 1M, 2M, 5M or 10M followers this week.</li>
+    </ul>
+    <h2>The engagement score</h2>
+    <p>Engagement shows how much an audience interacts, relative to its size. We work it out from each account's <b>last 10 posts</b>:</p>
+    <ol>
+      <li>For each post: likes, plus comments counted as <b>1.2 likes</b> each (a comment takes more effort).</li>
+      <li>Reels count <b>1.4×</b>, reflecting how much further video travels.</li>
+      <li>Divide by followers to get a percentage, then average across the posts. Posts with hidden like counts are skipped.</li>
+      <li>Two final adjustments of <b>1.2×</b> each: one for the saves and sends Meta doesn't share, which athletes' posts attract a lot of, and one for an athlete's place at the top of the sporting pyramid.</li>
+    </ol>
+    <p>The same score is used for official accounts and creators, so everything is comparable. An account's own replies can't be separated out, so they're included in its comment count.</p>
+    <h2>Teams, leagues and national squads</h2>
+    <ul>
+      <li><b>Fastest growing leagues and clubs</b> (home page) add up the followers of every athlete we track in that league or club, and show how much that total grew. It's not the club's own account.</li>
+      <li><b>National team</b> badges are based on each team's most recent official tournament squad, so they reflect who's in the side now.</li>
+    </ul>
+    <h2>Sports and official accounts</h2>
+    <ul>
+      <li>The Sports pages rank clubs', leagues', national teams' and federations' own Instagram accounts, grouped by region.</li>
+      <li><b>Posts in the last 7 / 30 days</b> and the <b>content mix</b> come from each account's latest 40 posts.</li>
+      <li><b>Best posts</b> are ranked by likes plus comments.</li>
+      <li><b>Players' followers</b> on a league or team is the combined following of the athletes we track in it.</li>
+      <li><b>Events</b> such as the Australian Open appear from a week before they start until three days after they finish.</li>
+    </ul>
+    <p class="note">Spotted something wrong, or an athlete we're missing? Email <a href="mailto:hello@socialetehq.com">hello@socialetehq.com</a>.</p>`);
+}
 /* ---------------------------------------------------------------- routing */
 function route() {
   document.querySelectorAll(".nav details[open]").forEach(d => d.removeAttribute("open"));
@@ -2136,6 +2213,8 @@ function route() {
   if (sp) return showSport(decodeURIComponent(sp[1]));
   const am = h.match(/^#\/athletes(?:\?(.*))?$/);
   if (am) return showAthletes(new URLSearchParams(am[1] || ""));
+  if (h === "#/about") return showAbout();
+  if (h === "#/how-it-works") return showHow();
   const acc = h.match(/^#\/sports\/a\/([^?]+)/);
   if (acc) return showAccount(decodeURIComponent(acc[1]));
   const hubm = h.match(/^#\/sports\/(leagues|national-teams|federations|clubs)\b/);
