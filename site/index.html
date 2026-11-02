@@ -12,11 +12,11 @@
 </script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Socialete</title>
-<meta name="description" content="Australian athletes ranked by Instagram followers, updated daily.">
+<meta name="description" content="Sport, ranked by Instagram. Athletes, clubs, leagues and national teams: followers, growth and engagement, updated daily.">
 <meta name="theme-color" content="#0E1430">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Socialete – Australia's athletes, ranked by Instagram">
-<meta property="og:description" content="Australian athletes ranked by Instagram. Updated daily.">
+<meta property="og:title" content="Socialete – Sport, ranked by Instagram">
+<meta property="og:description" content="Athletes, clubs, leagues and national teams, ranked by Instagram. Followers, growth and engagement, updated daily.">
 <meta property="og:image" content="og.png">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230E1430'/%3E%3Cpath d='M9 25 19 7h5L14 25z' fill='%23FF7A1A'/%3E%3C/svg%3E">
@@ -2386,7 +2386,7 @@ function teamLine(p) {
 
 function showHome() {
   current = null;
-  document.title = `${SITE_NAME} – Australia's athletes, ranked by Instagram`;
+  document.title = `${SITE_NAME} – Sport, ranked by Instagram`;
   const withF = DATA.players.filter(p => p.followers != null);
   const total = withF.reduce((s, p) => s + p.followers, 0);
   const tp = topProfiles("All");
@@ -2427,7 +2427,7 @@ function showHome() {
 
     <section class="mx-hero">
       <div>
-        <div class="kicker">The daily programme · Australian athletes on Instagram</div>
+        <div class="kicker">The daily programme · Sport on Instagram</div>
         <h1>Who's winning the <em>feed</em> today</h1>
         <p class="lede">Followers, growth and the hottest profiles from ${DATA.players.length} Australian athletes, from the NBA to the AFLW. Updated every morning; collected like a footy card set.</p>
         <div class="stats">
