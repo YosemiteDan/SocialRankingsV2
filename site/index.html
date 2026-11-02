@@ -901,7 +901,7 @@
     </div>
     <div class="foot-bottom">
       <p>© <span id="year">2026</span> Socialete. Follower numbers come from public Instagram accounts through Meta's official API. Heights and ages come from Wikidata. Not affiliated with any league, team or governing body, or with Instagram or Meta.</p>
-      <p class="foot-legal"><a href="#/privacy">Privacy</a><a class="soon" href="#">Terms</a></p>
+      <p class="foot-legal"><a href="#/privacy">Privacy</a><a href="#/terms">Terms</a></p>
     </div>
   </div>
 </footer>
@@ -1856,8 +1856,8 @@ function keepScroll(fn) { const y = scrollY; fn(); scrollTo(0, y); }
 function creatorsSection(sport) {
   const list = (DATA.creators || []).filter(c => c.live && c.followers != null && (!sport || c.sport === sport)).sort((a, b) => (b.followers || 0) - (a.followers || 0)).slice(0, 5);
   if (!list.length) return "";
-  return `<section class="mx-sec"><div class="sechead"><h2>Top creators</h2><span class="hand">the voices around the game</span></div>
-    <div class="t5-grid one">${list.map((c, i) => `<a class="t5-row" href="${accHref(c)}"><span class="n">${i + 1}</span>${sq(c)}<span class="who"><b>${esc(c.name)}</b><small>${esc(c.kind || "Creator")}</small></span><span class="v">${compact(c.followers)}</span></a>`).join("")}</div></section>`;
+  return `<section class="mx-sec"><div class="sechead"><h2>Top creators</h2><span class="hand">the voices around the game</span><span class="sechint">Individual creators and fan accounts</span></div>
+    <div class="t5-grid one">${list.map((c, i) => `<a class="t5-row" href="${accHref(c)}"><span class="n">${i + 1}</span>${sq(c)}<span class="who"><b>${esc(c.name)}</b><small>${esc(c.kind || "Creator")} · ${esc(SPORT_LABEL[c.sport] || c.sport)} · ${engVal(c)} eng</small></span><span class="v">${compact(c.followers)}</span></a>`).join("")}</div></section>`;
 }
 // Governing bodies and events get their own tables: a Grand Slam's account isn't a fair fight for a governing body.
 function govEventsHtml(list) {
@@ -2163,6 +2163,43 @@ function showAbout() {
     <p>Want to work with us, or think we've missed someone? Get in touch at <a href="mailto:hello@socialetehq.com">hello@socialetehq.com</a>, and follow along at <a href="https://www.instagram.com/socialetehq/" target="_blank" rel="noopener">@socialetehq</a>.</p>
     <p class="note">Socialete isn't affiliated with any athlete, club, league or governing body, or with Instagram or Meta.</p>`);
 }
+function showTerms() {
+  prosePage("Socialete · terms", "Terms of use", `
+    <p class="big">These terms cover your use of the Socialete website. By using the site, you agree to them. They're written to be read, so they're short.</p>
+    <p class="note" style="margin-top:0">Last updated 2 November 2026.</p>
+    <h2>What Socialete is</h2>
+    <p>Socialete ranks sport on Instagram: athletes, clubs, leagues, national teams, federations and creators. The site is free to use and you don't need an account.</p>
+    <h2>The numbers are a guide</h2>
+    <ul>
+      <li>Our figures come from public Instagram business and creator accounts (through Meta's official API) and other public sources such as Wikidata, collected once a day. They can be delayed, incomplete or occasionally wrong, for example if an account changes its handle, hides its likes or goes private.</li>
+      <li>Rankings, growth figures and engagement scores are Socialete's own calculations and opinions about online audiences. They aren't a measure of sporting ability, character or commercial value.</li>
+      <li>Everything on the site is general information only. Please don't rely on it alone for business, sponsorship, betting or other decisions; check anything important with the athlete, club or their representatives.</li>
+    </ul>
+    <h2>Not affiliated</h2>
+    <p>Socialete is independent. We're not affiliated with, endorsed by or sponsored by any athlete, club, league, governing body or event we feature, or by Instagram or Meta. Being listed or ranked on Socialete doesn't mean an athlete or organisation supports us.</p>
+    <h2>Names, photos and logos</h2>
+    <ul>
+      <li>Athlete names, profile photos, post previews, club and league names and logos belong to their owners. We show them, taken from public profiles, to identify the accounts we rank and to link to the original posts.</li>
+      <li>If you own content shown on Socialete and want it changed or removed, email <a href="mailto:hello@socialetehq.com?subject=Content%20request">hello@socialetehq.com</a> and we'll respond promptly.</li>
+      <li>The Socialete name, logo, site design, rankings and written content belong to Socialete.</li>
+    </ul>
+    <h2>Using the site</h2>
+    <p>You're welcome to view, link to and share pages, and to quote individual rankings or figures with credit to Socialete. Please don't:</p>
+    <ul>
+      <li>copy, scrape or download the site's data in bulk, or use automated tools to collect it, without our written permission;</li>
+      <li>republish our rankings as your own, or present them as official or endorsed by anyone we feature;</li>
+      <li>interfere with the site, try to break its security, or use it for anything unlawful.</li>
+    </ul>
+    <p>Want to use Socialete data for your business, media or research? Talk to us at <a href="mailto:hello@socialetehq.com?subject=Advertising%20%26%20partnerships">hello@socialetehq.com</a>.</p>
+    <h2>Links to other sites</h2>
+    <p>Socialete links to Instagram and other websites we don't control. Their own terms and privacy policies apply when you visit them.</p>
+    <h2>Liability</h2>
+    <p>We work hard to keep Socialete accurate and available, but we provide it "as is" and can't promise it will always be complete, current or online. To the extent the law allows, we aren't liable for any loss arising from your use of the site or reliance on its information. Nothing in these terms limits any rights you have under the Australian Consumer Law or other laws that can't be excluded.</p>
+    <h2>Privacy</h2>
+    <p>How we handle information is explained in our <a href="#/privacy">privacy policy</a>.</p>
+    <h2>Changes and contact</h2>
+    <p>We may update these terms as Socialete grows; the date at the top shows the latest version. These terms are governed by the laws of Australia. Questions? Email <a href="mailto:hello@socialetehq.com">hello@socialetehq.com</a>.</p>`);
+}
 function showPrivacy() {
   prosePage("Socialete · privacy", "Privacy policy", `
     <p class="big">Socialete is a website that ranks sport on Instagram: athletes, clubs, leagues, national teams and federations around the world, starting with Australia. You don't need an account to use it, and we don't ask for your name or email. This page explains the little we do collect, why, and your choices.</p>
@@ -2267,6 +2304,7 @@ function route() {
   if (h === "#/about") return showAbout();
   if (h === "#/how-it-works") return showHow();
   if (h === "#/privacy") return showPrivacy();
+  if (h === "#/terms") return showTerms();
   const acc = h.match(/^#\/sports\/a\/([^?]+)/);
   if (acc) return showAccount(decodeURIComponent(acc[1]));
   const hubm = h.match(/^#\/sports\/(leagues|national-teams|federations|clubs)\b/);
