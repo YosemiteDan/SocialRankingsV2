@@ -885,7 +885,7 @@
     <div class="foot-top">
       <div class="foot-brand">
         <a class="logo" href="#/">Social<b>ete</b></a>
-        <p>Australian sport, ranked by Instagram. Athletes, clubs, leagues and national teams: followers, growth and engagement, updated every morning.</p>
+        <p>Sport, ranked by Instagram. Athletes, clubs, leagues and national teams: followers, growth and engagement, updated every morning.</p>
         <div class="foot-social">
           <a href="https://www.instagram.com/socialetehq/" target="_blank" rel="noopener" aria-label="Socialete on Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg></a>
           <a href="https://www.tiktok.com/@socialetehq" target="_blank" rel="noopener" aria-label="Socialete on TikTok"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.6 3c.4 2.2 1.8 3.7 4 3.9v3.2c-1.5 0-2.9-.4-4-1.2v6.3a6 6 0 1 1-6-6h.5v3.3a2.8 2.8 0 1 0 2.3 2.7V3h3.2z"/></svg></a>
@@ -2147,7 +2147,7 @@ function prosePage(kicker, title, body) {
 function showAbout() {
   const n = DATA.players.length, orgs = (DATA.orgs || []).filter(o => o.followers != null).length;
   prosePage("Socialete · about", "Sport's social scoreboard", `
-    <p class="big">Socialete ranks Australian sport by what happens on Instagram. Every morning we check the public accounts of ${n} Australian athletes and ${orgs} clubs, leagues, national teams and federations, and turn the numbers into one daily scoreboard.</p>
+    <p class="big">Socialete ranks sport by what happens on Instagram, starting with Australia. Every morning we check the public accounts of ${n} Australian athletes and ${orgs} clubs, leagues, national teams and federations, and turn the numbers into one daily scoreboard.</p>
     <p>Sport has always had ladders, stats and leaderboards for what happens on the field. Off the field, where athletes and teams now build audiences that rival broadcasters, there's been nothing. Socialete is that missing scoreboard: who's growing, who's dropping, who's genuinely connecting with fans, and who's about to break out.</p>
     <h2>What you'll find</h2>
     <ul>
@@ -2165,7 +2165,7 @@ function showAbout() {
 }
 function showPrivacy() {
   prosePage("Socialete · privacy", "Privacy policy", `
-    <p class="big">Socialete is a website that ranks Australian sport on Instagram. You don't need an account to use it, and we don't ask for your name or email. This page explains the little we do collect, why, and your choices.</p>
+    <p class="big">Socialete is a website that ranks sport on Instagram: athletes, clubs, leagues, national teams and federations around the world, starting with Australia. You don't need an account to use it, and we don't ask for your name or email. This page explains the little we do collect, why, and your choices.</p>
     <p class="note" style="margin-top:0">Last updated 2 November 2026.</p>
     <h2>Who we are</h2>
     <p>"Socialete", "we" and "us" means the team behind socialete (this website and the @socialetehq Instagram and TikTok accounts). You can contact us about privacy at <a href="mailto:hello@socialetehq.com?subject=Privacy">hello@socialetehq.com</a>.</p>
@@ -2182,7 +2182,7 @@ function showPrivacy() {
     <h2>If you email us</h2>
     <p>If you contact us, we receive your email address and whatever you write. We use it only to reply and to deal with your enquiry (for example a partnership, a correction or a removal request), and keep it only as long as we need to.</p>
     <h2>Information about athletes and accounts we feature</h2>
-    <p>Socialete shows <b>publicly available</b> information about athletes, clubs, leagues, national teams, federations and creators:</p>
+    <p>Socialete shows <b>publicly available</b> information about athletes, clubs, leagues, national teams, federations and creators, wherever they are based:</p>
     <ul>
       <li>numbers from their public Instagram business or creator accounts (followers, posts, likes and comments on recent posts, profile photo and bio), collected through Meta's official Instagram API;</li>
       <li>public details such as team, league, national team selection, height and birth date, from official team lists and Wikidata;</li>
@@ -2195,7 +2195,7 @@ function showPrivacy() {
       <li><b>GitHub</b>, which hosts the website and, like any web host, may keep basic technical logs (such as IP addresses) for security.</li>
       <li><b>Meta</b>, whose Instagram API we use to read public account numbers. Using our site doesn't send your information to Meta, but clicking through to Instagram takes you to Meta's own service.</li>
     </ul>
-    <p>These providers store and process information outside Australia, mainly in the United States. We don't otherwise share, sell or rent personal information, unless the law requires it.</p>
+    <p>These providers store and process information in several countries, mainly the United States. We don't otherwise share, sell or rent personal information, unless the law requires it.</p>
     <h2>How long we keep it</h2>
     <p>Google Analytics data is kept for 14 months and then deleted automatically. Emails are kept only as long as needed to deal with your enquiry.</p>
     <h2>Your choices</h2>
@@ -2205,13 +2205,13 @@ function showPrivacy() {
       <li>You can turn off ad personalisation, which also stops Google signals using your account information, at <a href="https://myadcenter.google.com" target="_blank" rel="noopener">myadcenter.google.com</a>.</li>
     </ul>
     <h2>Your rights</h2>
-    <p>You can ask what personal information we hold about you, ask us to correct it, or ask us to delete it, by emailing <a href="mailto:hello@socialetehq.com?subject=Privacy">hello@socialetehq.com</a>. We'll respond within 30 days. If you're not happy with how we've handled a privacy concern, you can contact the Office of the Australian Information Commissioner at <a href="https://www.oaic.gov.au" target="_blank" rel="noopener">oaic.gov.au</a>.</p>
+    <p>You can ask what personal information we hold about you, ask us to correct it, or ask us to delete it, by emailing <a href="mailto:hello@socialetehq.com?subject=Privacy">hello@socialetehq.com</a>. We'll respond within 30 days. Socialete is based in Australia and follows the Australian Privacy Principles. If you're not happy with how we've handled a privacy concern, you can contact the Office of the Australian Information Commissioner at <a href="https://www.oaic.gov.au" target="_blank" rel="noopener">oaic.gov.au</a>. If you live elsewhere, you may have extra rights under your local law (for example the GDPR in the UK and Europe), and we'll honour those requests too.</p>
     <h2>Children</h2>
     <p>Socialete is a general audience site and isn't directed at children. We don't knowingly collect personal information from anyone under 16.</p>
     <h2>Security</h2>
     <p>We keep what we collect to a minimum and use reputable providers with strong security. No website can be completely secure, but we'll tell you and the relevant authorities if a breach is likely to cause you serious harm.</p>
     <h2>Changes</h2>
-    <p>We may update this policy as Socialete grows (for example if we add newsletters or accounts). We'll change the date at the top when we do, and highlight anything significant on the site.</p>`);
+    <p>We may update this policy as Socialete grows (for example as we add new regions, newsletters or accounts). We'll change the date at the top when we do, and highlight anything significant on the site.</p>`);
 }
 function showHow() {
   prosePage("Socialete · how it works", "How the rankings work", `
