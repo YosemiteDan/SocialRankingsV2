@@ -28,6 +28,12 @@ import sys
 import time
 import unicodedata
 from datetime import datetime, timezone
+from zoneinfo import ZoneInfo
+
+# A "day" of numbers is a Sydney day: the 7am run starts a new one, and any extra runs
+# later that day (catch-ups, or one started by hand) only fill gaps rather than starting
+# tomorrow's numbers early once UTC ticks over at 11am.
+LOCAL_TZ = ZoneInfo("Australia/Sydney")
 from pathlib import Path
 
 import requests
@@ -564,7 +570,7 @@ def main():
 
 
 def run(now, report):
-    today = now.date().isoformat()
+    today = now.astimezone(LOCAL_TZ).date().isoformat()
     fields, athletes = load_athletes()
     people = people_from(athletes)
     sync_rows(fields, athletes, people)
