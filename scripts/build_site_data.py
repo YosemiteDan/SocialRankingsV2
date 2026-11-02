@@ -204,7 +204,7 @@ def build_orgs(history, profiles, filename="organisations.csv"):
             rows, prof = history.get(handle, []), profiles.get(handle, {})
             item = {"id": slug(o["name"]), "name": o["name"], "instagram": handle, "type": o["type"],
                     "sport": o["sport"], "league": o.get("league") or "", "country": o.get("country") or "Australia",
-                    "gender": o.get("gender") or "mixed", "verified": prof.get("is_verified"), "kind": o.get("kind") or "", "live": (o.get("live") or "").lower() == "yes",
+                    "gender": o.get("gender") or "mixed", "verified": prof.get("is_verified"), "kind": o.get("kind") or "", "parent": o.get("parent") or "", "live": (o.get("live") or "").lower() == "yes",
                     "photo": f"img/{handle}.jpg" if (SITE / "img" / f"{handle}.jpg").exists() else None,
                     "region": REGIONS.get(o.get("country") or "Australia", "Global"), "followers": None}
             if rows:

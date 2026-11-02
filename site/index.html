@@ -503,6 +503,17 @@
   .prose ul, .prose ol { padding-left: 22px; } .prose li { margin: 8px 0; } .prose b { color: var(--cream); }
   .prose a { color: var(--accent); }
   .prose .note { font-size: 15px; color: var(--muted); margin-top: 30px; }
+  .cat-tabs { display: flex; gap: 0; border: 2px solid var(--cream); width: max-content; max-width: 100%; margin-bottom: 14px; }
+  .cat-tabs a { padding: 12px 22px; font: 700 16px/1 var(--display); letter-spacing: .1em; text-transform: uppercase; text-decoration: none; color: var(--cream); }
+  .cat-tabs a.on { background: var(--cream); color: var(--bg); }
+  .cat-note { font-size: 13px; color: var(--muted); margin: 10px 0 0; } .cat-note .g-tag { margin: 0 4px 0 0; }
+  .hub-h2h.clubs .h2h-row { grid-template-columns: 30px minmax(0, 1fr) 80px 80px 56px 64px 76px 210px; }
+  .star { display: flex; align-items: center; gap: 10px; min-width: 0; padding-left: 14px; border-left: 1px dashed var(--line); text-align: left; }
+  .star .sq { width: 38px; height: 38px; flex: none; } .star b { display: block; font: 700 14px/1.15 var(--serif); color: var(--cream); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .star small { display: block !important; font: 700 10px/1.3 var(--display); letter-spacing: .08em; text-transform: uppercase; color: var(--accent) !important; margin-top: 2px; } .star em { color: var(--muted); font-style: normal; }
+  .hub-h2h.clubs .h2h-head > span:last-child { text-align: left; padding-left: 14px; }
+  .sib-link { display: inline-block; margin-top: 10px; color: var(--accent); font: 700 12px/1 var(--display); letter-spacing: .12em; text-transform: uppercase; text-decoration: none; border-bottom: 2px solid currentColor; padding-bottom: 3px; }
+  @media (max-width: 760px) { .hub-h2h.clubs .h2h-row { grid-template-columns: 22px minmax(0, 1fr) 62px 62px 48px; } .cat-tabs a { padding: 11px 14px; font-size: 14px; } }
   .h2h { container-type: inline-size; }
   .h2h-row { display: grid; grid-template-columns: 30px minmax(0, 1fr) 80px 80px 60px 70px; gap: 0 12px; align-items: center; padding: 10px 0; border-bottom: 1px dashed var(--line); color: inherit; text-decoration: none; }
   .h2h.with-pl .h2h-row { grid-template-columns: 30px minmax(0, 1fr) 80px 80px 60px 70px 110px; }
@@ -1942,25 +1953,42 @@ function showSportsHub(first = true) {
   if (first) window.scrollTo(0, 0);
 }
 /* ---- A hub (#/sports/leagues etc.): head to head for one kind of account in the region. */
-const hubState = { sport: "All", league: "All", gender: "All", days: 7, key: "followers" };
+const hubState = { sport: "All", league: "All", gender: "All", days: 7, key: "followers", cat: "men", comp: "All" };
+// Clubs: the club a women's (or men's) team account belongs to, and the players we track there.
+const clubKey = o => o.parent || o.name.replace(/\s+(AFLW|NRLW|Women)$/i, "");
+const nmClub = t => (t || "").toLowerCase().replace(/[^a-z ]/g, "").replace(/\bfc\b/g, "").replace(/\s+/g, " ").trim();
+function clubPlayers(o, gender) {
+  const cn = nmClub(clubKey(o));
+  return DATA.players.filter(p => p.followers != null && p.sport === o.sport && (!gender || p.gender === gender) &&
+    (p.teams || []).some(t => { const tn = nmClub(t[1]); return tn && (tn === cn || tn.startsWith(cn + " ") || cn.startsWith(tn + " ")); }))
+    .sort((a, b) => b.followers - a.followers);
+}
+const accGender = o => o.gender === "women" ? "women" : o.gender === "men" ? "men" : null;
+const compLabel = (l, cat) => cat === "men" && l === "A-League" ? "A-League Men" : l;
 function showHub(slug, first = true) {
   const H = hubBy(slug); if (!H) return showSportsHub();
   const [type, , title, hand] = H;
   current = null;
   document.title = `${title} – ${SITE_NAME}`;
-  const all = regionOrgs().filter(o => o.type === type);
+  const isClubs = type === "club";
+  // Clubs split cleanly: Women's clubs are dedicated women's team accounts; everything else
+  // (men's teams and shared men's & women's accounts) sits under Men's clubs.
+  const inCat = o => !isClubs || (hubState.cat === "women" ? o.gender === "women" : o.gender !== "women");
+  const all = regionOrgs().filter(o => o.type === type && inCat(o));
+  const comps = isClubs ? [...new Set(all.map(o => o.league))].filter(Boolean).sort((a, b) => ((["AFL", "AFLW", "NRL", "NRLW", "A-League", "A-League Women", "NBL", "WNBL"].indexOf(a) + 1) || 99) - ((["AFL", "AFLW", "NRL", "NRLW", "A-League", "A-League Women", "NBL", "WNBL"].indexOf(b) + 1) || 99)) : [];
+  if (!comps.includes(hubState.comp)) hubState.comp = "All";
   // Sports with accounts in this hub: the ones with athletes first, then the rest (netball, hockey...) A-Z.
   const sports = [...new Set(all.map(o => o.sport))].sort((a, b) => (((SPORT_ORDER.indexOf(a) + 1) || 99) - ((SPORT_ORDER.indexOf(b) + 1) || 99)) || a.localeCompare(b));
   if (!sports.includes(hubState.sport)) hubState.sport = "All";
   const leagues = type === "club" ? [...new Set(all.filter(o => hubState.sport === "All" || o.sport === hubState.sport).map(o => o.league))].filter(Boolean).sort() : [];
   if (!leagues.includes(hubState.league)) hubState.league = "All";
   // Clubs filter by sport and league; leagues and national teams by men / women; federations need no filter.
-  const bySport = type === "club", byGender = type !== "governing";
+  const bySport = false, byGender = type === "league" || type === "national";
   if (!bySport) { hubState.sport = "All"; hubState.league = "All"; }
   if (!byGender) hubState.gender = "All";
   // Women: women's clubs plus clubs whose account covers both; same for men.
   const gOk = o => hubState.gender === "All" || o.gender === hubState.gender || o.gender === "mixed";
-  const list = all.filter(o => (hubState.sport === "All" || o.sport === hubState.sport) && (hubState.league === "All" || o.league === hubState.league) && gOk(o));
+  const list = all.filter(o => (hubState.sport === "All" || o.sport === hubState.sport) && (hubState.league === "All" || o.league === hubState.league) && gOk(o) && (!isClubs || hubState.comp === "All" || o.league === hubState.comp));
   const d = hubState.days, pk = d === 7 ? "posts_7d" : "posts_30d";
   const ch = o => d === 7 ? weekGrowth(o) : (o.change_30d != null ? { pct: o.change_30d_pct, n: o.change_30d } : null);
   const val = o => ({ followers: o.followers, growth: (ch(o) || {}).pct ?? -1e9, eng: o.engagement_rate ?? -1, posts: o[pk] ?? -1, likes: o.avg_likes ?? -1 })[hubState.key];
@@ -1973,12 +2001,15 @@ function showHub(slug, first = true) {
     <section class="bd-hero">
       <div class="kicker crumbs"><a href="#/sports" class="kick-link">Sports</a> › <a href="#/sports" class="kick-link">${REGION}</a> › ${title}</div>
       <h1>${title}</h1>
-      <p class="lede hub-lede">${all.length} official ${H[4]} accounts in ${REGION}, ${compact(all.reduce((s, o) => s + o.followers, 0))} followers between them.</p>
+      <p class="lede hub-lede">${isClubs ? `${all.length} ${hubState.cat === "women" ? "women's" : "men's"} club accounts in ${REGION}` : `${all.length} official ${H[4]} accounts in ${REGION}`}, ${compact(all.reduce((s, o) => s + o.followers, 0))} followers between them.</p>
       <div class="bd-modes hub-tabs">${HUBS.map(([t, sl, l]) => `<a href="#/sports/${sl}" class="${t === type ? "on" : ""}">${l}</a>`).join("")}</div>
     </section>
     <div class="bd-controls" style="position:static">
       ${bySport ? `<div class="bd-chips" data-hub="sport">${["All", ...sports].map(sp => `<a href="#" data-v="${esc(sp)}" aria-selected="${sp === hubState.sport}">${sp === "All" ? "All sports" : esc(SPORT_LABEL[sp] || sp)}</a>`).join("")}</div>` : ""}
-      ${leagues.length > 1 ? `<div class="bd-chips sub" data-hub="league">${["All", ...leagues].map(l => `<a href="#" data-v="${esc(l)}" aria-selected="${l === hubState.league}">${l === "All" ? "All leagues" : esc(l)}</a>`).join("")}</div>` : ""}
+      ${isClubs ? `<div class="cat-tabs" data-hub="cat">${[["men", "Men's clubs"], ["women", "Women's clubs"]].map(([k, l]) => `<a href="#" data-v="${k}" class="${k === hubState.cat ? "on" : ""}">${l}</a>`).join("")}</div>
+        <div class="bd-chips" data-hub="comp">${["All", ...comps].map(c => `<a href="#" data-v="${esc(c)}" aria-selected="${c === hubState.comp}">${c === "All" ? "All competitions" : esc(compLabel(c, hubState.cat))}</a>`).join("")}</div>
+        ${hubState.cat === "men" ? `<p class="cat-note"><span class="g-tag mw">Men's &amp; women's</span> = a club that runs one account for both its teams.</p>` : ""}` : ""}
+      ${!isClubs && leagues.length > 1 ? `<div class="bd-chips sub" data-hub="league">${["All", ...leagues].map(l => `<a href="#" data-v="${esc(l)}" aria-selected="${l === hubState.league}">${l === "All" ? "All leagues" : esc(l)}</a>`).join("")}</div>` : ""}
       <div class="bd-row" style="justify-content:${byGender ? "space-between" : "flex-end"}">${byGender ? `<div class="pills" data-hub="gender">${[["All", "Everyone"], ["women", "Women"], ["men", "Men"]].map(([k, l]) => `<a href="#" class="pill" data-v="${k}" aria-pressed="${k === hubState.gender}">${l}</a>`).join("")}</div>` : ""}<div class="pills" data-hub="days">${[[7, "Last 7 days"], [30, "Last 30 days"]].map(([k, l]) => `<a href="#" class="pill" data-v="${k}" aria-pressed="${k === d}">${l}</a>`).join("")}</div></div>
     </div>
     <section class="mx-sec" style="margin-top:10px">
@@ -1987,16 +2018,17 @@ function showHub(slug, first = true) {
     </section>
     <section class="mx-sec">
       <div class="sechead"><h2>Head to head</h2><span class="hand">${hand}</span><div class="pills sm" data-hub="key">${keys.map(([k, l]) => `<button data-v="${k}" aria-pressed="${k === hubState.key}">${l}</button>`).join("")}</div></div>
-      ${rows.length ? `<div class="h2h hub-h2h">
-        <div class="h2h-row h2h-head"><span></span><span>Account</span><span class="${hubState.key === "followers" ? "key" : ""}">Followers</span><span class="${hubState.key === "growth" ? "key" : ""}">${d} days</span><span class="${hubState.key === "eng" ? "key" : ""}" title="${ENG_INFO}">Eng</span><span class="hide-s ${hubState.key === "posts" ? "key" : ""}">Posts ${d}d</span><span class="hide-s ${hubState.key === "likes" ? "key" : ""}">Avg likes</span><span class="hide-s">Avg comments</span></div>
+      ${rows.length ? `<div class="h2h hub-h2h${isClubs ? " clubs" : ""}">
+        <div class="h2h-row h2h-head"><span></span><span>Account</span><span class="${hubState.key === "followers" ? "key" : ""}">Followers</span><span class="${hubState.key === "growth" ? "key" : ""}">${d} days</span><span class="${hubState.key === "eng" ? "key" : ""}" title="${ENG_INFO}">Eng</span><span class="hide-s ${hubState.key === "posts" ? "key" : ""}">Posts ${d}d</span><span class="hide-s ${hubState.key === "likes" ? "key" : ""}">Avg likes</span><span class="hide-s">${isClubs ? "⭐ Star player" : "Avg comments"}</span></div>
         ${rows.map((o, i) => { const g = ch(o), v = val(o); return `<a class="h2h-row" href="${accHref(o)}"><span class="n">${i + 1}</span>
-          <span class="who">${sq(o)}<span><b>${esc(o.name)}${genderTag(o)}</b><small>${esc(SPORT_LABEL[o.sport] || o.sport)}${o.league && type === "club" ? " · " + esc(o.league) : ""}</small><i class="hbar"><i style="width:${Math.max(3, Math.abs(v) / max * 100).toFixed(1)}%" class="${hubState.key === "growth" && v < 0 ? "neg" : ""}"></i></i></span></span>
+          <span class="who">${sq(o)}<span><b>${esc(o.name)}${isClubs ? (o.gender === "mixed" ? genderTag(o) : "") : genderTag(o)}</b><small>${isClubs ? esc(compLabel(o.league, o.gender === "women" ? "women" : "men")) : esc(SPORT_LABEL[o.sport] || o.sport)}</small><i class="hbar"><i style="width:${Math.max(3, Math.abs(v) / max * 100).toFixed(1)}%" class="${hubState.key === "growth" && v < 0 ? "neg" : ""}"></i></i></span></span>
           <span class="c-f${hubState.key === "followers" ? " key" : ""}">${compact(o.followers)}</span>
           <span class="c-c ${chCls(g)}${hubState.key === "growth" ? " key" : ""}">${g && g.n ? pct1(g.pct) : "–"}${g && g.n ? `<small>${exactSigned(g.n)}</small>` : d === 30 ? "<small>from Dec</small>" : ""}</span>
           <span class="c-e${hubState.key === "eng" ? " key" : ""}">${engVal(o)}</span>
           <span class="c-p hide-s${hubState.key === "posts" ? " key" : ""}">${o[pk] ?? "–"}</span>
           <span class="c-p hide-s${hubState.key === "likes" ? " key" : ""}">${o.avg_likes != null ? compact(o.avg_likes) : "–"}</span>
-          <span class="c-p hide-s">${o.avg_comments != null ? compact(Math.round(o.avg_comments)) : "–"}</span></a>`; }).join("")}
+          ${isClubs ? (() => { const st = clubPlayers(o, accGender(o))[0]; return `<span class="star hide-s">${st ? `${sq(st)}<span><b>${esc(st.name)}</b><small>${compact(st.followers)} followers</small></span>` : "<em>–</em>"}</span>`; })()
+            : `<span class="c-p hide-s">${o.avg_comments != null ? compact(Math.round(o.avg_comments)) : "–"}</span>`}</a>`; }).join("")}
       </div>` : `<p class="empty">No ${title.toLowerCase()} here yet.</p>`}
     </section>
     <section class="mx-sec">
@@ -2010,7 +2042,7 @@ function showHub(slug, first = true) {
   $("main").querySelectorAll("[data-hub]").forEach(box => box.addEventListener("click", e => {
     const t = e.target.closest("[data-v]"); if (!t) return; e.preventDefault();
     const k = box.dataset.hub, v = t.dataset.v;
-    if (k === "sport") { hubState.sport = v; hubState.league = "All"; } else if (k === "days") hubState.days = +v; else hubState[k] = v;   // gender, league, key
+    if (k === "sport") { hubState.sport = v; hubState.league = "All"; } else if (k === "cat") { hubState.cat = v; hubState.comp = "All"; } else if (k === "days") hubState.days = +v; else hubState[k] = v;   // gender, league, comp, key
     keepScroll(() => showHub(slug, false));
   }));
   if (first) window.scrollTo(0, 0);
@@ -2043,12 +2075,12 @@ async function showAccount(handle) {
   const best = [...rec].sort((a, b) => (b.likes + (b.comments || 0)) - (a.likes + (a.comments || 0))).slice(0, 5)
     .map(m => ({ ...m, thumb: ((o.top_posts || []).find(t => t.url === m.url) || {}).thumb }));
   const clubs = o.type === "league" ? regionOrgs().filter(x => x.type === "club" && x.league === o.league).sort((a, b) => b.followers - a.followers) : [];
-  // Club pages: the players on that club's list (team name starting with the club's name, e.g. Carlton -> Carlton Blues).
-  const nm = t => (t || "").toLowerCase().replace(/[^a-z ]/g, "").replace(/\bfc\b/g, "").replace(/\s+/g, " ").trim();
-  const isClub = o.type === "club", cn = nm(o.name);
-  const atClub = p => p.sport === o.sport && (p.teams || []).some(t => { const tn = nm(t[1]); return tn && (tn === cn || tn.startsWith(cn + " ") || cn.startsWith(tn + " ")); });
-  const players = (isClub ? DATA.players.filter(p => p.followers != null && atClub(p))
-    : o.league ? DATA.players.filter(p => p.followers != null && inLeague(p, o.league)) : []).sort((a, b) => b.followers - a.followers);
+  // Club pages: the players at that club (women's account -> women's players, men's -> men's, shared -> both).
+  const isClub = o.type === "club";
+  const players = isClub ? clubPlayers(o, accGender(o))
+    : (o.league ? DATA.players.filter(p => p.followers != null && inLeague(p, o.league)) : []).sort((a, b) => b.followers - a.followers);
+  // The same club's other team account (e.g. Western Bulldogs <-> Western Bulldogs AFLW).
+  const sibling = isClub ? (DATA.orgs || []).find(x => x !== o && x.type === "club" && x.followers != null && clubKey(x) === clubKey(o)) : null;
   const leaguePeers = isClub ? regionOrgs().filter(x => x.type === "club" && x.league === o.league) : [];
   const g = weekGrowth(o), g30 = o.change_30d != null ? { pct: o.change_30d_pct } : null;
   const isCreator = o.type === "creator";
@@ -2057,6 +2089,7 @@ async function showAccount(handle) {
       <div class="kicker crumbs"><a href="#/sports" class="kick-link">Sports</a> › ${H ? `<a href="#/sports" class="kick-link">${REGION}</a> › <a href="#/sports/${H[1]}" class="kick-link">${H[2]}</a> › ` : ""}${esc(o.name)}</div>
       <div class="acc-head">${sq(o)}<div><h1>${esc(o.name)}${o.verified ? TICK : ""}</h1>${genderTag(o) ? `<div class="acc-g">${genderTag(o)}</div>` : ""}
         <div class="acc-sub"><a href="${orgLink(o)}" target="_blank" rel="noopener">@${esc(o.instagram)}</a> · ${esc(isCreator ? (o.kind || "Creator") : ORG_TYPE[o.type] || "")} · ${esc(SPORT_LABEL[o.sport] || o.sport)}${o.region ? " · " + esc(o.region) : ""}</div>
+        ${sibling ? `<a class="sib-link" href="${accHref(sibling)}">${sibling.gender === "women" ? "Women's team" : "Men's team"}: ${esc(sibling.name)} →</a>` : ""}
         ${H && rank ? `<div class="acc-badges"><span>#${rank} ${H[4]} in ${REGION} by followers</span>${engRank ? `<span>#${engRank} by engagement</span>` : ""}</div>` : ""}</div></div>
       <div class="stats acc-stats">
         <div><small>Followers</small><b>${compact(o.followers)}</b></div>
@@ -2078,7 +2111,7 @@ async function showAccount(handle) {
       </div>
     </section>
     <section class="mx-sec">
-      <div class="sechead"><h2>Best posts</h2><span class="hand">what landed</span><span class="sechint">Most likes + comments, recent posts</span></div>
+      <div class="sechead"><h2>Top 5 posts</h2><span class="hand">what landed</span><span class="sechint">Most likes + comments, recent posts</span></div>
       ${best.length ? `<div class="posts5">${best.map((m, i) => postTile(o, m, i, false)).join("")}</div>` : `<p class="empty">Posts show after the next update.</p>`}
     </section>
     ${isClub && leaguePeers.length > 1 ? `<section class="mx-sec"><div class="sechead"><h2>Against the ${esc(o.league)}</h2><span class="hand">the club ladder</span>${h2hSort("acc", spState.h2h)}</div>${h2hTable(leaguePeers, { key: spState.h2h, sub: x => x === o ? "This club" : x.league, hl: o })}</section>`

@@ -210,7 +210,7 @@ def token_expiry(token):
 
 RECENT_POSTS = 10  # latest posts fetched per athlete: the video strip on their profile, and engagement
 ORG_POSTS = 40     # official accounts and creators post a lot: enough for posts in the last 7/30 days
-TOP_POSTS = 3      # preview images kept per official account (its best posts of the week)
+TOP_POSTS = 5      # preview images kept per official account (its top 5 posts of the week)
 
 # Whether Meta lets us fetch recent posts in the same lookup. None = not known yet.
 # If asking for posts ever causes errors, the run carries on without them.
