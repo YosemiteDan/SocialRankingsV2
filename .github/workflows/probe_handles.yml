@@ -1,0 +1,19 @@
+# Run by hand: checks a list of possible Instagram handles (data/probe_*.txt) through Meta.
+name: Probe handles
+on:
+  workflow_dispatch:
+    inputs:
+      file:
+        description: "List to check, e.g. data/probe_women.txt"
+        required: true
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - run: pip install requests
+      - run: python scripts/probe_handles.py "${{ inputs.file }}"
+        env:
+          META_ACCESS_TOKEN: ${{ secrets.META_ACCESS_TOKEN }}
+          META_IG_USER_ID: ${{ secrets.META_IG_USER_ID }}
