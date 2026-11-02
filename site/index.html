@@ -2531,7 +2531,13 @@ document.addEventListener("click", e => {
   if (!a) return;
   const hrefA = a.getAttribute("href") || "", label = (a.textContent || "").trim().slice(0, 60);
   if (/instagram\.com/.test(hrefA)) track("instagram_click", { handle: (hrefA.match(/instagram\.com\/([^/?#]+)/) || [])[1] || "", page_area: pageArea() });
-  else if (hrefA.startsWith("mailto:")) track("contact_click", { contact_type: /subject=Advert/i.test(hrefA) ? "advertise_partner" : "contact" });
+  else if (hrefA.startsWith("mailto:")) {
+    // Opening the mail app can cut off the analytics request, so send it first, then open the email.
+    e.preventDefault();
+    let opened = false; const open = () => { if (!opened) { opened = true; location.href = hrefA; } };
+    track("contact_click", { contact_type: /subject=Advert/i.test(hrefA) ? "advertise_partner" : "contact", transport_type: "beacon", event_callback: open });
+    setTimeout(open, 700);
+  }
   else if (a.id === "shareBtn") track("share", { page_title: document.title });
   else if (a.closest(".bd-modes, .bd-chips, .pills, [data-hub], [data-sort], .rg-stamps, .hub-tabs")) track("filter_use", { filter: label, page_area: pageArea() });
   else if (a.closest(".bd-adv summary") || a.id === "advReset") track("advanced_filters", { action: a.id === "advReset" ? "reset" : "toggle" });
