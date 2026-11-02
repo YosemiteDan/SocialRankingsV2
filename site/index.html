@@ -1975,7 +1975,7 @@ function showHub(slug, first = true) {
   // (men's teams and shared men's & women's accounts) sits under Men's clubs.
   const inCat = o => !isClubs || (hubState.cat === "women" ? o.gender === "women" : o.gender !== "women");
   const all = regionOrgs().filter(o => o.type === type && inCat(o));
-  const comps = isClubs ? [...new Set(all.map(o => o.league))].filter(Boolean).sort((a, b) => ((["AFL", "AFLW", "NRL", "NRLW", "A-League", "A-League Women", "NBL", "WNBL"].indexOf(a) + 1) || 99) - ((["AFL", "AFLW", "NRL", "NRLW", "A-League", "A-League Women", "NBL", "WNBL"].indexOf(b) + 1) || 99)) : [];
+  const comps = isClubs ? [...new Set(all.map(o => o.league))].filter(Boolean).sort((a, b) => ((["AFL", "AFLW", "NRL", "NRLW", "A-League", "A-League Women", "NBL", "WNBL", "Super Netball"].indexOf(a) + 1) || 99) - ((["AFL", "AFLW", "NRL", "NRLW", "A-League", "A-League Women", "NBL", "WNBL", "Super Netball"].indexOf(b) + 1) || 99)) : [];
   if (!comps.includes(hubState.comp)) hubState.comp = "All";
   // Sports with accounts in this hub: the ones with athletes first, then the rest (netball, hockey...) A-Z.
   const sports = [...new Set(all.map(o => o.sport))].sort((a, b) => (((SPORT_ORDER.indexOf(a) + 1) || 99) - ((SPORT_ORDER.indexOf(b) + 1) || 99)) || a.localeCompare(b));
