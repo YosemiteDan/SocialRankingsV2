@@ -2,6 +2,14 @@
 <html lang="en-AU">
 <head>
 <meta charset="utf-8">
+<!-- Google Analytics (GA4). Page views are sent by trackPage() on every in-site page change. -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-8P9B9Q6TL1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-8P9B9Q6TL1", { send_page_view: false });
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Socialete</title>
 <meta name="description" content="Australian athletes ranked by Instagram followers, updated daily.">
@@ -2502,6 +2510,38 @@ function renderWidget(by) {
 let resizeTimer;
 window.addEventListener("resize", () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(drawChart, 150); });
 window.addEventListener("hashchange", route);
+
+/* ---------------------------------------------------------------- analytics (GA4)
+   The site changes pages without reloading, so each page change is sent as a page view
+   (after the page has drawn, so the title is right), plus a few useful actions as events. */
+const track = (name, params = {}) => { try { if (window.gtag) gtag("event", name, params); } catch (e) { /* never break the site */ } };
+let lastTracked = "";
+function trackPage() {
+  setTimeout(() => {
+    const path = "/" + (location.hash.replace(/^#\/?/, "") || "");
+    if (path === lastTracked) return;
+    lastTracked = path;
+    track("page_view", { page_title: document.title, page_location: location.href, page_path: path });
+  }, 400);
+}
+window.addEventListener("hashchange", trackPage);
+const pageArea = () => (location.hash.match(/^#\/([^/?]+)/) || [, "home"])[1];
+document.addEventListener("click", e => {
+  const a = e.target.closest("a, button");
+  if (!a) return;
+  const hrefA = a.getAttribute("href") || "", label = (a.textContent || "").trim().slice(0, 60);
+  if (/instagram\.com/.test(hrefA)) track("instagram_click", { handle: (hrefA.match(/instagram\.com\/([^/?#]+)/) || [])[1] || "", page_area: pageArea() });
+  else if (hrefA.startsWith("mailto:")) track("contact_click", { contact_type: /subject=Advert/i.test(hrefA) ? "advertise_partner" : "contact" });
+  else if (a.id === "shareBtn") track("share", { page_title: document.title });
+  else if (a.closest(".bd-modes, .bd-chips, .pills, [data-hub], [data-sort], .rg-stamps, .hub-tabs")) track("filter_use", { filter: label, page_area: pageArea() });
+  else if (a.closest(".bd-adv summary") || a.id === "advReset") track("advanced_filters", { action: a.id === "advReset" ? "reset" : "toggle" });
+}, true);
+let searchTimer;
+document.addEventListener("input", e => {
+  if (e.target.type === "search") { clearTimeout(searchTimer); const v = e.target.value.trim();
+    if (v.length >= 3) searchTimer = setTimeout(() => track("search", { search_term: v, page_area: pageArea() }), 1200); }
+  else if (e.target.closest && e.target.closest(".adv-s")) { clearTimeout(searchTimer); searchTimer = setTimeout(() => track("advanced_filters", { action: "slider", filter: e.target.closest(".adv-s").dataset.k }), 1200); }
+});
 // Footer links that aren't set up yet.
 document.addEventListener("click", e => { const a = e.target.closest("a.soon"); if (a) { e.preventDefault(); toast("Coming soon"); } });
 document.getElementById("year").textContent = new Date().getFullYear();
@@ -2513,6 +2553,7 @@ fetch("data.json", { cache: "no-store" }).then(r => r.json()).then(d => {
   buildNav();
   if (asOf) $("updated").innerHTML = `<span class="live"></span>Updated ${niceDate(asOf, { day: "numeric", month: "short" })}`;
   route();
+  trackPage();
 }).catch(() => {
   $("main").innerHTML = '<p class="notice" style="margin-top:32px">The rankings file couldn\'t be loaded. If you opened this page straight from your computer, preview it through GitHub Pages instead.</p>';
 });
