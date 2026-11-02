@@ -901,7 +901,7 @@
     </div>
     <div class="foot-bottom">
       <p>© <span id="year">2026</span> Socialete. Follower numbers come from public Instagram accounts through Meta's official API. Heights and ages come from Wikidata. Not affiliated with any league, team or governing body, or with Instagram or Meta.</p>
-      <p class="foot-legal"><a class="soon" href="#">Privacy</a><a class="soon" href="#">Terms</a></p>
+      <p class="foot-legal"><a href="#/privacy">Privacy</a><a class="soon" href="#">Terms</a></p>
     </div>
   </div>
 </footer>
@@ -2163,6 +2163,56 @@ function showAbout() {
     <p>Want to work with us, or think we've missed someone? Get in touch at <a href="mailto:hello@socialetehq.com">hello@socialetehq.com</a>, and follow along at <a href="https://www.instagram.com/socialetehq/" target="_blank" rel="noopener">@socialetehq</a>.</p>
     <p class="note">Socialete isn't affiliated with any athlete, club, league or governing body, or with Instagram or Meta.</p>`);
 }
+function showPrivacy() {
+  prosePage("Socialete · privacy", "Privacy policy", `
+    <p class="big">Socialete is a website that ranks Australian sport on Instagram. You don't need an account to use it, and we don't ask for your name or email. This page explains the little we do collect, why, and your choices.</p>
+    <p class="note" style="margin-top:0">Last updated 2 November 2026.</p>
+    <h2>Who we are</h2>
+    <p>"Socialete", "we" and "us" means the team behind socialete (this website and the @socialetehq Instagram and TikTok accounts). You can contact us about privacy at <a href="mailto:hello@socialetehq.com?subject=Privacy">hello@socialetehq.com</a>.</p>
+    <h2>Information about visitors</h2>
+    <p>We use <b>Google Analytics</b> to understand how the site is used, so we can improve it and show partners how many people visit. When you browse the site, Google Analytics uses cookies and similar technology to collect:</p>
+    <ul>
+      <li>the pages you view, how long you stay, and actions such as using filters, searching, sharing a page or clicking through to Instagram or our email address;</li>
+      <li>information about your device and browser (for example device type, operating system, screen size and language);</li>
+      <li>your approximate location (city or region, worked out from your IP address; Google doesn't give us your IP address);</li>
+      <li>how you arrived at the site (for example from a search engine or social media).</li>
+    </ul>
+    <p>We have also turned on <b>Google signals</b>. If you're signed in to a Google account and have allowed ad personalisation, Google may add information it already holds, such as broad age range, gender and interests, and recognise visits across your devices. We only ever see this as <b>totals and percentages</b> for all visitors together, never about you individually.</p>
+    <p>We don't use this information to identify you, we don't sell it, and we don't run advertising on the site.</p>
+    <h2>If you email us</h2>
+    <p>If you contact us, we receive your email address and whatever you write. We use it only to reply and to deal with your enquiry (for example a partnership, a correction or a removal request), and keep it only as long as we need to.</p>
+    <h2>Information about athletes and accounts we feature</h2>
+    <p>Socialete shows <b>publicly available</b> information about athletes, clubs, leagues, national teams, federations and creators:</p>
+    <ul>
+      <li>numbers from their public Instagram business or creator accounts (followers, posts, likes and comments on recent posts, profile photo and bio), collected through Meta's official Instagram API;</li>
+      <li>public details such as team, league, national team selection, height and birth date, from official team lists and Wikidata;</li>
+      <li>our own calculations from these, such as rankings, growth and engagement scores.</li>
+    </ul>
+    <p>We don't collect anything that isn't already public, and we can't see private or personal Instagram accounts. If you're featured and something is wrong, or you'd like your profile removed, email <a href="mailto:hello@socialetehq.com?subject=Profile%20correction%20or%20removal">hello@socialetehq.com</a> and we'll act on it promptly.</p>
+    <h2>Who we share information with</h2>
+    <ul>
+      <li><b>Google</b>, which runs Google Analytics for us. Google handles this data under its own privacy policy: <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">policies.google.com/privacy</a>.</li>
+      <li><b>GitHub</b>, which hosts the website and, like any web host, may keep basic technical logs (such as IP addresses) for security.</li>
+      <li><b>Meta</b>, whose Instagram API we use to read public account numbers. Using our site doesn't send your information to Meta, but clicking through to Instagram takes you to Meta's own service.</li>
+    </ul>
+    <p>These providers store and process information outside Australia, mainly in the United States. We don't otherwise share, sell or rent personal information, unless the law requires it.</p>
+    <h2>How long we keep it</h2>
+    <p>Google Analytics data is kept for 14 months and then deleted automatically. Emails are kept only as long as needed to deal with your enquiry.</p>
+    <h2>Your choices</h2>
+    <ul>
+      <li>You can block or delete cookies in your browser settings; the site still works without them.</li>
+      <li>You can stop Google Analytics collecting your visits on every site with Google's <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener">opt-out browser add-on</a>.</li>
+      <li>You can turn off ad personalisation, which also stops Google signals using your account information, at <a href="https://myadcenter.google.com" target="_blank" rel="noopener">myadcenter.google.com</a>.</li>
+    </ul>
+    <h2>Your rights</h2>
+    <p>You can ask what personal information we hold about you, ask us to correct it, or ask us to delete it, by emailing <a href="mailto:hello@socialetehq.com?subject=Privacy">hello@socialetehq.com</a>. We'll respond within 30 days. If you're not happy with how we've handled a privacy concern, you can contact the Office of the Australian Information Commissioner at <a href="https://www.oaic.gov.au" target="_blank" rel="noopener">oaic.gov.au</a>.</p>
+    <h2>Children</h2>
+    <p>Socialete is a general audience site and isn't directed at children. We don't knowingly collect personal information from anyone under 16.</p>
+    <h2>Security</h2>
+    <p>We keep what we collect to a minimum and use reputable providers with strong security. No website can be completely secure, but we'll tell you and the relevant authorities if a breach is likely to cause you serious harm.</p>
+    <h2>Changes</h2>
+    <p>We may update this policy as Socialete grows (for example if we add newsletters or accounts). We'll change the date at the top when we do, and highlight anything significant on the site.</p>`);
+}
 function showHow() {
   prosePage("Socialete · how it works", "How the rankings work", `
     <p class="big">Everything on Socialete comes from public Instagram numbers, collected every morning and worked out the same way for everyone. Here's exactly how.</p>
@@ -2216,6 +2266,7 @@ function route() {
   if (am) return showAthletes(new URLSearchParams(am[1] || ""));
   if (h === "#/about") return showAbout();
   if (h === "#/how-it-works") return showHow();
+  if (h === "#/privacy") return showPrivacy();
   const acc = h.match(/^#\/sports\/a\/([^?]+)/);
   if (acc) return showAccount(decodeURIComponent(acc[1]));
   const hubm = h.match(/^#\/sports\/(leagues|national-teams|federations|clubs)\b/);
