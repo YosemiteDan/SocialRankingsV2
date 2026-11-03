@@ -271,6 +271,9 @@
   .strip { display: flex; gap: 14px; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 8px; margin: 0 -4px; }
   .strip::-webkit-scrollbar { height: 8px; } .strip::-webkit-scrollbar-thumb { background: var(--card-2); border-radius: 8px; }
   .post { flex: 0 0 328px; max-width: 86vw; scroll-snap-align: start; }
+  .post-wrap { flex: 0 0 328px; max-width: 86vw; scroll-snap-align: start; display: flex; flex-direction: column; gap: 8px; } .post-wrap .post { flex: none; max-width: none; }
+  .post-meta { display: flex; justify-content: space-between; gap: 10px; font: 700 12px/1.2 var(--display); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .post-meta .pm-stats { color: var(--cream); letter-spacing: .04em; white-space: nowrap; } .post-wrap:first-child .pm-kind { color: var(--accent); }
   .post .instagram-media { margin: 0 !important; min-width: 0 !important; width: 100% !important; border-radius: 14px !important; }
   .post-ph {
     display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; height: 420px;
@@ -928,6 +931,9 @@ const LOGO_PARTS = ["Social", "ete"];
 // (likes, comments, posts) is being collected, to show those features.
 const SHOW_ENGAGEMENT = false;          // engagement as a ranking on the rankings page
 const SHOW_ENGAGEMENT_PROFILE = true;   // engagement panel on athlete profiles
+// Trial: the latest post sits inside "Latest posts" (newest first, with likes and comments)
+// instead of its own highlight box at the top. Set to true to bring the highlight box back.
+const SHOW_FEATURED_BOX = false;
 
 const VIEWS = {
   followers:  { key: "followers",       tab: "Most followed",       label: "followers",  fmt: v => compact(v) },
@@ -1224,7 +1230,7 @@ async function showProfile(id) {
       </div>
     </section>
 
-    ${featuredCard(p)}
+    ${SHOW_FEATURED_BOX ? featuredCard(p) : ""}
 
     <div class="tiles">
       <div class="tile hot"><b>${p.followers != null ? exact(p.followers) : "–"}</b><span>followers${rankText ? ` · ${rankText}` : " · unranked"}</span></div>
@@ -1314,21 +1320,33 @@ function loadInstagram() {
 }
 
 function videoPanel(p) {
-  // The featured post is shown separately, so leave it out of the strip.
-  const recent = (p.recent || []).filter(m => !p.featured || m.url !== p.featured.url);
-  if (!recent.length) return "";
-  const reels = recent.filter(m => m.type === "reel");
-  const picks = [...reels, ...recent.filter(m => m.type !== "reel")].slice(0, 6);
+  if (SHOW_FEATURED_BOX) {
+    // The featured post is shown separately, so leave it out of the strip.
+    const recent = (p.recent || []).filter(m => !p.featured || m.url !== p.featured.url);
+    if (!recent.length) return "";
+    const reels = recent.filter(m => m.type === "reel");
+    const picks = [...reels, ...recent.filter(m => m.type !== "reel")].slice(0, 6);
+    return postStrip(p, picks, reels.length ? "More reels and posts" : "More posts", false);
+  }
+  // Latest posts, newest first, each with its likes and comments.
+  const picks = [...(p.recent || [])].sort((a, b) => (b.date || "").localeCompare(a.date || "")).slice(0, 6);
+  return picks.length ? postStrip(p, picks, "Latest posts", true) : "";
+}
+function postStrip(p, picks, title, stats) {
   return `<section class="panel" id="videos">
       <div class="chart-head">
-        <div><h2>${reels.length ? "More reels and posts" : "More posts"}</h2>
-        <p class="hint">From @${esc(p.instagram)} on Instagram.</p></div>
+        <div><h2>${title}</h2>
+        <p class="hint">From @${esc(p.instagram)} on Instagram${stats ? ", newest first" : ""}.</p></div>
       </div>
-      <div class="strip">${picks.map(m => `
-        <div class="post" data-url="${esc(m.url)}">
-          <a class="post-ph" href="${esc(m.url)}" rel="noopener" target="_blank">
-            ${m.type === "reel" ? PLAY : IG}<span>${m.type === "reel" ? "Reel" : "Post"}${m.date ? " · " + niceDate(m.date) : ""}</span>
-          </a>
+      <div class="strip">${picks.map((m, i) => `
+        <div class="post-wrap">
+          ${stats ? `<div class="post-meta"><span class="pm-kind">${i === 0 ? "Latest · " : ""}${m.type === "reel" ? "Reel" : m.type === "carousel" ? "Carousel" : "Post"}${m.date ? " · " + niceDate(m.date) : ""}</span>
+            <span class="pm-stats">${m.likes != null ? `♥ ${compact(m.likes)}` : "♥ hidden"}${m.comments != null ? ` · 💬 ${compact(m.comments)}` : ""}</span></div>` : ""}
+          <div class="post" data-url="${esc(m.url)}">
+            <a class="post-ph" href="${esc(m.url)}" rel="noopener" target="_blank">
+              ${m.type === "reel" ? PLAY : IG}<span>${m.type === "reel" ? "Reel" : "Post"}${m.date ? " · " + niceDate(m.date) : ""}</span>
+            </a>
+          </div>
         </div>`).join("")}
       </div>
     </section>`;
