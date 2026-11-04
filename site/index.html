@@ -517,6 +517,19 @@
   .hub-h2h.clubs .h2h-head > span:last-child { text-align: left; padding-left: 14px; }
   .sib-link { display: inline-block; margin-top: 10px; color: var(--accent); font: 700 12px/1 var(--display); letter-spacing: .12em; text-transform: uppercase; text-decoration: none; border-bottom: 2px solid currentColor; padding-bottom: 3px; }
   @media (max-width: 760px) { .hub-h2h.clubs .h2h-row { grid-template-columns: 22px minmax(0, 1fr) 62px 62px 48px; } .cat-tabs a { padding: 11px 14px; font-size: 14px; } }
+  .yt-ic { color: #FF3D3D; vertical-align: -2px; } .yt-panel .hint a { color: var(--accent); text-decoration: none; }
+  .yt-stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin: 6px 0 18px; }
+  .yt-stats div { border: 1px solid var(--line); padding: 12px 14px; } .yt-stats b { display: block; font: 700 24px/1 var(--display); } .yt-stats b.up { color: var(--green, #4BE38E); }
+  .yt-stats small { display: block; margin-top: 6px; font: 700 10px/1.2 var(--display); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+  .yt-vids { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+  @media (max-width: 760px) { .yt-vids { grid-template-columns: 1fr 1fr; } }
+  .yt-v { color: inherit; text-decoration: none; display: flex; flex-direction: column; gap: 6px; }
+  .yt-th { position: relative; display: block; aspect-ratio: 16 / 9; overflow: hidden; background: var(--card-2, #1b2350); border-radius: 6px; }
+  .yt-th img { width: 100%; height: 100%; object-fit: cover; display: block; } .yt-th i { position: absolute; right: 8px; bottom: 6px; color: #fff; filter: drop-shadow(0 1px 3px rgba(0,0,0,.6)); }
+  .yt-v b { font: 600 14px/1.3 var(--body, inherit); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; } .yt-v:hover b { color: var(--accent); }
+  .yt-v small { font: 700 11px/1.3 var(--display); letter-spacing: .06em; color: var(--muted); }
+  .note-yt { color: var(--muted); font-size: 12px; margin: 14px 0 0; }
+  @media (max-width: 760px) { .yt-stats { grid-template-columns: 1fr 1fr; } }
   .h2h { container-type: inline-size; }
   .h2h-row { display: grid; grid-template-columns: 30px minmax(0, 1fr) 80px 80px 60px 70px; gap: 0 12px; align-items: center; padding: 10px 0; border-bottom: 1px dashed var(--line); color: inherit; text-decoration: none; }
   .h2h.with-pl .h2h-row { grid-template-columns: 30px minmax(0, 1fr) 80px 80px 60px 70px 110px; }
@@ -1252,6 +1265,7 @@ async function showProfile(id) {
     </section>
 
     ${videoPanel(p)}
+    ${youtubePanel(p.youtube)}
 
 
 
@@ -2128,6 +2142,7 @@ async function showAccount(handle) {
         <div class="rhythm">${byDay.map(n => `<span style="height:${6 + n * 16}px" title="${n} posts"><b>${n || ""}</b></span>`).join("")}</div>
       </div>
     </section>
+    ${extra.youtube && ytShow(extra.youtube) ? `<section class="mx-sec">${youtubePanel(extra.youtube)}</section>` : ""}
     <section class="mx-sec">
       <div class="sechead"><h2>Top 5 posts</h2><span class="hand">what landed</span><span class="sechint">Most likes + comments, recent posts</span></div>
       ${best.length ? `<div class="posts5">${best.map((m, i) => postTile(o, m, i, false)).join("")}</div>` : `<p class="empty">Posts show after the next update.</p>`}
@@ -2246,8 +2261,8 @@ function showTerms() {
       <li>interfere with the site, try to break its security, or use it for anything unlawful.</li>
     </ul>
     <p>Want to use Socialete data for your business, media or research? Talk to us at <a href="mailto:hello@socialetehq.com?subject=Advertising%20%26%20partnerships">hello@socialetehq.com</a>.</p>
-    <h2>Instagram and other platforms</h2>
-    <p>Socialete uses information from Instagram through Meta's official API and in line with Meta's Platform Terms. Socialete isn't operated or endorsed by Meta, and we can't control changes Meta makes to its services, which may affect what we can show. Don't use Socialete to break Instagram's own terms, for example to harass, impersonate or spam the accounts we feature.</p>
+    <h2>Instagram, YouTube and other platforms</h2>
+    <p>Socialete uses information from Instagram through Meta's official API and in line with Meta's Platform Terms, and from YouTube through YouTube API Services. By using Socialete you also agree to be bound by the <a href="https://www.youtube.com/t/terms" target="_blank" rel="noopener">YouTube Terms of Service</a>. Socialete isn't operated or endorsed by Meta, and we can't control changes Meta makes to its services, which may affect what we can show. Don't use Socialete to break Instagram's own terms, for example to harass, impersonate or spam the accounts we feature.</p>
     <h2>Copyright and takedown requests</h2>
     <p>If you believe something on Socialete infringes your copyright or other rights, email <a href="mailto:hello@socialetehq.com?subject=Takedown%20request">hello@socialetehq.com</a> with: your name and contact details; a description of the work or right concerned; the page address where it appears; and a statement that the information in your notice is accurate and that you own the rights or are authorised to act for the owner. We'll review it promptly and remove or correct the content where appropriate.</p>
     <h2>Links to other sites</h2>
@@ -2306,6 +2321,7 @@ function showPrivacy() {
     <ul>
       <li><b>Google</b>, which runs Google Analytics for us. Google handles this data under its own privacy policy: <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">policies.google.com/privacy</a>.</li>
       <li><b>GitHub</b>, which hosts the website and, like any web host, may keep basic technical logs (such as IP addresses) for security.</li>
+      <li><b>YouTube (Google)</b>: we use <b>YouTube API Services</b> to read public channel and video statistics. By using Socialete you agree to be bound by the <a href="https://www.youtube.com/t/terms" target="_blank" rel="noopener">YouTube Terms of Service</a>, and Google's handling of data is covered by the <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google Privacy Policy</a>. You can revoke any access Google has through your Google security settings at <a href="https://security.google.com/settings/security/permissions" target="_blank" rel="noopener">security.google.com/settings/security/permissions</a> (Socialete itself never asks for access to your Google account).</li>
       <li><b>Meta</b>, whose Instagram API we use to read public account numbers. Using our site doesn't send your information to Meta, but clicking through to Instagram takes you to Meta's own service.</li>
     </ul>
     <p>These providers store and process information in several countries, mainly the United States, and protect it under their own security and data transfer commitments.</p>
@@ -2369,6 +2385,29 @@ function showHow() {
       <li><b>Events</b> such as the Australian Open appear from a week before they start until three days after they finish.</li>
     </ul>
     <p class="note">Spotted something wrong, or an athlete we're missing? Email <a href="mailto:hello@socialetehq.com">hello@socialetehq.com</a>.</p>`);
+}
+/* ---------------------------------------------------------------- YouTube panel (athletes and accounts)
+   Shown for channels with 100+ subscribers (or hidden counts), from the YouTube Data API. */
+const YT_ICON = `<svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18" aria-hidden="true"><path d="M22.5 7.2a2.8 2.8 0 0 0-2-2C18.8 4.7 12 4.7 12 4.7s-6.8 0-8.5.5a2.8 2.8 0 0 0-2 2A29 29 0 0 0 1 12a29 29 0 0 0 .5 4.8 2.8 2.8 0 0 0 2 2c1.7.5 8.5.5 8.5.5s6.8 0 8.5-.5a2.8 2.8 0 0 0 2-2A29 29 0 0 0 23 12a29 29 0 0 0-.5-4.8zM9.8 15.1V8.9l5.7 3.1-5.7 3.1z"/></svg>`;
+const ytShow = y => y && (y.hidden || (y.subscribers || 0) >= 100);
+function youtubePanel(y) {
+  if (!ytShow(y)) return "";
+  const url = y.handle ? `https://www.youtube.com/${y.handle.startsWith("@") ? y.handle : "@" + y.handle}` : `https://www.youtube.com/channel/${y.channel_id}`;
+  const vids = (y.recent || []).slice(0, 4);
+  return `<section class="panel yt-panel">
+    <div class="chart-head"><div><h2><span class="yt-ic">${YT_ICON}</span> YouTube</h2>
+      <p class="hint"><a href="${url}" target="_blank" rel="noopener">${esc(y.title || "Channel")}${y.handle ? " · " + esc(y.handle) : ""}</a></p></div></div>
+    <div class="yt-stats">
+      <div><b>${y.hidden ? "Hidden" : compact(y.subscribers)}</b><small>subscribers</small></div>
+      <div><b>${compact(y.views)}</b><small>total views</small></div>
+      <div><b>${y.videos != null ? exact(y.videos) : "–"}</b><small>videos</small></div>
+      <div><b class="${y.views_gain > 0 ? "up" : ""}">${y.views_gain != null ? "+" + compact(y.views_gain) : "–"}</b><small>views ${y.gain_days && y.gain_days < 7 ? `in ${y.gain_days} day${y.gain_days > 1 ? "s" : ""}` : "this week"}</small></div>
+    </div>
+    ${vids.length ? `<div class="yt-vids">${vids.map(v => `<a class="yt-v" href="https://www.youtube.com/watch?v=${encodeURIComponent(v.id)}" target="_blank" rel="noopener">
+        <span class="yt-th"><img src="https://i.ytimg.com/vi/${encodeURIComponent(v.id)}/mqdefault.jpg" alt="" loading="lazy"><i>${YT_ICON}</i></span>
+        <b>${esc(v.title)}</b><small>${v.date ? niceDate(v.date) : ""}${v.views != null ? " · " + compact(v.views) + " views" : ""}${v.likes != null ? " · ♥ " + compact(v.likes) : ""}</small></a>`).join("")}</div>` : ""}
+    <p class="note-yt">YouTube numbers from the YouTube API. Subscriber counts are rounded by YouTube.</p>
+  </section>`;
 }
 /* ---------------------------------------------------------------- routing */
 function route() {
