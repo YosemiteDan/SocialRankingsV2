@@ -1,18 +1,7 @@
 {
-  "ran_at": "2026-11-04T07:38:00+00:00",
+  "ran_at": "2026-11-04T09:15:10+00:00",
   "method": "meta",
-  "succeeded": [
-    "Annabel Sutherland",
-    "Aziz Behich",
-    "Jada Whyman",
-    "Kahli Johnson",
-    "Olivia Kernick",
-    "Paul Okon-Engstler",
-    "Phoebe Litchfield",
-    "Sophie Molineux",
-    "Tahlia McGrath",
-    "Tamika Upton"
-  ],
+  "succeeded": [],
   "failed": {
     "Sunday Dech": "no Instagram handle yet - add it to data/athletes.csv",
     "Milton Doyle": "no Instagram handle yet - add it to data/athletes.csv",
