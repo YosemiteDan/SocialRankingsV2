@@ -51,6 +51,14 @@ jobs:
           APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
         run: python scripts/collect.py
 
+      - name: Collect YouTube numbers
+        if: github.event_name == 'schedule' || inputs.collect
+        continue-on-error: true
+        timeout-minutes: 15
+        env:
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+        run: python scripts/youtube.py
+
       - name: Update player details (weekly)
         if: github.event_name == 'schedule' || inputs.collect
         continue-on-error: true   # the NBA's stats site is sometimes unreachable; try again next time

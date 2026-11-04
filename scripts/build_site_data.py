@@ -189,6 +189,9 @@ def post_stats(recent, as_of):
     return out
 
 
+YOUTUBE = {}
+
+
 def build_orgs(history, profiles, filename="organisations.csv"):
     """Official accounts (data/organisations.csv), or creators (data/creators.csv), for the Sports pages."""
     path = DATA / filename
@@ -221,6 +224,11 @@ def build_orgs(history, profiles, filename="organisations.csv"):
             if bp:
                 item["best_post"] = {k: bp.get(k) for k in keys}
             item["top_posts"] = [{k: m.get(k) for k in keys} for m in (prof.get("top_posts") or ([bp] if bp else []))]
+            y = next((YOUTUBE.get("account:" + h) for h in options if YOUTUBE.get("account:" + h)), None)
+            if y:
+                item["youtube"] = {k: v for k, v in y.items() if k != "recent"}
+                if rows:
+                    (SITE / "accounts" / f"{handle}.json").write_text(json.dumps({**json.loads((SITE / "accounts" / f"{handle}.json").read_text()), "youtube": y}, separators=(",", ":"), ensure_ascii=False))
             out.append(item)
     return out
 
@@ -232,6 +240,40 @@ def load_events():
         return []
     with path.open(newline="") as f:
         return [{k: (v or "").strip() for k, v in r.items()} for r in csv.DictReader(f) if (r.get("name") or "").strip()]
+
+
+def load_youtube():
+    """{key: summary} for athletes ("athlete:<name>") and accounts ("account:<handle>") with a YouTube channel."""
+    ch_path, hist_path, prof_path = DATA / "youtube_channels.csv", DATA / "youtube_history.csv", DATA / "youtube_profiles.json"
+    if not ch_path.exists() or not hist_path.exists():
+        return {}
+    with hist_path.open(newline="") as f:
+        hist = {}
+        for r in csv.DictReader(f):
+            hist.setdefault(r["channel_id"], []).append(r)
+    profiles = json.loads(prof_path.read_text()) if prof_path.exists() else {}
+    out = {}
+    with ch_path.open(newline="") as f:
+        for c in csv.DictReader(f):
+            rows = sorted(hist.get(c["channel_id"], []), key=lambda r: r["date"])
+            if not rows:
+                continue
+            last, prof = rows[-1], profiles.get(c["channel_id"], {})
+            yt = {"channel_id": c["channel_id"], "handle": prof.get("handle"), "title": prof.get("title"),
+                  "subscribers": num(last["subscribers"]), "views": num(last["views"]), "videos": num(last["videos"]),
+                  "hidden": last.get("hidden") == "yes", "as_of": last["date"], "recent": prof.get("recent") or []}
+            week_ago = (date.fromisoformat(last["date"]) - timedelta(days=7)).isoformat()
+            base = next((r for r in reversed(rows) if r["date"] <= week_ago), rows[0])
+            days = (date.fromisoformat(last["date"]) - date.fromisoformat(base["date"])).days
+            if days > 0:
+                bv, bs = num(base["views"]), num(base["subscribers"])
+                if bv is not None and yt["views"] is not None:
+                    yt["views_gain"], yt["gain_days"] = yt["views"] - bv, days
+                if bs and yt["subscribers"] is not None:
+                    yt["subs_gain"] = yt["subscribers"] - bs
+                    yt["subs_gain_pct"] = round(100 * (yt["subscribers"] - bs) / bs, 2)
+            out[c["key"]] = yt
+    return out
 
 
 def main():
@@ -252,6 +294,8 @@ def main():
         grouped.setdefault(a["name"], []).append(a)
 
     squads = load_squads()
+    youtube = load_youtube()
+    YOUTUBE.update(youtube)
     summaries, pages = [], {}
     for name, memberships in grouped.items():
         a = memberships[0]                      # first row = main league and team
@@ -340,6 +384,9 @@ def main():
             p["height_cm"] = det["height_cm"]
         if det.get("birthdate"):
             p["birthdate"] = det["birthdate"]
+        y = youtube.get("athlete:" + a["name"])
+        if y:
+            p["youtube"] = {k: v for k, v in y.items() if k != "recent"}
         summaries.append(p)
         pages[p["id"]] = {
             **{k: v for k, v in p.items() if k != "spark"},
@@ -350,6 +397,7 @@ def main():
             "featured": prof.get("featured") if prof.get("featured") and
                         (SITE / prof["featured"].get("thumb", "-")).exists() else None,
             "details": details.get(a["name"]),
+            "youtube": youtube.get("athlete:" + a["name"]),
             # [date, followers, posts, engagement rate]
             "history": [[r["date"], num(r["followers"]), num(r["posts"]),
                          num(r["engagement_rate"], float)] for r in rows],
