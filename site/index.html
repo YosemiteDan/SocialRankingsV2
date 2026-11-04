@@ -2142,7 +2142,6 @@ async function showAccount(handle) {
         <div class="rhythm">${byDay.map(n => `<span style="height:${6 + n * 16}px" title="${n} posts"><b>${n || ""}</b></span>`).join("")}</div>
       </div>
     </section>
-    ${extra.youtube && ytShow(extra.youtube) ? `<section class="mx-sec">${youtubePanel(extra.youtube)}</section>` : ""}
     <section class="mx-sec">
       <div class="sechead"><h2>Top 5 posts</h2><span class="hand">what landed</span><span class="sechint">Most likes + comments, recent posts</span></div>
       ${best.length ? `<div class="posts5">${best.map((m, i) => postTile(o, m, i, false)).join("")}</div>` : `<p class="empty">Posts show after the next update.</p>`}
@@ -2154,7 +2153,8 @@ async function showAccount(handle) {
       ${players.length ? `<div class="bd-list club-players">${[0, 1].map(c => `<div>${listHead("Week", "f")}${players.filter((_, i) => i % 2 === c).map(p => listRow(p, players.indexOf(p) + 1, weekGrowth(p), "f")).join("")}</div>`).join("")}</div>`
         : `<p class="empty">We don't track any ${esc(o.name)} players yet.</p>`}</section>`
     : players.length ? `<section class="mx-sec"><div class="sechead"><h2>The players</h2><span class="hand">${compact(players.reduce((s, p) => s + p.followers, 0))} followers between them</span><a class="sechint" href="${athLink({ tab: "followed", sport: o.sport, league: o.league, gender: "All" })}">All ${players.length} athletes →</a></div>
-      <div class="ev-faces wide">${players.slice(0, 6).map(p => `<a href="${href(p)}">${sq(p)}<b>${esc(p.name)}</b><small>${compact(p.followers)}</small></a>`).join("")}</div></section>` : ""}`;
+      <div class="ev-faces wide">${players.slice(0, 6).map(p => `<a href="${href(p)}">${sq(p)}<b>${esc(p.name)}</b><small>${compact(p.followers)}</small></a>`).join("")}</div></section>` : ""}
+    ${extra.youtube && ytShow(extra.youtube) ? `<section class="mx-sec">${youtubePanel(extra.youtube)}</section>` : ""}`;
   $("main").querySelectorAll("[data-sort] button").forEach(b => b.addEventListener("click", () => { spState.h2h = b.dataset.k; showAccount(handle); }));
   window.scrollTo(0, 0);
 }
