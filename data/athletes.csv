@@ -358,7 +358,7 @@ Kye Rowles,Soccer,Socceroos,D.C. United,,,breadrowles,wikidata
 Mathew Ryan,Soccer,Socceroos,Levante,GK,,matyryan,wikidata
 Mohamed Toure,Soccer,Socceroos,Randers,,,,no
 Patrick Yazbek,Soccer,Socceroos,Nashville SC,,,,no
-Jordan Mailata,American football,NFL,Philadelphia Eagles,OT,,,no
+Jordan Mailata,American football,NFL,Philadelphia Eagles,OT,,jordanmailata,yes
 Daniel Faalele,American football,NFL,Jacksonville Jaguars,G,,daniel.faalele,wikidata
 Michael Dickson,American football,NFL,Seattle Seahawks,P,,,no
 Mitch Wishnowsky,American football,NFL,New England Patriots,P,,,no
@@ -382,15 +382,15 @@ Emerson Jones,Tennis,WTA,Australia,,,emersonjonesss,no
 Priscilla Hon,Tennis,WTA,Australia,,,priscilla_hon,no
 Ellen Perez,Tennis,WTA,Australia,,,ellenperez95,no
 Nick Daicos,AFL,AFL,Collingwood Magpies,MID,,nickdaicos,no
-Josh Daicos,AFL,AFL,Collingwood Magpies,MID,,,no
-Marcus Bontempelli,AFL,AFL,Western Bulldogs,MID,,,no
+Josh Daicos,AFL,AFL,Collingwood Magpies,MID,,joshdaicos,yes
+Marcus Bontempelli,AFL,AFL,Western Bulldogs,MID,,marcus_bontempelli,yes
 Sam Darcy,AFL,AFL,Western Bulldogs,FWD,,,no
-Patrick Cripps,AFL,AFL,Carlton Blues,MID,,,no
+Patrick Cripps,AFL,AFL,Carlton Blues,MID,,patrickcripps,yes
 Harris Andrews,AFL,AFL,Brisbane Lions,DEF,,harris_andrews,no
 Cameron Rayner,AFL,AFL,Brisbane Lions,FWD,,cameronrayner,no
 Darcy Gardiner,AFL,AFL,Brisbane Lions,DEF,,dizzgardiner,no
 Lachie Neale,AFL,AFL,Brisbane Lions,MID,,lachieneale,wikidata
-Zak Butters,AFL,AFL,Port Adelaide Power,MID,,,no
+Zak Butters,AFL,AFL,Port Adelaide Power,MID,,zak.butters,yes
 Isaac Heeney,AFL,AFL,Sydney Swans,MID,,isaacheeney,no
 Errol Gulden,AFL,AFL,Sydney Swans,MID,,,no
 Jeremy Cameron,AFL,AFL,Geelong Cats,FWD,,,no
@@ -407,23 +407,23 @@ Nina Morrison,AFL,AFLW,Geelong Cats,MID,,ninamorrison_,no
 Chloe Molloy,AFL,AFLW,Sydney Swans,FWD,,cchloemolloyy,no
 Ebony Marinoff,AFL,AFLW,Adelaide Crows,MID,,ebmarinoff,wikidata
 Jasmine Garner,AFL,AFLW,North Melbourne Kangaroos,MID,,,no
-Ash Riddell,AFL,AFLW,North Melbourne Kangaroos,MID,,,no
-Tayla Harris,AFL,AFLW,Melbourne Demons,FWD,,,no
-Maddy Prespakis,AFL,AFLW,Essendon Bombers,MID,,,no
+Ash Riddell,AFL,AFLW,North Melbourne Kangaroos,MID,,ashriddell,yes
+Tayla Harris,AFL,AFLW,Melbourne Demons,FWD,,tayla_harris,yes
+Maddy Prespakis,AFL,AFLW,Essendon Bombers,MID,,maddy_prespakis,yes
 Georgie Prespakis,AFL,AFLW,Geelong Cats,MID,,georgieprespakis,wikidata
 Nathan Cleary,Rugby league,NRL,Penrith Panthers,HB,,,no
 Dylan Edwards,Rugby league,NRL,Penrith Panthers,FB,,,no
 Payne Haas,Rugby league,NRL,Brisbane Broncos,PR,,,no
 Reece Walsh,Rugby league,NRL,Brisbane Broncos,FB,,,no
-Ezra Mam,Rugby league,NRL,Brisbane Broncos,FE,,,no
-James Tedesco,Rugby league,NRL,Sydney Roosters,FB,,,no
-Daly Cherry-Evans,Rugby league,NRL,Sydney Roosters,HB,,,no
+Ezra Mam,Rugby league,NRL,Brisbane Broncos,FE,,ezra.mam,yes
+James Tedesco,Rugby league,NRL,Sydney Roosters,FB,,jamestedesco,yes
+Daly Cherry-Evans,Rugby league,NRL,Sydney Roosters,HB,,dalycherryevans,yes
 Kalyn Ponga,Rugby league,NRL,Newcastle Knights,FB,,kalynponga,no
 Latrell Mitchell,Rugby league,NRL,South Sydney Rabbitohs,CE,,latrellmitchell,no
 Cameron Munster,Rugby league,NRL,Melbourne Storm,FE,,,no
 Harry Grant,Rugby league,NRL,Melbourne Storm,HK,,,no
-Jahrome Hughes,Rugby league,NRL,Melbourne Storm,HB,,,no
-Tom Trbojevic,Rugby league,NRL,Manly Sea Eagles,FB,,,no
+Jahrome Hughes,Rugby league,NRL,Melbourne Storm,HB,,jahromehughes,yes
+Tom Trbojevic,Rugby league,NRL,Manly Sea Eagles,FB,,tomtrbojevic,yes
 Mitchell Moses,Rugby league,NRL,Parramatta Eels,HB,,,no
 Ryan Matterson,Rugby league,NRL,Parramatta Eels,2R,,ryan_matto,no
 Nicho Hynes,Rugby league,NRL,Cronulla Sharks,HB,,,no
