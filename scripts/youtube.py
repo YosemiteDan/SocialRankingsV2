@@ -114,7 +114,7 @@ def account_handle_lookup(rows, key):
             if not items:
                 continue
             c = items[0]
-            title = plain(c["snippet"].get("title")).replace(" ", "") + " " + h
+            title = plain(c["snippet"].get("title")).replace(" ", "")
             if any(w in title for w in words) and int(c.get("statistics", {}).get("videoCount", 0)) > 0:
                 rows["account:" + handles[0]] = {"key": "account:" + handles[0], "name": o["name"], "channel_id": c["id"], "source": "handle"}
                 print(f"  YouTube @{h} -> {c['snippet'].get('title')}")
