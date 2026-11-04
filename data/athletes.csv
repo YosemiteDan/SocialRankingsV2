@@ -87,7 +87,7 @@ Brodie McGregor,Basketball,NBL,Illawarra Hawks,F,,brodie.mcgregor2,yes
 Johny Narkle,Basketball,NBL,Illawarra Hawks,G-F,,johny_narkle09,yes
 Lamar Patterson,Basketball,NBL,Illawarra Hawks,G-F,yes,lamarpatterson13,yes
 Mason Peatling,Basketball,NBL,Illawarra Hawks,F-C,,mason.peatling,yes
-Kobe McDowell-White,Basketball,NBL,Illawarra Hawks,,,,no
+Kobe McDowell-White,Basketball,NBL,Illawarra Hawks,,,kobemcdowellwhite,yes
 Cole Anthony,Basketball,NBL,Melbourne United,G,yes,the_cole.anthony,yes
 Kyle Bowen,Basketball,NBL,Melbourne United,F,,_kylebowen,yes
 Jensen Bradtke,Basketball,NBL,Melbourne United,F-C,,jensenbradtkee,yes
@@ -309,11 +309,11 @@ Charlotte Whittaker,Basketball,WNBL,UC Capitals,,,char_whittaker,yes
 Alexia Apostolakis,Soccer,Matildas,Bristol City,D,,alexiaaposto,wikidata
 Mackenzie Arnold,Soccer,Matildas,Portland Thorns,GK,,mackenziearnold,wikidata
 Ellie Carpenter,Soccer,Matildas,Chelsea,D,,elliecarpenterr,wikidata
-Steph Catley,Soccer,Matildas,Arsenal,D,,,no
+Steph Catley,Soccer,Matildas,Arsenal,D,,stephcatley,yes
 Alex Chidiac,Soccer,Matildas,Como Women,M,,,no
 Caitlin Foord,Soccer,Matildas,Arsenal,F,,caitlinfoord,wikidata
 Mary Fowler,Soccer,Matildas,Manchester City,F,,maryfowlerrr,wikidata
-Daniela Galic,Soccer,Matildas,Vittsjö GIK,M,,,no
+Daniela Galic,Soccer,Matildas,Vittsjö GIK,M,,daniela_galic,yes
 Charlotte Grant,Soccer,Matildas,Malmö FF,D,,,no
 Winonah Heatley,Soccer,Matildas,AS Roma,D,,winiheatleyy,wikidata
 Sam Kerr,Soccer,Matildas,Gotham FC,F,,samanthakerr20,wikidata
@@ -323,8 +323,8 @@ Leticia McKenna,Soccer,Matildas,Nottingham Forest,F,,,no
 Holly McNamara,Soccer,Matildas,Everton,F,,,no
 Alana Murphy,Soccer,Matildas,Nottingham Forest,M,,,no
 Courtney Nevin,Soccer,Matildas,Malmö FF,D,,court_nevin,wikidata
-Courtney Newbon,Soccer,Matildas,Melbourne Victory,GK,,,no
-Jamilla Rankin,Soccer,Matildas,Hoffenheim,D,,,no
+Courtney Newbon,Soccer,Matildas,Melbourne Victory,GK,,courtneynewbon,yes
+Jamilla Rankin,Soccer,Matildas,Hoffenheim,D,,jamillarankin,yes
 Hayley Raso,Soccer,Matildas,Eintracht Frankfurt,F,,hayleyraso,wikidata
 Amy Sayer,Soccer,Matildas,Malmö FF,M,,,no
 Remy Siemsen,Soccer,Matildas,FC Rosengård,F,,,no
@@ -334,7 +334,7 @@ Emily van Egmond,Soccer,Matildas,Charlton Athletic,M,,emilyvanegmond10,wikidata
 Clare Wheeler,Soccer,Matildas,Everton,M,,clarewheelerr,wikidata
 Leah Davidson,Soccer,Matildas,Charlton Athletic,M,,,no
 Daniel Arzani,Soccer,Socceroos,Ferencváros,,,iamdanielarzani,wikidata
-Max Balard,Soccer,Socceroos,NAC Breda,,,,no
+Max Balard,Soccer,Socceroos,NAC Breda,,,max.balard,yes
 Jordan Bos,Soccer,Socceroos,Feyenoord,,,,no
 Martin Boyle,Soccer,Socceroos,Hibernian,,,,no
 Cameron Burgess,Soccer,Socceroos,Swansea City,,,,no
@@ -343,12 +343,12 @@ Miloš Degenek,Soccer,Socceroos,TSC,,,milos.d34,wikidata
 Cameron Devlin,Soccer,Socceroos,Hearts,,,,no
 Mitchell Duke,Soccer,Socceroos,Machida Zelvia,,,mitchellduke,wikidata
 Nicholas D'Agostino,Soccer,Socceroos,Viking,,,,no
-Joe Gauci,Soccer,Socceroos,Port Vale,GK,,,no
-Jason Geria,Soccer,Socceroos,Albirex Niigata,,,,no
+Joe Gauci,Soccer,Socceroos,Port Vale,GK,,joe_gauci,yes
+Jason Geria,Soccer,Socceroos,Albirex Niigata,,,jasongeria,yes
 Ajdin Hrustic,Soccer,Socceroos,Heracles Almelo,,,ajdinhrustic23,wikidata
 Nestory Irankunda,Soccer,Socceroos,Watford,,,,no
 Paul Izzo,Soccer,Socceroos,Randers,GK,,,no
-Jacob Italiano,Soccer,Socceroos,Grazer AK,,,,no
+Jacob Italiano,Soccer,Socceroos,Grazer AK,,,jacobitaliano,yes
 Hayden Matthews,Soccer,Socceroos,Portsmouth,,,haydenmatt_,wikidata
 Connor Metcalfe,Soccer,Socceroos,St. Pauli,,,connor_metcalfe,wikidata
 Lewis Miller,Soccer,Socceroos,Blackburn Rovers,,,,no
