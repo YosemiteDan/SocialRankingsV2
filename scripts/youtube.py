@@ -61,8 +61,41 @@ def sparql(q):
     raise RuntimeError("Wikidata didn't answer")
 
 
-def find_channels(today):
-    """Weekly: fill in channel IDs from Wikidata. Manual rows are kept as they are."""
+import re
+import unicodedata
+
+
+def plain(t):
+    return re.sub(r"[^a-z ]", "", unicodedata.normalize("NFKD", t or "").encode("ascii", "ignore").decode().lower())
+
+
+def handle_lookup(rows, people, key):
+    """Athletes often use the same handle on YouTube as on Instagram: try @<instagram handle>
+    and keep the channel only if its name includes the athlete's surname."""
+    tried = 0
+    for name, p in people.items():
+        k = "athlete:" + name
+        if rows.get(k) or not p["ig"]:
+            continue
+        tried += 1
+        try:
+            items = yt("channels", key, part="snippet,statistics", forHandle="@" + p["ig"]).get("items", [])
+        except Exception:  # noqa: BLE001
+            continue
+        if not items:
+            continue
+        c = items[0]
+        title, surname = plain(c["snippet"].get("title")), plain(name).split()[-1]
+        if surname and surname in title.replace(" ", "") and int(c.get("statistics", {}).get("videoCount", 0)) > 0:
+            rows[k] = {"key": k, "name": name, "channel_id": c["id"], "source": "handle"}
+            print(f"  YouTube @{p['ig']} -> {c['snippet'].get('title')}")
+    return tried
+
+
+def find_channels(today, key=""):
+    """Weekly: fill in channel IDs from Wikidata, then by trying athletes' Instagram handles on
+    YouTube. Rows with source "manual" (a channel added by hand) or "none" (no channel, or a
+    wrong match to ignore) are never changed."""
     checked = json.loads(CHECKED.read_text()) if CHECKED.exists() else {}
     if checked.get("last") and (datetime.fromisoformat(today) - datetime.fromisoformat(checked["last"])).days < REFRESH_DAYS:
         return
@@ -73,7 +106,7 @@ def find_channels(today):
         p = people.setdefault(a["name"], {"sport": a.get("sport", ""), "ig": ""})
         if a.get("instagram", "").strip():
             p["ig"] = a["instagram"].strip().lstrip("@").lower()
-    names = [n for n in people if rows.get("athlete:" + n, {}).get("source") != "manual"]
+    names = [n for n in people if rows.get("athlete:" + n, {}).get("source") not in ("manual", "none")]
     found = 0
     for i in range(0, len(names), 60):
         batch = names[i:i + 60]
@@ -93,8 +126,8 @@ def find_channels(today):
                 sports = b.get("sports", {}).get("value", "").lower()
                 return (2 if me["ig"] and ig == me["ig"] else 0) + (1 if any(w in sports for w in SPORT_WORDS.get(me["sport"], [])) else 0)
             best = max(cands, key=score)
-            if score(best) == 0 and len({c["p"]["value"] for c in cands}) > 1:
-                continue        # several people with this name and nothing to tell them apart
+            if score(best) == 0:
+                continue        # can't confirm it's our athlete (same name, different person)
             rows["athlete:" + name] = {"key": "athlete:" + name, "name": name, "channel_id": best["yt"]["value"], "source": "wikidata"}
             found += 1
         time.sleep(2)
@@ -104,7 +137,7 @@ def find_channels(today):
     for o in accounts:
         for h in o.get("instagram", "").split("|"):
             h = h.strip().lstrip("@").lower()
-            if h and rows.get("account:" + h, {}).get("source") != "manual":
+            if h and rows.get("account:" + h, {}).get("source") not in ("manual", "none"):
                 handles[h] = o["name"]
     hl = list(handles)
     for i in range(0, len(hl), 80):
@@ -114,6 +147,8 @@ def find_channels(today):
             rows["account:" + h] = {"key": "account:" + h, "name": handles.get(h, h), "channel_id": b["yt"]["value"], "source": "wikidata"}
             found += 1
         time.sleep(2)
+    if key:
+        print(f"Tried {handle_lookup(rows, people, key)} Instagram handles on YouTube")
     with CHANNELS.open("w", newline="") as f:
         w = csv.DictWriter(f, fieldnames=["key", "name", "channel_id", "source"], lineterminator="\n")
         w.writeheader()
@@ -134,13 +169,13 @@ def main():
     key = os.environ.get("YOUTUBE_API_KEY", "").strip()
     today = datetime.now(timezone.utc).astimezone(ZoneInfo("Australia/Sydney")).date().isoformat()
     try:
-        find_channels(today)
+        find_channels(today, key)
     except Exception as e:  # noqa: BLE001 - lookups can wait a week
         print(f"::warning::Couldn't look up YouTube channels on Wikidata ({e})")
     if not key:
         print("YOUTUBE_API_KEY isn't set; skipping YouTube.")
         return
-    channels = sorted({r["channel_id"] for r in read_csv(CHANNELS) if r.get("channel_id")})
+    channels = sorted({r["channel_id"] for r in read_csv(CHANNELS) if r.get("channel_id") and r.get("source") != "none"})
     history = read_csv(HISTORY)
     if any(r["date"] == today for r in history):
         print("YouTube numbers already collected today.")
