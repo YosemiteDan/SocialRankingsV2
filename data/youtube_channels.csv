@@ -1,34 +1,34 @@
 key,name,channel_id,source
 account:adelaidethunderbirds,Adelaide Thunderbirds,UCTDVzICs2rHvN3u0umd13Kg,wikidata
 account:adellightning,Adelaide Lightning,UCbjdV-40nHzfadrzVMS9jAA,handle
-account:afl,AFL,@AFL,manual
-account:aflwomens,AFLW,@AFLWomens,manual
-account:aleagues,A-Leagues,@aleagues,manual
+account:afl,AFL,UCxAeHdLDAatFV_vt95MSO-g,manual
+account:aflwomens,AFLW,UCui2LJ0N-Zi7Uw_sHyE5kgQ,manual
+account:aleagues,A-Leagues,UCzRogd_oK3bzKvAW-4aLuPQ,manual
 account:atptour,ATP Tour,UCY_5h5zaSwN7Or4kIJDYNXA,wikidata
-account:auscyclingaus,AusCycling,@AusCycling,manual
-account:australianathletics,Athletics Australia,@AustralianAths,manual
+account:auscyclingaus,AusCycling,UCAjrvRYNDKCCgYs5U3LG1nQ,manual
+account:australianathletics,Athletics Australia,UCeSZTyotegASDg-voCyTt3g,manual
 account:australianboomers,Boomers,UCAHCJ-ALDzKMjnxwlFD6Tmw,handle
 account:australianopen,Australian Open,UCeTKJSW1NTAkf27nNmjWt5A,wikidata
-account:austsail,Australian Sailing,@australiansailing100,manual
-account:ausvolley,Volleyball Australia,@Ausvolley,manual
-account:basketballaus,Basketball Australia,@BasketballAus,manual
-account:bbl,Big Bash League,@BigBash,manual
+account:austsail,Australian Sailing,UCXJBX_iDbsmjjqvaBh_Q0rA,manual
+account:ausvolley,Volleyball Australia,UC2ExeiHAKbA1j136TUswwUA,manual
+account:basketballaus,Basketball Australia,UCW8q-gFQLQCAMbe9ePxSQYA,manual
+account:bbl,Big Bash League,UCv5-1Ypl3Adf4uGaR_H0mlg,manual
 account:brisbanebullets,Brisbane Bullets,UCRthLxFnTeve4ttayDmlHhQ,handle
 account:brisbanelions,Brisbane Lions,UCp_RcJCqrVSK581-EPBqUDg,handle
 account:bulldogs,Canterbury-Bankstown Bulldogs,UCmTNUyQeeyP8AZi68QUKycg,handle
 account:carlton_fc,Carlton,UCmoDtBuxY-lt3pSksTexAVQ,wikidata
-account:cricketaustralia,Cricket Australia,@CricketAus,manual
+account:cricketaustralia,Cricket Australia,UC2naOExy27J5Qz3SO-w6xkQ,manual
 account:cronullasharks,Cronulla Sharks,UCIA5M1KLQzQk8YZSCsHv1Ww,handle
 account:dandoesfooty,Dan Does Footy,UCuifmVaOrAacio5vhilxQuA,handle
 account:dolphinsnrl,Dolphins,UCLCbdBF6uxsD2Vsa5iysdLw,handle
 account:essendonfc,Essendon,UCF8Z00NwEU_EL8iGCvpevNQ,handle
 account:firebirdsqld,Queensland Firebirds,UC-mJkerY7GBKSbZdavJ941g,handle
-account:footballaus,Football Australia,@footballaustralia,manual
-account:golfaust,Golf Australia,@GolfAust,manual
+account:footballaus,Football Australia,UC5qRwzD58S_sTEoLpl6AzTQ,manual
+account:golfaust,Golf Australia,UCbl1FTIZPWNGFUm1vDgMf_w,manual
 account:gomvfc,Melbourne Victory,UCQUbxcY_2RUCayNFbo9UaOA,handle
 account:gwsgiants,GWS Giants,UCviHNdt03bEXJJWRkBfVXVQ,handle
-account:gymaustralia,Gymnastics Australia,@ausgymnastics,manual
-account:hockeyaustraliaofficial,Hockey Australia,@HockeyAustralia,manual
+account:gymaustralia,Gymnastics Australia,UCD9x9t6_7qIV-O6xtzAonGw,manual
+account:hockeyaustraliaofficial,Hockey Australia,UCOX8eTDVaEfBOyYBNNLIf3g,manual
 account:illawarrahawks,Illawarra Hawks,UCt7ogBmi_H92y1O7S5YcM_Q,handle
 account:jackjumpers,Tasmania JackJumpers,UCcNn-CbwyR0MltCGJ6bKWbg,handle
 account:jarrodkimber,Jarrod Kimber,UC5mJzS1CuAP63ffTS_MUQBg,handle
@@ -38,14 +38,14 @@ account:melbourneboomers,Melbourne Boomers,UCaySxMBoGYlGvoThMvwnrxw,handle
 account:melbournemavericks,Melbourne Mavericks,UCGQWnHedx1d94dQevUaH2Fg,handle
 account:melbournevixens,Melbourne Vixens,UC25qcUpx3Sdg1zFIcSRbFLA,wikidata
 account:nba,NBA,UCWJ2lWNubArHWmf3FIHbfcQ,wikidata
-account:nbl,NBL,@nbl,manual
-account:netballaust,Netball Australia,@NetballAustralia,manual
+account:nbl,NBL,UCQOt5-Mc5m03JCO_W9SWySA,manual
+account:netballaust,Netball Australia,UC84KF8G9Nhor7wx2wOGN87g,manual
 account:nfl,NFL,UCDVYQ4Zhbm3S2dlz7P1GBDg,wikidata
 account:nmfcofficial,North Melbourne,UCMfyniGmAs3dvmm4awVfhpg,handle
-account:nrl,NRL,@NRL,manual
+account:nrl,NRL,UC33-OkQ6VCYk8xtml8Pk4-g,manual
 account:nrl_dragons,St George Illawarra Dragons,UChZ3WTvYUsrskvn8u_JsOow,handle
 account:nrlknights,Newcastle Knights,UCqANsRehmODKYHpnSL0XqCw,handle
-account:nrlw,NRLW,@NRLW,manual
+account:nrlw,NRLW,UCME0EifJ3Xm3mGmLdBz1Kyw,manual
 account:nzwarriors,New Zealand Warriors,UCRv6p_K-zFVRPughO5oAZFg,handle
 account:pafc,Port Adelaide,UCSszrpGLUBZkS2hDkvggQKg,wikidata
 account:raiderscanberra,Canberra Raiders,UC3HIxYZVJ8t7tOOMesx_rlA,handle
@@ -53,25 +53,25 @@ account:richmond_fc,Richmond,UCn0gNU3NHaMX-AYDBHtiefQ,handle
 account:roaminghaz,Roaming Haz,UCMaqavNyU9kcEn-lN3z5izA,handle
 account:saintstvpod,Saints TV,UC2nlpTGrgNYXgFP8t88Xisg,handle
 account:socceroos,Socceroos,UCjHeEbVgbX_EAAhAtkLMTew,handle
-account:softballaustralia,Softball Australia,@softballaustralia,manual
+account:softballaustralia,Softball Australia,UCIDrNTi0M_auTAd19b7j2Dg,manual
 account:storm,Melbourne Storm,UCtwDouE-8TTbciZ1fcXws9w,handle
-account:supercarschampionship,Supercars Championship,@SupercarsChampionship,manual
+account:supercarschampionship,Supercars Championship,UCcCBrelNGfpchXKLFt8gtKg,manual
 account:supernetball,Super Netball,UCNg5_4ULxSiujjGY_TkWq1A,handle
-account:surfingaus,Surfing Australia,@SurfingAustraliaVids,manual
-account:swimmingaustralia,Swimming Australia,@SwimAus,manual
+account:surfingaus,Surfing Australia,UCpfLlUWzh8YQw0XsNW4-DiQ,manual
+account:swimmingaustralia,Swimming Australia,UCQIm9EHOptR7FavmLpRgF_g,manual
 account:swoopluke,Swoop Luke,UC5HjU-8ypt1Qzr7y8demRFA,handle
 account:sydneyflames,Sydney Flames,UC5ir73FhQ151HWeMKUKjO3w,handle
 account:sydneyfootballclub,Sydney FC,UCZae0Fmbng1Gx57YVQ0hqnw,handle
 account:sydneysirensnetball,Sydney Sirens (GIANTS Netball),UCf6Ry7Q6xnLciFc90Bx0kwQ,handle
-account:teamaustraliabaseball,Baseball Australia,@TeamAusBaseball,manual
-account:tennisaustralia,Tennis Australia,@TennisAustralia,manual
+account:teamaustraliabaseball,Baseball Australia,UCklD4X25f4Uf_EEj3JIc0Tg,manual
+account:tennisaustralia,Tennis Australia,UCgUrLyvzsRqgGSmTBbxL84A,manual
 account:tomharrisfootball,Tom Harris Football,UCIVGVpjywyPA3ZusfLAsvbA,handle
 account:townsvillefire,Townsville Fire,UCYqZ5WPNSUFOPL3NXrTeqxA,handle
 account:uccapitals,Canberra Capitals,UCL2OJO21v8sUP4g0BEtbWyg,handle
-account:wbbl,Weber WBBL,@BigBash,manual
+account:wbbl,Weber WBBL,UCv5-1Ypl3Adf4uGaR_H0mlg,manual
 account:westcoastfeverofficial,West Coast Fever,UCxObSfCuj98NQ-U33tVTZ3g,handle
 account:wnba,WNBA,UCO9a_ryN_l7DIDS-VIt-zmw,wikidata
-account:wnbl,WNBL,@wnbl,manual
+account:wnbl,WNBL,UCBvJAIEjr5xjoG6uCHicGFA,manual
 account:wta,WTA,UCaBIVVpHjq6j3tSyxwTE-8Q,wikidata
 athlete:Alex de Minaur,Alex de Minaur,UCdml_kfucyifRi-FGYscm_g,handle
 athlete:Austin Shelley,Austin Shelley,UCWzJM2Xlx72qA1lYbWzbI-w,none

@@ -1,21 +1,7 @@
 {
-  "ran_at": "2026-11-04T06:16:15+00:00",
+  "ran_at": "2026-11-04T06:26:54+00:00",
   "method": "meta",
-  "succeeded": [
-    "Ash Riddell",
-    "Daly Cherry-Evans",
-    "Ezra Mam",
-    "Jahrome Hughes",
-    "James Tedesco",
-    "Jordan Mailata",
-    "Josh Daicos",
-    "Maddy Prespakis",
-    "Marcus Bontempelli",
-    "Patrick Cripps",
-    "Tayla Harris",
-    "Tom Trbojevic",
-    "Zak Butters"
-  ],
+  "succeeded": [],
   "failed": {
     "Sunday Dech": "no Instagram handle yet - add it to data/athletes.csv",
     "Milton Doyle": "no Instagram handle yet - add it to data/athletes.csv",
@@ -222,16 +208,18 @@
     "Awer Mabil": "@awermabil10 not found, or it's a personal account Meta can't see (checked 2026-10-31; re-checked weekly). Check the handle, or add an APIFY_TOKEN secret for personal accounts.",
     "Harry Souttar": "@harry_souttar not found, or it's a personal account Meta can't see (checked 2026-10-31; re-checked weekly). Check the handle, or add an APIFY_TOKEN secret for personal accounts.",
     "Tete Yengi": "@teteyengi not found, or it's a personal account Meta can't see (checked 2026-10-31; re-checked weekly). Check the handle, or add an APIFY_TOKEN secret for personal accounts.",
-    "Emma Tonegato": "@emmatonegato belongs to 'Emma Verran', not Emma Tonegato. Fix the handle, or set handle_checked to yes if it really is them.",
     "Isabelle Kelly": "@isabellekelly belongs to 'ISABELLE MAREE 🌸', not Isabelle Kelly. Fix the handle, or set handle_checked to yes if it really is them.",
     "Dyson Daniels": "@dysondaniels belongs to 'DD 🇦🇺', not Dyson Daniels. Fix the handle, or set handle_checked to yes if it really is them.",
     "Mary Fowler": "@maryfowlerrr belongs to 'Mazzy', not Mary Fowler. Fix the handle, or set handle_checked to yes if it really is them.",
-    "Monique Conti": "@moniiquecontii belongs to 'Monique ©onti', not Monique Conti. Fix the handle, or set handle_checked to yes if it really is them."
+    "Monique Conti": "@moniiquecontii belongs to 'Monique ©onti', not Monique Conti. Fix the handle, or set handle_checked to yes if it really is them.",
+    "Emma Tonegato": "@emmatonegato belongs to 'Emma Verran', not Emma Tonegato. Fix the handle, or set handle_checked to yes if it really is them."
   },
   "handle_changes": {},
   "warnings": [],
   "token_expires": "never",
-  "orgs_succeeded": [],
+  "orgs_succeeded": [
+    "Cricket Australia"
+  ],
   "orgs_failed": {
     "Perth Glory Women": "@perthglorywomen not found. Check data/organisations.csv.",
     "Hadiola": "@hadiola.ftbl not found. Check data/organisations.csv.",
