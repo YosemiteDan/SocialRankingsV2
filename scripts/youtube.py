@@ -175,7 +175,21 @@ def main():
     if not key:
         print("YOUTUBE_API_KEY isn't set; skipping YouTube.")
         return
-    channels = sorted({r["channel_id"] for r in read_csv(CHANNELS) if r.get("channel_id") and r.get("source") != "none"})
+    # Channels added by hand as an @handle are turned into channel IDs here.
+    ch_rows = read_csv(CHANNELS)
+    changed = False
+    for r in ch_rows:
+        if r.get("channel_id", "").startswith("@"):
+            items = yt("channels", key, part="id", forHandle=r["channel_id"]).get("items", [])
+            if items:
+                print(f"  {r['channel_id']} -> {items[0]['id']}")
+                r["channel_id"], changed = items[0]["id"], True
+    if changed:
+        with CHANNELS.open("w", newline="") as f:
+            w = csv.DictWriter(f, fieldnames=["key", "name", "channel_id", "source"], lineterminator="\n")
+            w.writeheader()
+            w.writerows(ch_rows)
+    channels = sorted({r["channel_id"] for r in ch_rows if r.get("channel_id") and not r["channel_id"].startswith("@") and r.get("source") != "none"})
     history = read_csv(HISTORY)
     if any(r["date"] == today for r in history):
         print("YouTube numbers already collected today.")
