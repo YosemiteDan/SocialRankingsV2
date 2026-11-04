@@ -1,17 +1,23 @@
 key,name,channel_id,source
 account:adelaidethunderbirds,Adelaide Thunderbirds,UCTDVzICs2rHvN3u0umd13Kg,wikidata
 account:afl,AFL,UCxAeHdLDAatFV_vt95MSO-g,wikidata
+account:aleagues,A-Leagues,@aleagues,manual
 account:atptour,ATP Tour,UCY_5h5zaSwN7Or4kIJDYNXA,wikidata
 account:australianopen,Australian Open,UCeTKJSW1NTAkf27nNmjWt5A,wikidata
+account:basketballaus,Basketball Australia,@BasketballAus,manual
 account:carlton_fc,Carlton,UCmoDtBuxY-lt3pSksTexAVQ,wikidata
+account:cricketcomau,Cricket Australia,@cricketcomau,manual
+account:footballaus,Football Australia,@footballaustralia,manual
 account:melbournevixens,Melbourne Vixens,UC25qcUpx3Sdg1zFIcSRbFLA,wikidata
 account:nba,NBA,UCWJ2lWNubArHWmf3FIHbfcQ,wikidata
-account:nbl,NBL,UCQOt5-Mc5m03JCO_W9SWySA,wikidata
+account:nbl,NBL,@nbl,manual
 account:netballaust,Netball Australia,UCyrrgZq_I_U0p6vdqh4jexg,none
 account:nfl,NFL,UCDVYQ4Zhbm3S2dlz7P1GBDg,wikidata
+account:nrl,NRL,@NRL,manual
 account:pafc,Port Adelaide,UCSszrpGLUBZkS2hDkvggQKg,wikidata
 account:supercarschampionship,Supercars Championship,UCcCBrelNGfpchXKLFt8gtKg,wikidata
 account:wnba,WNBA,UCO9a_ryN_l7DIDS-VIt-zmw,wikidata
+account:wnbl,WNBL,@wnbl,manual
 account:wta,WTA,UCaBIVVpHjq6j3tSyxwTE-8Q,wikidata
 athlete:Alex de Minaur,Alex de Minaur,UCdml_kfucyifRi-FGYscm_g,handle
 athlete:Austin Shelley,Austin Shelley,UCWzJM2Xlx72qA1lYbWzbI-w,none

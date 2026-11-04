@@ -92,6 +92,36 @@ def handle_lookup(rows, people, key):
     return tried
 
 
+GENERIC = {"the", "fc", "football", "club", "afc", "and", "official", "australia", "australian", "women", "womens", "aflw", "nrlw", "league"}
+
+
+def account_handle_lookup(rows, key):
+    """Clubs, leagues and federations: try their Instagram handle on YouTube, and keep the
+    channel only if its name shares a distinctive word with the account's name."""
+    accounts = read_csv(DATA / "organisations.csv") + read_csv(DATA / "creators.csv")
+    tried = 0
+    for o in accounts:
+        handles = [h.strip().lstrip("@").lower() for h in o.get("instagram", "").split("|") if h.strip()]
+        if not handles or any(rows.get("account:" + h) for h in handles):
+            continue
+        words = [w for w in plain(o["name"]).split() if len(w) >= 3 and w not in GENERIC] or plain(o["name"]).split()
+        for h in handles:
+            tried += 1
+            try:
+                items = yt("channels", key, part="snippet,statistics", forHandle="@" + h).get("items", [])
+            except Exception:  # noqa: BLE001
+                continue
+            if not items:
+                continue
+            c = items[0]
+            title = plain(c["snippet"].get("title")).replace(" ", "") + " " + h
+            if any(w in title for w in words) and int(c.get("statistics", {}).get("videoCount", 0)) > 0:
+                rows["account:" + handles[0]] = {"key": "account:" + handles[0], "name": o["name"], "channel_id": c["id"], "source": "handle"}
+                print(f"  YouTube @{h} -> {c['snippet'].get('title')}")
+                break
+    return tried
+
+
 def find_channels(today, key=""):
     """Weekly: fill in channel IDs from Wikidata, then by trying athletes' Instagram handles on
     YouTube. Rows with source "manual" (a channel added by hand) or "none" (no channel, or a
@@ -148,7 +178,7 @@ def find_channels(today, key=""):
             found += 1
         time.sleep(2)
     if key:
-        print(f"Tried {handle_lookup(rows, people, key)} Instagram handles on YouTube")
+        print(f"Tried {handle_lookup(rows, people, key)} athletes' and {account_handle_lookup(rows, key)} accounts' Instagram handles on YouTube")
     with CHANNELS.open("w", newline="") as f:
         w = csv.DictWriter(f, fieldnames=["key", "name", "channel_id", "source"], lineterminator="\n")
         w.writeheader()
