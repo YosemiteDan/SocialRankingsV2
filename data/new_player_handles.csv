@@ -25,12 +25,12 @@ Rory Laird,none,,,,rorylaird|rory.laird|rory_laird
 Wayne Milera,none,,,,waynemilera|wayne.milera|wayne_milera
 Billy Dowling,none,,,,billydowling|billy.dowling|billy_dowling
 Darcy Fogarty,none,,,,darcyfogarty|darcy.fogarty|darcy_fogarty
-Indy Cotton,check,indycotton,IC Art,8517,indycotton|indy.cotton|indy_cotton
+Indy Cotton,rejected,indycotton,IC Art,8517,indycotton|indy.cotton|indy_cotton
 Archie Ludowyke,none,,,,archieludowyke|archie.ludowyke|archie_ludowyke
 James Borlase,found,james.borlase,James Borlase,6670,jamesborlase|james.borlase|james_borlase
 Finnbar Maley,found,finnbar.maley,Finnbar Maley,10278,finnbarmaley|finnbar.maley|finnbar_maley
-Toby Murray,check,toby_murray,Toby,949,tobymurray|toby.murray|toby_murray
-Hugo Hall-Kahan,check,hugo_hallkahan,Hugo HK,7842,hugohallkahan|hugo.hallkahan|hugo_hallkahan
+Toby Murray,rejected,toby_murray,Toby,949,tobymurray|toby.murray|toby_murray
+Hugo Hall-Kahan,found,hugo_hallkahan,Hugo HK,7842,hugohallkahan|hugo.hallkahan|hugo_hallkahan
 Lachlan McAndrew,none,,,,lachlanmcandrew|lachlan.mcandrew|lachlan_mcandrew
 Reilly O'Brien,none,,,,reillyobrien|reilly.obrien|reilly_obrien
 Isaac Cumming,found,isaaccumming,Isaac Cumming,14661,isaaccumming|isaac.cumming|isaac_cumming
@@ -72,17 +72,17 @@ Lachlan Cowan,none,,,,lachlancowan|lachlan.cowan|lachlan_cowan
 Jesse Motlop,none,,,,jessemotlop|jesse.motlop|jesse_motlop
 Oliver Hollands,none,,,,oliverhollands|oliver.hollands|oliver_hollands
 Adam Cerra,rejected,adam.cerra,Adam Cerra | Sales Coach for Coaches,2029,adamcerra|adam.cerra|adam_cerra
-Jagga Smith,check,jagga.smith,Jagga,41213,jaggasmith|jagga.smith|jagga_smith
+Jagga Smith,found,jagga.smith,Jagga,41213,jaggasmith|jagga.smith|jagga_smith
 Harry McKay,none,,,,harrymckay|harry.mckay|harry_mckay
 Mitch McGovern,found,mitchmcgovern,Mitch McGovern,31092,mitchmcgovern|mitch.mcgovern|mitch_mcgovern
 Ben Ainsworth,none,,,,benainsworth|ben.ainsworth|ben_ainsworth
 Blake Acres,none,,,,blakeacres|blake.acres|blake_acres
-Ollie Florent,check,ollie_florent,ollie :),28834,ollieflorent|ollie.florent|ollie_florent
-Billy Wilson,check,billywilson,Bilbo,131,billywilson|billy.wilson|billy_wilson
-Brodie Kemp,check,brodie.kemp,Brodie Kemp,16146,brodiekemp|brodie.kemp|brodie_kemp
+Ollie Florent,found,ollie_florent,ollie :),28834,ollieflorent|ollie.florent|ollie_florent
+Billy Wilson,rejected,billywilson,Bilbo,131,billywilson|billy.wilson|billy_wilson
+Brodie Kemp,found,brodie.kemp,Brodie Kemp,16146,brodiekemp|brodie.kemp|brodie_kemp
 Sam Walsh,none,,,,samwalsh|sam.walsh|sam_walsh
 Will Hayward,found,willhayward,Will Hayward,47771,willhayward|will.hayward|will_hayward
-Joel Amartey,check,joelamartey,Joel Amartey,18517,joelamartey|joel.amartey|joel_amartey
+Joel Amartey,found,joelamartey,Joel Amartey,18517,joelamartey|joel.amartey|joel_amartey
 Harry O'Farrell,none,,,,harryofarrell|harry.ofarrell|harry_ofarrell
 Jacob Weitering,none,,,,jacobweitering|jacob.weitering|jacob_weitering
 Nic Newman,found,nic.newman,Nic Newman,18413,nicnewman|nic.newman|nic_newman
@@ -91,9 +91,9 @@ Nick Haynes,none,,,,nickhaynes|nick.haynes|nick_haynes
 Marc Pittonet,found,marc_pittonet,Marc Pittonet,15959,marcpittonet|marc.pittonet|marc_pittonet
 George Hewett,none,,,,georgehewett|george.hewett|george_hewett
 Jack Ison,none,,,,jackison|jack.ison|jack_ison
-Campbell Chesser,check,campbellchesser,Campbell Chesser,17507,campbellchesser|campbell.chesser|campbell_chesser
-Matt Carroll,check,mattcarroll,Matt Carroll,558,mattcarroll|matt.carroll|matt_carroll
-Rob Monahan,check,rob_monahan,Rob Monahan,485,robmonahan|rob.monahan|rob_monahan
+Campbell Chesser,found,campbellchesser,Campbell Chesser,17507,campbellchesser|campbell.chesser|campbell_chesser
+Matt Carroll,rejected,mattcarroll,Matt Carroll,558,mattcarroll|matt.carroll|matt_carroll
+Rob Monahan,rejected,rob_monahan,Rob Monahan,485,robmonahan|rob.monahan|rob_monahan
 Harry Dean,none,,,,harrydean|harry.dean|harry_dean
 Cooper Lord,none,,,,cooperlord|cooper.lord|cooper_lord
 Talor Byrne,none,,,,talorbyrne|talor.byrne|talor_byrne
@@ -103,26 +103,26 @@ Matt Cottrell,none,,,,mattcottrell|matt.cottrell|matt_cottrell
 Wade Derksen,none,,,,wadederksen|wade.derksen|wade_derksen
 Lachie Whitfield,none,,,,lachiewhitfield|lachie.whitfield|lachie_whitfield
 Wil Parker,none,,,,wilparker|wil.parker|wil_parker
-Patrick Lipinski,check,patrick_lipinski,Patrick,380,patricklipinski|patrick.lipinski|patrick_lipinski
+Patrick Lipinski,rejected,patrick_lipinski,Patrick,380,patricklipinski|patrick.lipinski|patrick_lipinski
 Jordan De Goey,none,,,,jordangoey|jordan.goey|jordan_goey
-Isaac Quaynor,check,isaacquaynor,Isaac Quaynor,122354,isaacquaynor|isaac.quaynor|isaac_quaynor
-Brayden Maynard,check,brayden.maynard,Brayden Maynard,117336,braydenmaynard|brayden.maynard|brayden_maynard
+Isaac Quaynor,found,isaacquaynor,Isaac Quaynor,122354,isaacquaynor|isaac.quaynor|isaac_quaynor
+Brayden Maynard,found,brayden.maynard,Brayden Maynard,117336,braydenmaynard|brayden.maynard|brayden_maynard
 Jamie Elliott,none,,,,jamieelliott|jamie.elliott|jamie_elliott
-Lachie Schultz,check,lachieschultz,Lachlan Schultz,30548,lachieschultz|lachie.schultz|lachie_schultz
+Lachie Schultz,found,lachieschultz,Lachlan Schultz,30548,lachieschultz|lachie.schultz|lachie_schultz
 Dan Houston,none,,,,danhouston|dan.houston|dan_houston
 Daniel McStay,none,,,,danielmcstay|daniel.mcstay|daniel_mcstay
 Harry Perryman,found,harryperryman,Harry Perryman,30366,harryperryman|harry.perryman|harry_perryman
 Darcy Cameron,found,darcy_cameron,Darcy Cameron,36855,darcycameron|darcy.cameron|darcy_cameron
-Ed Allan,check,edallan,Edgar Allan Gastélum,1073,edallan|ed.allan|ed_allan
+Ed Allan,rejected,edallan,Edgar Allan Gastélum,1073,edallan|ed.allan|ed_allan
 Billy Frampton,none,,,,billyframpton|billy.frampton|billy_frampton
 Tyan Prindable,none,,,,tyanprindable|tyan.prindable|tyan_prindable
 Tew Jiath,none,,,,tewjiath|tew.jiath|tew_jiath
 Oscar Steene,found,oscar.steene,Oscar Steene,10989,oscarsteene|oscar.steene|oscar_steene
-Jack Crisp,check,jackcrisp,Jack Crisp,113076,jackcrisp|jack.crisp|jack_crisp
+Jack Crisp,found,jackcrisp,Jack Crisp,113076,jackcrisp|jack.crisp|jack_crisp
 Reef McInnes,none,,,,reefmcinnes|reef.mcinnes|reef_mcinnes
 Tim Membrey,none,,,,timmembrey|tim.membrey|tim_membrey
 Charlie West,none,,,,charliewest|charlie.west|charlie_west
-Darcy Moore,check,darcy.moore,Darcy Moore,7960,darcymoore|darcy.moore|darcy_moore
+Darcy Moore,ask,darcy.moore,Darcy Moore,7960,darcymoore|darcy.moore|darcy_moore
 Beau McCreery,none,,,,beaumccreery|beau.mccreery|beau_mccreery
 Sam Swadling,none,,,,samswadling|sam.swadling|sam_swadling
 Jack Buller,none,,,,jackbuller|jack.buller|jack_buller
@@ -133,7 +133,7 @@ Will Hayes,none,,,,willhayes|will.hayes|will_hayes
 Angus Anderson,none,,,,angusanderson|angus.anderson|angus_anderson
 Jai Saxena,none,,,,jaisaxena|jai.saxena|jai_saxena
 Ned Long,none,,,,nedlong|ned.long|ned_long
-Roan Steele,check,roansteele,,11359,roansteele|roan.steele|roan_steele
+Roan Steele,found,roansteele,,11359,roansteele|roan.steele|roan_steele
 Liam Puncher,none,,,,liampuncher|liam.puncher|liam_puncher
 Jesse Hogan,none,,,,jessehogan|jesse.hogan|jesse_hogan
 Flynn Riley,none,,,,flynnriley|flynn.riley|flynn_riley
@@ -142,16 +142,16 @@ Andrew McGrath,found,andrew_mcgrath,Andrew McGrath,46096,andrewmcgrath|andrew.mc
 Jacob Farrow,none,,,,jacobfarrow|jacob.farrow|jacob_farrow
 Darcy Parish,found,darcy_parish,DARCY PARISH,46977,darcyparish|darcy.parish|darcy_parish
 Kyle Langford,none,,,,kylelangford|kyle.langford|kyle_langford
-Jye Caldwell,check,jyecaldwell,Jye Caldwell,30764,jyecaldwell|jye.caldwell|jye_caldwell
+Jye Caldwell,found,jyecaldwell,Jye Caldwell,30764,jyecaldwell|jye.caldwell|jye_caldwell
 Brayden Fiorini,none,,,,braydenfiorini|brayden.fiorini|brayden_fiorini
 Sullivan Robey,none,,,,sullivanrobey|sullivan.robey|sullivan_robey
 Isaac Kako,found,isaac.kako,Isaac Kako,29119,isaackako|isaac.kako|isaac_kako
-Will Setterfield,check,willsetterfield,Will Setterfield,12069,willsetterfield|will.setterfield|will_setterfield
+Will Setterfield,found,willsetterfield,Will Setterfield,12069,willsetterfield|will.setterfield|will_setterfield
 Dyson Sharp,none,,,,dysonsharp|dyson.sharp|dyson_sharp
 Archie Perkins,none,,,,archieperkins|archie.perkins|archie_perkins
-Vigo Visentini,check,vigovisentini,Vigo Visentini,5913,vigovisentini|vigo.visentini|vigo_visentini
+Vigo Visentini,found,vigovisentini,Vigo Visentini,5913,vigovisentini|vigo.visentini|vigo_visentini
 Lewis Hayes,none,,,,lewishayes|lewis.hayes|lewis_hayes
-Peter Wright,check,peter_snakebite_wright,Peter Wright,200970,peter_snakebite_wright|peterwright|peter.wright|peter_wright
+Peter Wright,rejected,peter_snakebite_wright,Peter Wright,200970,peter_snakebite_wright|peterwright|peter.wright|peter_wright
 Archie Roberts,none,,,,archieroberts|archie.roberts|archie_roberts
 Sam Durham,none,,,,samdurham|sam.durham|sam_durham
 Harrison Jones,none,,,,harrisonjones|harrison.jones|harrison_jones
@@ -165,7 +165,7 @@ Nate Caddy,none,,,,natecaddy|nate.caddy|nate_caddy
 Zach Reid,none,,,,zachreid|zach.reid|zach_reid
 Ben McKay,none,,,,benmckay|ben.mckay|ben_mckay
 Hussien El Achkar,none,,,,hussienachkar|hussien.achkar|hussien_achkar
-Jaxon Artemis,check,jaxon.artemis,jaxon artemis,7600,jaxonartemis|jaxon.artemis|jaxon_artemis
+Jaxon Artemis,found,jaxon.artemis,jaxon artemis,7600,jaxonartemis|jaxon.artemis|jaxon_artemis
 Angus Clarke,none,,,,angusclarke|angus.clarke|angus_clarke
 Nic Martin,none,,,,nicmartin|nic.martin|nic_martin
 Rhys Unwin,none,,,,rhysunwin|rhys.unwin|rhys_unwin
@@ -174,57 +174,57 @@ Zak Johnson,none,,,,zakjohnson|zak.johnson|zak_johnson
 Jayden Nguyen,none,,,,jaydennguyen|jayden.nguyen|jayden_nguyen
 Archer Day-Wicks,none,,,,archerdaywicks|archer.daywicks|archer_daywicks
 Lachlan Blakiston,none,,,,lachlanblakiston|lachlan.blakiston|lachlan_blakiston
-Jack Bowes,check,jackbowes,Jack Bowes,14210,jackbowes|jack.bowes|jack_bowes
-Keidean Coleman,check,keideancoleman,KIDDY,21275,keideancoleman|keidean.coleman|keidean_coleman
+Jack Bowes,found,jackbowes,Jack Bowes,14210,jackbowes|jack.bowes|jack_bowes
+Keidean Coleman,found,keideancoleman,KIDDY,21275,keideancoleman|keidean.coleman|keidean_coleman
 Jaeger O'Meara,none,,,,jaegeromeara|jaeger.omeara|jaeger_omeara
 Caleb Serong,none,,,,calebserong|caleb.serong|caleb_serong
 Sean Darcy,none,,,,seandarcy|sean.darcy|sean_darcy
 Heath Chapman,none,,,,heathchapman|heath.chapman|heath_chapman
-Jordan Clark,check,jordanclark,Jordan Clark,374884,jordanclark|jordan.clark|jordan_clark
+Jordan Clark,rejected,jordanclark,Jordan Clark,374884,jordanclark|jordan.clark|jordan_clark
 Andrew Brayshaw,none,,,,andrewbrayshaw|andrew.brayshaw|andrew_brayshaw
-Luke Jackson,check,lukejackson,Luke Jackson,45399,lukejax77|lukejackson|luke.jackson|luke_jackson
-Shai Bolton,check,shaibolton,shai,61721,shaibolton|shai.bolton|shai_bolton
+Luke Jackson,ask,lukejackson,Luke Jackson,45399,lukejax77|lukejackson|luke.jackson|luke_jackson
+Shai Bolton,found,shaibolton,shai,61721,shaibolton|shai.bolton|shai_bolton
 Tobyn Murray,none,,,,tobynmurray|tobyn.murray|tobyn_murray
 Hugh Davies,none,,,,hughdavies|hugh.davies|hugh_davies
 Luke Ryan,none,,,,lukeryan|luke.ryan|luke_ryan
 Jeremy Sharp,none,,,,jeremysharp|jeremy.sharp|jeremy_sharp
 Adam Sweid,none,,,,adamsweid|adam.sweid|adam_sweid
-Murphy Reid,check,murphyreid,Mitch Murphy-Reid,2043,murphyreid|murphy.reid|murphy_reid
+Murphy Reid,rejected,murphyreid,Mitch Murphy-Reid,2043,murphyreid|murphy.reid|murphy_reid
 Judd McVee,none,,,,juddmcvee|judd.mcvee|judd_mcvee
 Mason Cox,none,,,,masoncox|mason.cox|mason_cox
 Leon Kickett,none,,,,leonkickett|leon.kickett|leon_kickett
 Patrick Voss,none,,,,patrickvoss|patrick.voss|patrick_voss
-Oscar McDonald,check,oscar.mcdonald,,589,oscarmcdonald|oscar.mcdonald|oscar_mcdonald
+Oscar McDonald,rejected,oscar.mcdonald,,589,oscarmcdonald|oscar.mcdonald|oscar_mcdonald
 Charlie Nicholls,none,,,,charlienicholls|charlie.nicholls|charlie_nicholls
 Karl Worner,none,,,,karlworner|karl.worner|karl_worner
 Jye Amiss,none,,,,jyeamiss|jye.amiss|jye_amiss
 Alex Pearce,none,,,,alexpearce|alex.pearce|alex_pearce
 Hayden Young,none,,,,haydenyoung|hayden.young|hayden_young
 Toby Whan,none,,,,tobywhan|toby.whan|toby_whan
-Neil Erasmus,check,neilerasmus,Neil Erasmus,20642,neilerasmus|neil.erasmus|neil_erasmus
-Cooper Simpson,check,coopersimpson,coop,1676,coopersimpson|cooper.simpson|cooper_simpson
+Neil Erasmus,found,neilerasmus,Neil Erasmus,20642,neilerasmus|neil.erasmus|neil_erasmus
+Cooper Simpson,rejected,coopersimpson,coop,1676,coopersimpson|cooper.simpson|cooper_simpson
 Brandon Walker,none,,,,brandonwalker|brandon.walker|brandon_walker
 Michael Frederick,none,,,,michaelfrederick|michael.frederick|michael_frederick
 Corey Wagner,none,,,,coreywagner|corey.wagner|corey_wagner
 Josh Treacy,none,,,,joshtreacy|josh.treacy|josh_treacy
 Brennan Cox,none,,,,brennancox|brennan.cox|brennan_cox
 Josh Draper,none,,,,joshdraper|josh.draper|josh_draper
-Aiden Riddle,check,aiden.riddle,Aiden Riddle,96,aidenriddle|aiden.riddle|aiden_riddle
+Aiden Riddle,rejected,aiden.riddle,Aiden Riddle,96,aidenriddle|aiden.riddle|aiden_riddle
 Isaiah Dudley,none,,,,isaiahdudley|isaiah.dudley|isaiah_dudley
-Matthew Johnson,check,matthewjohnson,Matthew Johnson,81056,matthewjohnson|matthew.johnson|matthew_johnson
+Matthew Johnson,rejected,matthewjohnson,Matthew Johnson,81056,matthewjohnson|matthew.johnson|matthew_johnson
 Chris Scerri,none,,,,chrisscerri|chris.scerri|chris_scerri
-Dominic Bedendo,check,dominicbedendo,Dominic Bedendo,11767,dominicbedendo|dominic.bedendo|dominic_bedendo
+Dominic Bedendo,found,dominicbedendo,Dominic Bedendo,11767,dominicbedendo|dominic.bedendo|dominic_bedendo
 Jay Polkinghorne,none,,,,jaypolkinghorne|jay.polkinghorne|jay_polkinghorne
-Tanner Bruhn,check,tannerbruhn,Tanner Bruhn,39139,tannerbruhn|tanner.bruhn|tanner_bruhn
+Tanner Bruhn,found,tannerbruhn,Tanner Bruhn,39139,tannerbruhn|tanner.bruhn|tanner_bruhn
 Toby Conway,none,,,,tobyconway|toby.conway|toby_conway
 Shaun Mannagh,none,,,,shaunmannagh|shaun.mannagh|shaun_mannagh
-Max Holmes,check,max.holmes,max holmes,1382,maxholmes|max.holmes|max_holmes
+Max Holmes,rejected,max.holmes,max holmes,1382,maxholmes|max.holmes|max_holmes
 Mitchell Edwards,none,,,,mitchelledwards|mitchell.edwards|mitchell_edwards
 Jhye Clark,none,,,,jhyeclark|jhye.clark|jhye_clark
 Connor O'Sullivan,none,,,,connorosullivan|connor.osullivan|connor_osullivan
-Sam De Koning,check,sam_koning,Sam Koning,120,samkoning|sam.koning|sam_koning
+Sam De Koning,rejected,sam_koning,Sam Koning,120,samkoning|sam.koning|sam_koning
 Lawson Humphries,none,,,,lawsonhumphries|lawson.humphries|lawson_humphries
-Jack Martin,check,realjackmartin,Jack Martin,320612,realjackmartin|jackmartin|jack.martin|jack_martin
+Jack Martin,ask,realjackmartin,Jack Martin,320612,realjackmartin|jackmartin|jack.martin|jack_martin
 Jacob Molier,none,,,,jacobmolier|jacob.molier|jacob_molier
 Oliver Wiltshire,none,,,,oliverwiltshire|oliver.wiltshire|oliver_wiltshire
 Hunter Holmes,none,,,,hunterholmes|hunter.holmes|hunter_holmes
@@ -232,27 +232,27 @@ Lennox Hofmann,none,,,,lennoxhofmann|lennox.hofmann|lennox_hofmann
 Jesse Mellor,none,,,,jessemellor|jesse.mellor|jesse_mellor
 Harley Barker,none,,,,harleybarker|harley.barker|harley_barker
 Nick Driscoll,none,,,,nickdriscoll|nick.driscoll|nick_driscoll
-Ollie Dempsey,check,olliedempsey,Ollie Dempsey,44323,olliedempsey|ollie.dempsey|ollie_dempsey
-James Worpel,check,jamesworpel,James Worpel,42615,jamesworpel|james.worpel|james_worpel
+Ollie Dempsey,found,olliedempsey,Ollie Dempsey,44323,olliedempsey|ollie.dempsey|ollie_dempsey
+James Worpel,found,jamesworpel,James Worpel,42615,jamesworpel|james.worpel|james_worpel
 Tom Atkins,none,,,,tomatkins|tom.atkins|tom_atkins
 Gryan Miers,found,gryan_miers,Gryan Miers,33523,gryanmiers|gryan.miers|gryan_miers
 Shannon Neale,none,,,,shannonneale|shannon.neale|shannon_neale
-Oisín Mullin,check,oisin_mullin,Oisin Mullin,38778,oisinmullin|oisin.mullin|oisin_mullin
+Oisín Mullin,found,oisin_mullin,Oisin Mullin,38778,oisinmullin|oisin.mullin|oisin_mullin
 Patrick Dangerfield,found,patrickdangerfield,Patrick Dangerfield,228859,patrickdangerfield|patrick.dangerfield|patrick_dangerfield
 Oliver Henry,none,,,,oliverhenry|oliver.henry|oliver_henry
-Joe Pike,check,joepike,Joe Pike | BBC Politics,5212,joepike|joe.pike|joe_pike
-Jack Henry,check,jackhenry,Jack Henry,14895,jackhenry|jack.henry|jack_henry
+Joe Pike,rejected,joepike,Joe Pike | BBC Politics,5212,joepike|joe.pike|joe_pike
+Jack Henry,ask,jackhenry,Jack Henry,14895,jackhenry|jack.henry|jack_henry
 Zach Guthrie,found,zachguthrie,Zach Guthrie,14582,zachguthrie|zach.guthrie|zach_guthrie
 Cillian Burke,none,,,,cillianburke|cillian.burke|cillian_burke
 Mark O'Connor,none,,,,markoconnor|mark.oconnor|mark_oconnor
 Tom Stewart,none,,,,tomstewart|tom.stewart|tom_stewart
 Brad Close,found,brad.close,Brad Close,29360,bradclose|brad.close|brad_close
 Mark Blicavs,none,,,,markblicavs|mark.blicavs|mark_blicavs
-Rowan Marshall,check,rowan_marshall,Rowan Marshall,21150,rowanmarshall|rowan.marshall|rowan_marshall
+Rowan Marshall,found,rowan_marshall,Rowan Marshall,21150,rowanmarshall|rowan.marshall|rowan_marshall
 Jordan Ridley,none,,,,jordanridley|jordan.ridley|jordan_ridley
-Mac Andrew,check,macandrew,MacAndrew,1540,macandrew|mac.andrew|mac_andrew
+Mac Andrew,rejected,macandrew,MacAndrew,1540,macandrew|mac.andrew|mac_andrew
 John Noble,none,,,,johnnoble|john.noble|john_noble
-Christian Petracca,check,christianpetracca,Christian Petracca,177765,on.trac5|christianpetracca|christian.petracca|christian_petracca
+Christian Petracca,found,christianpetracca,Christian Petracca,177765,on.trac5|christianpetracca|christian.petracca|christian_petracca
 Jed Walter,none,,,,jedwalter|jed.walter|jed_walter
 Alex Davies,none,,,,alexdavies|alex.davies|alex_davies
 Bodhi Uwland,found,bodhiuwland,Bodhi Uwland,4579,bodhiuwland|bodhi.uwland|bodhi_uwland
@@ -260,12 +260,12 @@ Leo Lombard,none,,,,leolombard|leo.lombard|leo_lombard
 Charlie Ballard,none,,,,charlieballard|charlie.ballard|charlie_ballard
 Touk Miller,found,toukmiller,Touk Miller,21626,toukmiller|touk.miller|touk_miller
 Elliott Himmelberg,none,,,,elliotthimmelberg|elliott.himmelberg|elliott_himmelberg
-Lachie Weller,check,lachie.weller,,89,lachieweller|lachie.weller|lachie_weller
+Lachie Weller,rejected,lachie.weller,,89,lachieweller|lachie.weller|lachie_weller
 Noah Anderson,none,,,,noahanderson|noah.anderson|noah_anderson
 Joel Jeffrey,none,,,,joeljeffrey|joel.jeffrey|joel_jeffrey
 Daniel Rioli,none,,,,danielrioli|daniel.rioli|daniel_rioli
 Matt Rowell,none,,,,mattrowell|matt.rowell|matt_rowell
-Bailey Humphrey,check,bailey.humphrey,,16924,baileyhumphrey|bailey.humphrey|bailey_humphrey
+Bailey Humphrey,found,bailey.humphrey,,16924,baileyhumphrey|bailey.humphrey|bailey_humphrey
 Ethan Read,none,,,,ethanread|ethan.read|ethan_read
 Ben Long,none,,,,benlong|ben.long|ben_long
 Ned Moyle,none,,,,nedmoyle|ned.moyle|ned_moyle
@@ -298,16 +298,16 @@ Lachie Ash,none,,,,lachieash|lachie.ash|lachie_ash
 Ryan Angwin,none,,,,ryanangwin|ryan.angwin|ryan_angwin
 Clayton Oliver,none,,,,claytonoliver|clayton.oliver|clayton_oliver
 Phoenix Gothard,none,,,,phoenixgothard|phoenix.gothard|phoenix_gothard
-Tom Green,check,tomgreen,Tom Green,798933,tomgreen|tom.green|tom_green
-Oliver Hannaford,check,oliver_hannaford,Oliver | Personal Trainer,328,oliverhannaford|oliver.hannaford|oliver_hannaford
+Tom Green,rejected,tomgreen,Tom Green,798933,tomgreen|tom.green|tom_green
+Oliver Hannaford,rejected,oliver_hannaford,Oliver | Personal Trainer,328,oliverhannaford|oliver.hannaford|oliver_hannaford
 Toby Bedford,none,,,,tobybedford|toby.bedford|toby_bedford
 Sam Taylor,none,,,,samtaylor|sam.taylor|sam_taylor
-Brent Daniels,check,brentdaniels,Brent Daniels,3326,brentdaniels|brent.daniels|brent_daniels
+Brent Daniels,ask,brentdaniels,Brent Daniels,3326,brentdaniels|brent.daniels|brent_daniels
 Finn Callaghan,none,,,,finncallaghan|finn.callaghan|finn_callaghan
 Harrison Oliver,none,,,,harrisonoliver|harrison.oliver|harrison_oliver
 Leek Aleer,none,,,,leekaleer|leek.aleer|leek_aleer
-Josh Kelly,check,joshkelly,Josh Kelly,1590,joshkelly07|joshkelly|josh.kelly|josh_kelly
-Harry Rowston,check,harryrowston,,4784,harryrowston|harry.rowston|harry_rowston
+Josh Kelly,rejected,joshkelly,Josh Kelly,1590,joshkelly07|joshkelly|josh.kelly|josh_kelly
+Harry Rowston,ask,harryrowston,,4784,harryrowston|harry.rowston|harry_rowston
 Jayden Laverde,none,,,,jaydenlaverde|jayden.laverde|jayden_laverde
 Jake Riccardi,none,,,,jakericcardi|jake.riccardi|jake_riccardi
 Harry Himmelberg,found,harryhimmelberg,𝙃𝘼𝙍𝙍𝙔 𝙃𝙄𝙈𝙈𝙀𝙇𝘽𝙀𝙍𝙂,16214,harryhimmelberg|harry.himmelberg|harry_himmelberg
@@ -315,14 +315,14 @@ Jack Ough,none,,,,jackough|jack.ough|jack_ough
 Cody Angove,found,codyangove,Cody Angove,3012,codyangove|cody.angove|cody_angove
 James Leake,none,,,,jamesleake|james.leake|james_leake
 Toby McMullin,none,,,,tobymcmullin|toby.mcmullin|toby_mcmullin
-Xavier O'Halloran,check,xavier_ohalloran,X.O,4702,xavierohalloran|xavier.ohalloran|xavier_ohalloran
+Xavier O'Halloran,found,xavier_ohalloran,X.O,4702,xavierohalloran|xavier.ohalloran|xavier_ohalloran
 Oskar Taylor,none,,,,oskartaylor|oskar.taylor|oskar_taylor
 Max Gruzewski,found,maxgruzewski,Max Gruzewski,3781,maxgruzewski|max.gruzewski|max_gruzewski
 Logan Smith,none,,,,logansmith|logan.smith|logan_smith
-Joe Fonti,check,joe_fonti,,4266,joefonti|joe.fonti|joe_fonti
-Josaia Delana,check,josaia_delana,joey delana,5037,josaiadelana|josaia.delana|josaia_delana
-Connor Idun,check,connor.idun,CI39,10863,connoridun|connor.idun|connor_idun
-Nick Madden,check,nickmadden,Nick Madden,744,nickmadden|nick.madden|nick_madden
+Joe Fonti,found,joe_fonti,,4266,joefonti|joe.fonti|joe_fonti
+Josaia Delana,found,josaia_delana,joey delana,5037,josaiadelana|josaia.delana|josaia_delana
+Connor Idun,found,connor.idun,CI39,10863,connoridun|connor.idun|connor_idun
+Nick Madden,rejected,nickmadden,Nick Madden,744,nickmadden|nick.madden|nick_madden
 Nathan Wardius,found,nathanwardius,Nathan Wardius,1866,nathanwardius|nathan.wardius|nathan_wardius
 Riley Hamilton,none,,,,rileyhamilton|riley.hamilton|riley_hamilton
 Jack Buckley,none,,,,jackbuckley|jack.buckley|jack_buckley
@@ -330,46 +330,46 @@ Finnegan Davis,none,,,,finnegandavis|finnegan.davis|finnegan_davis
 Callum Brown,none,,,,callumbrown|callum.brown|callum_brown
 Harry Morrison,none,,,,harrymorrison|harry.morrison|harry_morrison
 Mitchell Lewis,none,,,,mitchelllewis|mitchell.lewis|mitchell_lewis
-Jai Newcombe,check,jai.newcombe,Jai,43094,jainewcombe|jai.newcombe|jai_newcombe
+Jai Newcombe,found,jai.newcombe,Jai,43094,jainewcombe|jai.newcombe|jai_newcombe
 Jarman Impey,found,jarmanimpey,Jarman Impey,52286,jarmanimpey|jarman.impey|jarman_impey
 James Sicily,none,,,,jamessicily|james.sicily|james_sicily
 Ned Reeves,none,,,,nedreeves|ned.reeves|ned_reeves
-Dylan Moore,check,dylan_moore,Dylan Moore,1289,d_moore13|dylanmoore|dylan.moore|dylan_moore
+Dylan Moore,rejected,dylan_moore,Dylan Moore,1289,d_moore13|dylanmoore|dylan.moore|dylan_moore
 Connor Macdonald,none,,,,connormacdonald|connor.macdonald|connor_macdonald
 Karl Amon,none,,,,karlamon|karl.amon|karl_amon
 Conor Nash,none,,,,conornash|conor.nash|conor_nash
 Will Day,none,,,,willday|will.day|will_day
 Calsher Dear,none,,,,calsherdear|calsher.dear|calsher_dear
-Jack Scrimshaw,check,jackscrimshaw,Jack Scrimshaw,24289,jackscrimshaw|jack.scrimshaw|jack_scrimshaw
+Jack Scrimshaw,found,jackscrimshaw,Jack Scrimshaw,24289,jackscrimshaw|jack.scrimshaw|jack_scrimshaw
 Blake Hardwick,none,,,,blakehardwick|blake.hardwick|blake_hardwick
-Massimo D'Ambrosio,check,massimo.dambrosio,Massimo D'ambrosio,672,massimodambrosio|massimo.dambrosio|massimo_dambrosio
-Lloyd Meek,check,lloydmeek,Lloyd Meek,20222,lloydmeek|lloyd.meek|lloyd_meek
+Massimo D'Ambrosio,ask,massimo.dambrosio,Massimo D'ambrosio,672,massimodambrosio|massimo.dambrosio|massimo_dambrosio
+Lloyd Meek,found,lloydmeek,Lloyd Meek,20222,lloydmeek|lloyd.meek|lloyd_meek
 Mabior Chol,none,,,,mabiorchol|mabior.chol|mabior_chol
 Jack Gunston,none,,,,jackgunston|jack.gunston|jack_gunston
 Noah Mraz,none,,,,noahmraz|noah.mraz|noah_mraz
 Cameron Nairn,none,,,,cameronnairn|cameron.nairn|cameron_nairn
 Josh Weddle,none,,,,joshweddle|josh.weddle|josh_weddle
 Josh Battle,none,,,,joshbattle|josh.battle|josh_battle
-Josh Ward,check,josh_ward,Joshua Ward,1192,joshward|josh.ward|josh_ward
+Josh Ward,rejected,josh_ward,Joshua Ward,1192,joshward|josh.ward|josh_ward
 Will McCabe,none,,,,willmccabe|will.mccabe|will_mccabe
 Cameron Mackenzie,none,,,,cameronmackenzie|cameron.mackenzie|cameron_mackenzie
 Matthew LeRay,none,,,,matthewleray|matthew.leray|matthew_leray
-Jack Ginnivan,check,jackginnivan,,179216,jackginnivan|jack.ginnivan|jack_ginnivan
+Jack Ginnivan,found,jackginnivan,,179216,jackginnivan|jack.ginnivan|jack_ginnivan
 Jack Dalton,none,,,,jackdalton|jack.dalton|jack_dalton
 Ollie Greeves,found,ollie_greeves,Ollie Greeves,14534,olliegreeves|ollie.greeves|ollie_greeves
-Tom Barrass,check,tombarrass,tom barrass,48649,tombarrass|tom.barrass|tom_barrass
-Max Beattie,check,max_beattie,Max.,11440,maxbeattie|max.beattie|max_beattie
-Matt Hill,check,matt.hill,Matt Hill,995,matthillcomposer|matthill|matt.hill|matt_hill
+Tom Barrass,found,tombarrass,tom barrass,48649,tombarrass|tom.barrass|tom_barrass
+Max Beattie,ask,max_beattie,Max.,11440,maxbeattie|max.beattie|max_beattie
+Matt Hill,rejected,matt.hill,Matt Hill,995,matthillcomposer|matthill|matt.hill|matt_hill
 Bailey Macdonald,none,,,,baileymacdonald|bailey.macdonald|bailey_macdonald
-Josh Goater,check,joshgoater,Josh Goater,7828,joshgoater|josh.goater|josh_goater
+Josh Goater,found,joshgoater,Josh Goater,7828,joshgoater|josh.goater|josh_goater
 Ben King,none,,,,benking|ben.king|ben_king
 Zach Merrett,none,,,,zachmerrett|zach.merrett|zach_merrett
 Ollie Purcell,none,,,,olliepurcell|ollie.purcell|ollie_purcell
 Jacob van Rooyen,none,,,,jacobrooyen|jacob.rooyen|jacob_rooyen
-Christian Salem,check,christiansalem,Christian Salem,14144,christiansalem|christian.salem|christian_salem
+Christian Salem,found,christiansalem,Christian Salem,14144,christiansalem|christian.salem|christian_salem
 Harvey Langford,none,,,,harveylangford|harvey.langford|harvey_langford
 Xavier Lindsay,none,,,,xavierlindsay|xavier.lindsay|xavier_lindsay
-Caleb Windsor,check,caleb.windsor,Caleb Windsor,14823,calebwindsor|caleb.windsor|caleb_windsor
+Caleb Windsor,found,caleb.windsor,Caleb Windsor,14823,calebwindsor|caleb.windsor|caleb_windsor
 Jake Lever,none,,,,jakelever|jake.lever|jake_lever
 Jack Steele,found,jack_steele,Jack Steele,58314,jacksteele|jack.steele|jack_steele
 Daniel Turner,none,,,,danielturner|daniel.turner|daniel_turner
@@ -379,7 +379,7 @@ Changkuoth Jiath,none,,,,changkuothjiath|changkuoth.jiath|changkuoth_jiath
 Ed Langdon,none,,,,edlangdon|ed.langdon|ed_langdon
 Bailey Laurie,none,,,,baileylaurie|bailey.laurie|bailey_laurie
 Jake Bowey,found,jakebowey,Jake Bowey,12641,jakebowey|jake.bowey|jake_bowey
-Xavier Taylor,check,xavier_taylor,Xavier Taylor,908,xaviertaylor|xavier.taylor|xavier_taylor
+Xavier Taylor,rejected,xavier_taylor,Xavier Taylor,908,xaviertaylor|xavier.taylor|xavier_taylor
 Thomas Matthews,none,,,,thomasmatthews|thomas.matthews|thomas_matthews
 Matthew Jefferson,none,,,,matthewjefferson|matthew.jefferson|matthew_jefferson
 Blake Howes,none,,,,blakehowes|blake.howes|blake_howes
@@ -387,7 +387,7 @@ Jed Adams,none,,,,jedadams|jed.adams|jed_adams
 Max Heath,none,,,,maxheath|max.heath|max_heath
 Brody Mihocek,found,brodymihocek,Brody Mihocek,52295,brodymihocek|brody.mihocek|brody_mihocek
 Harry Sharp,none,,,,harrysharp|harry.sharp|harry_sharp
-Bayley Fritsch,check,bayleyfritsch,Bayley Fritsch,18678,bayleyfritsch|bayley.fritsch|bayley_fritsch
+Bayley Fritsch,found,bayleyfritsch,Bayley Fritsch,18678,bayleyfritsch|bayley.fritsch|bayley_fritsch
 Tom Sparrow,none,,,,tomsparrow|tom.sparrow|tom_sparrow
 Latrelle Pickett,found,latrellepickett,Latrelle pickett,18718,latrellepickett|latrelle.pickett|latrelle_pickett
 Harrison Petty,none,,,,harrisonpetty|harrison.petty|harrison_petty
