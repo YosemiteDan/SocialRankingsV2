@@ -40,10 +40,13 @@ for label, (sport, league, gender) in LEAGUES.items():
         v = lambda k: b.get(k, {}).get("value", "")
         name, born, start = v("pLabel"), v("born")[:10], v("start")[:10]
         if not name or name.startswith("Q") or (name.lower(), league) in seen: continue
+        born = born if born[:4].isdigit() else ""
+        start = start if start[:4].isdigit() else ""
         age = (date.today().year - int(born[:4])) if born else None
-        if age and age > 38: continue
-        if start and start < "2019": continue          # old spells Wikidata never closed
-        if not start and age and age > 33: continue
+        # Wikidata often leaves old spells open, so insist on signs of a current player.
+        if age is None or age > 34: continue
+        if start and start < "2019": continue
+        if not start and age > 30: continue
         seen.add((name.lower(), league)); kept += 1
         rows.append({"name": name, "sport": sport, "league": league, "team": v("teamLabel"), "gender": gender,
                      "instagram": v("ig").lstrip("@").lower(), "born": born, "since": start,
