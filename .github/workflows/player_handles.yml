@@ -1,0 +1,28 @@
+# Evenings: finds Instagram handles for new club players and adds clear matches.
+# Runs outside the daily collection hours so it doesn't use their Meta allowance.
+name: Find player handles
+on:
+  schedule:
+    - cron: "37 9,11,13,15,17 * * *"   # about 8:37pm, 10:37pm, 12:37am, 2:37am, 4:37am Sydney
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: player-handles
+jobs:
+  find:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - run: pip install requests
+      - run: python scripts/find_player_handles.py
+        env:
+          META_ACCESS_TOKEN: ${{ secrets.META_ACCESS_TOKEN }}
+          META_IG_USER_ID: ${{ secrets.META_IG_USER_ID }}
+      - run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/new_player_handles.csv data/athletes.csv
+          git diff --cached --quiet || git commit -m "New club players found"
+          for attempt in 1 2 3; do git pull --rebase --autostash -X theirs && git push && exit 0; sleep 10; done
