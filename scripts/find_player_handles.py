@@ -21,6 +21,10 @@ LIMIT = int(os.environ.get("LOOKUP_LIMIT", "185"))
 STATE_COLS = ["name", "status", "handle", "ig_name", "followers", "tried"]
 
 
+SPORT_HINTS = {"AFL": ["afl", "footy", "football", "aflw"], "Rugby league": ["nrl", "rugby", "league", "footy", "nrlw"],
+               "Soccer": ["football", "soccer", "fc"], "Basketball": ["basketball", "nbl", "wnbl", "hoops"], "Netball": ["netball"]}
+
+
 def plain(t):
     return re.sub(r"[^a-z ]", "", unicodedata.normalize("NFKD", t or "").encode("ascii", "ignore").decode().lower()).split()
 
@@ -76,7 +80,7 @@ def main():
             lookups += 1
             time.sleep(1.5)
             r = requests.get(f"{GRAPH}/{ig}", timeout=30, params={"access_token": token,
-                             "fields": f"business_discovery.username({h}){{username,name,followers_count}}"}).json()
+                             "fields": f"business_discovery.username({h}){{username,name,followers_count,biography}}"}).json()
             err = (r.get("error") or {})
             if err.get("code") in (4, 17, 32, 613) or "limit" in err.get("message", "").lower():
                 print("Meta limit reached; continuing next run"); stop = True; break
@@ -85,7 +89,12 @@ def main():
                 continue
             name_words = plain(d.get("name"))
             joined = "".join(name_words)
-            if f in name_words + [joined[:len(f)]] and l in joined:
+            # Same name isn't enough (common names belong to boxers, coaches, salespeople...):
+            # the bio must also point to their sport or club, otherwise it goes to review.
+            bio = " ".join(plain(d.get("biography"))) + " " + (d.get("biography") or "").lower()
+            club_words = [x for x in plain(p["team"]) if len(x) >= 4]
+            sporty = any(k in bio for k in SPORT_HINTS.get(p["sport"], [])) or any(x in bio for x in club_words)
+            if f in name_words + [joined[:len(f)]] and l in joined and sporty:
                 result.update(status="found", handle=h, ig_name=d.get("name") or "", followers=d.get("followers_count") or "")
                 added.append({"name": p["name"], "sport": p["sport"], "league": p["league"], "team": p["team"], "position": "",
                               "import": "", "instagram": h, "handle_checked": "yes"})
