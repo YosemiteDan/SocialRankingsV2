@@ -4,6 +4,13 @@ from pathlib import Path
 out = Path(__file__).resolve().parent.parent / "data" / "wiki"; out.mkdir(parents=True, exist_ok=True)
 S = requests.Session(); S.headers["User-Agent"] = "SocialeteRankings/1.0 (github.com; squad lists)"
 for q in sys.argv[1:]:
+  try:
+    if q.startswith("="):            # exact page title
+        t = q[1:]
+        p = S.get("https://en.wikipedia.org/w/api.php", params={"action": "parse", "page": t, "prop": "text", "format": "json", "redirects": 1}, timeout=60).json()
+        html = p.get("parse", {}).get("text", {}).get("*", "")
+        (out / (t.replace(" ", "_").replace("'", "") + ".html")).write_text(f"<!-- {t} -->\n" + html)
+        print(q, "saved", len(html)); continue
     r = S.get("https://en.wikipedia.org/w/api.php", params={"action": "query", "list": "search", "srsearch": q, "format": "json", "srlimit": 3}, timeout=60).json()
     hits = [h["title"] for h in r["query"]["search"]]
     print(q, "->", hits)
@@ -13,3 +20,5 @@ for q in sys.argv[1:]:
     html = p.get("parse", {}).get("text", {}).get("*", "")
     (out / (q.replace(" ", "_") + ".html")).write_text(f"<!-- {t} -->\n" + html)
     print("  saved", len(html))
+  except Exception as e:
+    print(q, "failed:", e)
